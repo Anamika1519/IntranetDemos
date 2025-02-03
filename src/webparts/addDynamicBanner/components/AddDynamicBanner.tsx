@@ -336,7 +336,7 @@ const AddDynamicBannerContext = ({ props }: any) => {
   //           //   for (const file of BnnerImagepostArr) {
   //           //     if (!file.serverRelativeUrl) {
   //           //       // const uploadedBanner = await uploadFile(file, sp, "Documents", Url);
-  //           //       bannerImageArray = await uploadFile(file, sp, "Documents", "https://alrostamanigroupae.sharepoint.com");
+  //           //       bannerImageArray = await uploadFile(file, sp, "Documents", "https://OfficeIndia.sharepoint.com");
   //           //     }
 
   //           //   }
@@ -415,7 +415,7 @@ const AddDynamicBannerContext = ({ props }: any) => {
   //           // if (BnnerImagepostArr.length > 0) {
   //           //   for (const file of BnnerImagepostArr) {
   //           //     // const uploadedBanner = await uploadFile(file, sp, "Documents", Url);
-  //           //     bannerImageArray = await uploadFile(file, sp, "Documents", "https://alrostamanigroupae.sharepoint.com");
+  //           //     bannerImageArray = await uploadFile(file, sp, "Documents", "https://OfficeIndia.sharepoint.com");
   //           //   }
   //           // }
   //           if (BnnerImagepostArr.length > 0 && BnnerImagepostArr[0]?.files?.length > 0) {
@@ -625,7 +625,7 @@ debugger
 
                     :
                     <form className='row' >
-                      <div className="col-lg-6">
+                      <div className="col-lg-4">
                         <div className="mb-3">
                           <label htmlFor="title" className="form-label">
                             Title <span className="text-danger">*</span>
@@ -644,7 +644,7 @@ debugger
 
                         </div>
                       </div>
-                      <div className="col-lg-6">
+                      <div className="col-lg-4">
                         <div className="mb-3">
                           <div className='d-flex justify-content-between'>
                             <div>

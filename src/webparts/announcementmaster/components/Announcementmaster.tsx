@@ -922,7 +922,7 @@ const Announcementmastercontext = ({ props }: any) => {
 
                                                 {item?.Status == "Save as draft" ? <FontAwesomeIcon icon={faEdit} fontSize={18} /> :
 
-                                                  <img src={require('../../../CustomAsset/Edit.png')} />
+                                                  <img src={require('../../../CustomAsset/edit.png')} />
                                                 }
                                               </a>
 

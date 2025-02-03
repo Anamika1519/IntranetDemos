@@ -33,7 +33,8 @@ import "@pnp/sp/webs";
 import "@pnp/sp/folders";
 import "@pnp/sp/files";
 import "@pnp/sp/sites"
-import "@pnp/sp/presets/all"
+import "@pnp/sp/presets/all";
+import moment from "moment";
 import { PermissionKind } from "@pnp/sp/security";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../../CustomCss/mainCustom.scss";
@@ -50,6 +51,7 @@ import './ApprovalActioncss'
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import DMSMyApproval from "./MyApprovals";
+import Swal from "sweetalert2";
 let approvedLevel: any = ''
 let filepreviewurl = ''
 let remark: any = ''
@@ -390,324 +392,1276 @@ const DMSMyApprovalAction = ({ props }: any) => {
     console.log(remark, "remaksss")
   }
 
-  const handleLogAndLogHistory = async (event: any) => {
-    event.preventDefault();
+  // const handleLogAndLogHistory = async (event: any) => {
+  //   event.preventDefault();
+  //   const buttonText = event.target.innerText || event.target.textContent;
+  //   // const date =new Date();
+  //   // const isoDate = date.toISOString();
+  //   // console.log(isoDate);
+  //   const filterData = Mylistdata.find((item) => item.CurrentUser === currentUserEmailRef.current)
+  //   console.log("filtered data Level", filterData.MasterApproval.Level);
+  //   console.log("filterData id", filterData.FileUID.FileUID);
+  //   console.log("filterData Id", filterData.Id);
+
+  //   const isoDate = new Date().toISOString().slice(0, 19) + 'Z';
+  //   // console.log(isoDate);
+  //   // console.log("remark value",remark);
+
+  //   // check and Set FinalApproved
+
+
+
+  //   let payload;
+  //   if (buttonText === "Approve") {
+
+
+  //     const updatedData = await sp.web.lists.getByTitle("DMSFileApprovalList").items
+  //       .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel", "FilePreviewUrl")
+  //       .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+  //       .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
+  //     console.log(updatedData, "updatedData")
+
+  //     if (updatedData && updatedData.length > 0) {
+  //       const mydat = updatedData[0]; // Assuming you want to compare using the first item's SiteName
+  //       filepreviewurl = mydat?.FilePreviewUrl
+  //       console.log(mydat?.FilePreviewUrl, "items,,,,")
+  //       approvedLevel = mydat.ApprovedLevel
+  //       // Step 3: Fetch data from the second list where SiteName matches
+  //       const updatedata2 = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
+  //         .filter(`SiteName eq '${mydat.SiteName}' and DocumentLibraryName eq '${mydat.DocumentLibraryName}' and Level eq ${mydat.ApprovedLevel}`)()
+  //         .catch((error: any) => console.error("Error fetching data from DMSFolderPermissionMaster:", error));
+
+  //       const getTaskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`)
+  //         .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
+  //         .expand("FileUID", "MasterApproval")()
+  //       console.log(getTaskdata, "getTaskdata")
+  //       console.log(updatedata2, "here is my data");
+
+  //       getTaskdata.forEach(item => {
+  //         console.log(item.CurrentUser, "CurrentUser")
+  //         // Step 1: Check if CurrentUser matches the stored user
+  //         if (item.CurrentUser === currentUserEmailRef.current) {
+  //           // Step 2: Check ApprovalType
+  //           if (item.MasterApproval.ApprovalType === 0) {
+  //             console.log(approvedLevel, "approvedLevel first in 0")
+  //             // If ApprovalType is 0, set state to 'done'
+  //             setApprovedStatus('Approved');
+  //             console.log("entere here in 0 for approval level", filterData.FileUID.FileUID, mydat.ApprovedLevel)
+  //             console.log("entere here in 0", ApprovedStatus)
+  //             approvedLevel = mydat.ApprovedLevel + 1
+  //             setFinalStatus = "Approved"
+  //             console.log(approvedLevel, "approvedLevel second in 1")
+  //           } else if (item.MasterApproval.ApprovalType === 1) {
+  //             // Step 3: If ApprovalType is 1, check the Log field
+  //             let nonNullLogCount = 0;
+  //             let totalItems = getTaskdata.length;
+
+  //             getTaskdata.forEach(logItem => {
+  //               if (logItem.Log !== null) {
+  //                 nonNullLogCount++;
+  //               }
+  //             });
+
+  //             // If more than 5 out of 6 Logs are not null, set 'approvalInProgress'
+  //             if (nonNullLogCount >= totalItems - 1) {
+  //               console.log(approvedLevel, "approvedLevel first in 1")
+  //               approvedLevel = mydat.ApprovedLevel + 1
+  //               setFinalStatus = "Approved"
+  //               setApprovedStatus('Approved');
+  //               console.log("entere here in 1 for approval level", filterData.FileUID.FileUID, mydat.ApprovedLevel + 1)
+  //               console.log("entere here in 1", ApprovedStatus)
+  //               console.log(approvedLevel, "approvedLevel second in 1")
+  //             }
+  //           }
+  //         }
+  //       });
+
+  //     } else {
+  //       console.log("No matching data found in DMSFileApprovalList.");
+  //     }
+  //     //start
+  //     try {
+  //       const updatedData1: any = await sp.web.lists.getByTitle("DMSFileApprovalList").items
+  //         .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel", "FilePreviewUrl")
+  //         .filter(`FileUID eq '${FileUID}'`)()
+  //         .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
+  //       console.log(updatedData1, "updatedData")
+
+
+  //       filepreviewurl = updatedData1[0]?.FilePreviewUrl;
+  //       Level = updatedData1[0].ApprovedLevel;
+  //       console.log(updatedData1[0], "DocumentLibraryName")
+
+  //       const getdatafromfoldermaster = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
+  //         .filter(`SiteName eq '${updatedData1[0].SiteName}' and DocumentLibraryName eq '${updatedData1[0].DocumentLibraryName}'`)()
+  //       console.log(getdatafromfoldermaster, "getdatafromfoldermaster")
+
+  //       let maxLevel = 0;
+  //       getdatafromfoldermaster.forEach((item) => {
+  //         if (item.Level >= maxLevel) {
+  //           maxLevel = item.Level;
+  //         }
+  //       })
+
+  //       console.log("MaxLevel ", maxLevel);
+
+  //       if (Level === maxLevel) {
+
+  //         const taskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`)
+  //           .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
+  //           .expand("FileUID", "MasterApproval")()
+
+  //         console.log("getData from DMSFileApprovalTaskList", taskdata);
+
+  //         taskdata.forEach(async (item) => {
+  //           if (item.CurrentUser === currentUserEmailRef.current) {
+
+  //             if (item.MasterApproval.ApprovalType === 0) {
+  //               setFinalStatus = "FinalApproved";
+  //               try {
+  //                 await sp.web.lists.getByTitle("DMSFileApprovalList").items
+  //                   .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+  //                   .then(async (items) => {
+  //                     if (items.length > 0) {
+  //                       const itemId = items[0].Id; // Assuming one item per FileUID
+  //                       // alert(`${itemId} item id is 1`)
+  //                       await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
+  //                         Status: "Approved",
+  //                       });
+  //                       console.log("Updated DMSFileApprovalList with Approved status");
+  //                       // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
+  //                     }
+  //                   });
+  //               } catch (error) {
+  //                 console.log(error, "Error updating DMSFileApprovalList status");
+  //               }
+  //               try {
+  //                 // Update Column Status on Document library or folder
+  //                 // updatedData1[0].DocumentLibraryName
+  //                 // FileUID
+  //                 // New code start
+  //                 const siteName = updatedData1[0].SiteName
+  //                 // console.log("siteName",siteName);
+  //                 const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
+  //                 // console.log(subsite , "subsite");
+  //                 // console.log("subsite id",subsite[0].Id)
+
+  //                 const { web } = await sp.site.openWebById(subsite[0].Id)
+  //                 // end
+  //                 // get the details of the file present inside the document library
+  //                 const file = web.getFileById(filterData.FileUID.FileUID);
+  //                 const listItem = await file.getItem();
+  //                 const updatedData = await listItem.update({
+  //                   Status: "Approved"
+  //                 });
+  //                 console.log("updatedData", updatedData);
+  //               } catch (error) {
+  //                 console.log(error, "Error updating status column on Libray or Folder");
+  //               }
+
+
+  //             } else if (item.MasterApproval.ApprovalType === 1) {
+
+  //               let approvedUser = 0;
+  //               let numberOfUser = taskdata.length;
+
+  //               taskdata.forEach(logItem => {
+  //                 if (logItem.Log !== null) {
+  //                   approvedUser++;
+  //                 }
+  //               });
+
+  //               if (approvedUser >= numberOfUser - 1) {
+  //                 setFinalStatus = "FinalApproved";
+  //                 try {
+  //                   await sp.web.lists.getByTitle("DMSFileApprovalList").items
+  //                     .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+  //                     .then(async (items) => {
+  //                       if (items.length > 0) {
+  //                         const itemId = items[0].Id; // Assuming one item per FileUID
+  //                         // alert(`${itemId} item id is 2`)
+  //                         await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
+  //                           Status: "Approved",
+  //                         });
+  //                         console.log("Updated DMSFileApprovalList with Approved status");
+  //                         // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
+  //                       }
+  //                     });
+  //                 } catch (error) {
+  //                   console.log(error, "Error updating DMSFileApprovalList status");
+  //                 }
+  //                 try {
+  //                   // Update Column Status on Document library or folder
+  //                   // updatedData1[0].DocumentLibraryName
+  //                   // FileUID
+  //                   // New code start
+  //                   const siteName = updatedData1[0].SiteName
+  //                   // console.log("siteName",siteName);
+  //                   const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
+  //                   // console.log(subsite , "subsite");
+  //                   // console.log("subsite id",subsite[0].Id)
+
+  //                   const { web } = await sp.site.openWebById(subsite[0].Id)
+  //                   // end
+  //                   // get the details of the file present inside the document library
+  //                   const file = web.getFileById(filterData.FileUID.FileUID);
+  //                   const listItem = await file.getItem();
+  //                   const updatedData = await listItem.update({
+  //                     Status: "Approved"
+  //                   });
+  //                   console.log("updatedData", updatedData);
+  //                 } catch (error) {
+  //                   console.log(error, "Error updating status column on Libray or Folder");
+  //                 }
+
+  //               }
+
+  //             }
+  //           }
+
+  //         })
+
+  //       } else {
+  //         setFinalStatus = "Approved";
+  //         console.log("Level is not equal to max level", Level);
+  //         console.log("FinalStatus", setFinalStatus);
+
+
+  //       }
+
+  //     } catch (error) {
+  //       console.error("Error fetching list items:", error);
+  //     }
+  //     // end
+
+  //     payload = {
+  //       Log: setFinalStatus,
+  //       LogHistory: isoDate,
+  //       Remark: remark,
+  //       // ApprovedLevel:approvedLevel
+  //     }
+  //   }
+  //   else if (buttonText === "Reject") {
+  //     // setFinalStatus = 'Rejected'
+  //     // payload = {
+  //     //   Log: setFinalStatus,
+  //     //   LogHistory: isoDate,
+  //     //   Remark: remark,
+  //     //   // ApprovedLevel:approvedLevel
+  //     // }
+  //     setFinalStatus = 'Rejected'
+  //         try{
+  //           const userConfirmed = await Swal.fire({
+  //             title: 'Are you sure?',
+  //             text: "Do you want to Reject this File Request?",
+  //             icon: 'warning',
+  //             showCancelButton: true,
+  //             confirmButtonColor: '#3085d6',
+  //             cancelButtonColor: '#d33',
+  //             confirmButtonText: 'Yes, reject it!',
+  //             cancelButtonText: 'No, cancel',
+  //           });
+       
+  //           if (!userConfirmed.isConfirmed) {
+  //             console.log("User canceled the action.");
+  //             return;
+  //           }
+  //           setFinalStatus = 'Rejected'
+  //           payload={
+  //               Log:setFinalStatus,
+  //               LogHistory:isoDate,
+  //               Remark:remark,
+  //               // ApprovedLevel:approvedLevel
+  //           }
+  //           const data=await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID","ApproveAction","ApprovedLevel" , "SiteName").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+  //           debugger
+  //        console.log("data ",data);
+       
+  //       const id=data[0].Id;
+  //       // alert(` here is item id ${id} `)
+  //       const filemasterlist = data[0].SiteName;
+  //       // alert(` here is master list  ${filemasterlist} `)
+  //       approvedLevel= data[0].ApprovedLevel
+  //       // alert(` here is approved level ${approvedLevel} : type ${typeof(approvedLevel)}`)
+  //       // debugger
+  //       try {
+  //         // const updateRejectstatus1 = await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(id).update({ Status: 'Rejected' });
+  //         // console.log("updateRejectstatus",updateRejectstatus1);
+  //         const updateRejectstatus = await sp.web.lists
+  //         .getByTitle(`DMS${filemasterlist}FileMaster`)
+  //         .items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+     
+  //       if (updateRejectstatus.length === 0) {
+  //         console.log("No items found for the given FileUID:", filterData.FileUID.FileUID);
+  //         return;
+  //       }
+     
+  //       // Update the 'Status' column for each filtered item
+  //       for (const item of updateRejectstatus) {
+  //         await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(item.Id).update({
+  //           Status: "Rejected",
+  //         });
+  //         console.log(`Item with ID ${item.Id} updated successfully.`);
+  //       }
+
+  //       const subsite = await sp.web.webs.filter(`Title eq '${filemasterlist}'`)();
+  //       const { web } = await sp.site.openWebById(subsite[0].Id)
+  //       const file = web.getFileById(filterData.FileUID.FileUID);
+  //       const listItem = await file.getItem();
+  //       const updatedData = await listItem.update({
+  //           Status: "Rejected"
+  //         });
+
+  //       } catch (error) {
+  //         Swal.fire(`'Error', 'Error Rejecting file 1', ${error}`);
+  //       }
+       
+  //     //  debugger
+ 
+  //         // try {
+  //         //   const updateddatagetitem=await sp.web.lists.getByTitle("DMSFileApprovalList").items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+  //         //   console.log(updateddatagetitem , "updateddatagetitem")
+  //         //   if (updateddatagetitem.length === 0) {
+  //         //     alert(`"No items found for the given FileUID:", filterData.FileUID.FileUID`);
+  //         //     console.log("No items found for the given FileUID:", filterData.FileUID.FileUID);
+  //         //     return;
+  //         //   }
+         
+  //         //   for(const item of updateddatagetitem){
+  //         //     const updateRejectstatus = await sp.web.lists
+  //         //     .getByTitle('DMSFileApprovalList')
+  //         //     .items.getById(item.Id).update({
+  //         //       ApproveAction : 'Rejected',
+  //         //       Status: 'Rejected',
+  //         //     })
+  //         //    console.log(updateRejectstatus , "updateRejectstatus")
+  //         // }
+         
+  //         // } catch (error) {
+  //         //   Swal.fire(`'Error', 'Error Rejecting file 2', 'error' : ${error}`);
+  //         // }
+ 
+  //       // debugger
+  //       getApprovalmasterTasklist();
+  //       Swal.fire('Success', 'File Rejected Successfully', 'success');
+ 
+  //         }catch{
+  //           console.log("Error Rejecting file");
+  //           Swal.fire('Error', 'Error Rejecting file', 'error');
+  //         }
+  //         getApprovalmasterTasklist();
+  //         getCurrrentuser()
+  //         Swal.fire('Success', 'File Rejected Successfully', 'success');
+
+  //   } else if (buttonText === "Rework") {
+  //     setFinalStatus = 'Rework'
+  //     payload = {
+  //       Log: setFinalStatus,
+  //       LogHistory: isoDate,
+  //       Remark: remark,
+  //       // ApprovedLevel:approvedLevel
+  //     }
+
+  //   }
+
+  //   console.log("payload for DMSFileApprovalTaskList", payload);
+
+  //   const updateddata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.getById(filterData.Id).update(payload);
+
+  //   console.log("Updated data", updateddata)
+  //   if (buttonText === "Rework") {
+  //     setFinalStatus = 'Rework'
+  //     // alert(`this is SiteName ${filterData.FileUID.SiteName}`)
+  //     // alert(`this is Filereqno ${filterData.FileUID.RequestNo}`)
+  //     const updateStatusinMaster = await sp.web.lists.getByTitle(`DMS${filterData.FileUID.SiteName}FileMaster`).items.filter(`RequestNo eq '${filterData.FileUID.RequestNo}'`)()
+  //     console.log(updateStatusinMaster, "updateStatusinMaster")
+  //     for (let item of updateStatusinMaster) {
+  //       item.Status = 'Rework';
+  //       await sp.web.lists.getByTitle(`DMS${filterData.FileUID.SiteName}FileMaster`).items.getById(item.ID).update({ Status: 'Rework' });
+  //     }
+  //     debugger
+  //     const getTaskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}' and LogHistory eq null`)
+  //       .select("*", "FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
+  //       .expand("FileUID", "MasterApproval")();
+
+  //     if (getTaskdata && getTaskdata.length > 0) {
+  //       console.log(getTaskdata, "getTaskdatagetTaskdata");
+  //       for (const item of getTaskdata) {
+  //         // alert(item.ID)
+  //         await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.getById(item.ID).delete();
+  //       }
+  //     } else {
+  //       console.log("No items found to delete.");
+  //     }
+  //   }
+
+  //   const data = await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID", "ApproveAction", "ApprovedLevel").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+
+  //   console.log("data ", data);
+  //   const id = data[0].Id;
+  //   if(buttonText === "Rework"){
+  //     const paylaodForDMSFileApprovalList = {
+  //       ApprovedLevel: Number(approvedLevel),
+  //       ApproveAction: "Submitted",
+  //       // Status:setFinalStatus,
+  //       FilePreviewUrl: filepreviewurl
+  //     }
+  //     console.log("paylaodForDMSFileApprovalList", paylaodForDMSFileApprovalList);
+  
+  //     const updateddata1 = await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(id).update(paylaodForDMSFileApprovalList);
+  
+  //     console.log("updateddata1", updateddata1);
+  //   }else{
+  //     const paylaodForDMSFileApprovalList = {
+  //       ApprovedLevel: Number(approvedLevel),
+  //       ApproveAction: payload.Log,
+  //       // Status:setFinalStatus,
+  //       FilePreviewUrl: filepreviewurl
+  //     }
+  //     console.log("paylaodForDMSFileApprovalList", paylaodForDMSFileApprovalList);
+  
+  //     const updateddata1 = await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(id).update(paylaodForDMSFileApprovalList);
+  
+  //     console.log("updateddata1", updateddata1);
+  //   }
+   
+
+  // }
+  const handleLogAndLogHistory=async(event:any)=>{
+    event.preventDefault(); 
     const buttonText = event.target.innerText || event.target.textContent;
     // const date =new Date();
     // const isoDate = date.toISOString();
     // console.log(isoDate);
-    const filterData = Mylistdata.find((item) => item.CurrentUser === currentUserEmailRef.current)
-    console.log("filtered data Level", filterData.MasterApproval.Level);
-    console.log("filterData id", filterData.FileUID.FileUID);
-    console.log("filterData Id", filterData.Id);
+    const filterData=Mylistdata.find((item)=> item.CurrentUser === currentUserEmailRef.current || item.CurrentUser === props.actingforuseremail);
+    console.log("filtered data Level",filterData.MasterApproval.Level);
+    console.log("filterData id",filterData.FileUID.FileUID);
+    console.log("filterData Id",filterData.Id);
 
     const isoDate = new Date().toISOString().slice(0, 19) + 'Z';
     // console.log(isoDate);
     // console.log("remark value",remark);
 
-    // check and Set FinalApproved
+      // check and Set FinalApproved
 
 
 
     let payload;
-    if (buttonText === "Approve") {
+    if(buttonText === "Approve"){
 
+      try{
 
-      const updatedData = await sp.web.lists.getByTitle("DMSFileApprovalList").items
-        .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel", "FilePreviewUrl")
-        .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
-        .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
-      console.log(updatedData, "updatedData")
-
-      if (updatedData && updatedData.length > 0) {
-        const mydat = updatedData[0]; // Assuming you want to compare using the first item's SiteName
-        filepreviewurl = mydat?.FilePreviewUrl
-        console.log(mydat?.FilePreviewUrl, "items,,,,")
-        approvedLevel = mydat.ApprovedLevel
-        // Step 3: Fetch data from the second list where SiteName matches
-        const updatedata2 = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
-          .filter(`SiteName eq '${mydat.SiteName}' and DocumentLibraryName eq '${mydat.DocumentLibraryName}' and Level eq ${mydat.ApprovedLevel}`)()
-          .catch((error: any) => console.error("Error fetching data from DMSFolderPermissionMaster:", error));
-
-        const getTaskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`)
-          .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
-          .expand("FileUID", "MasterApproval")()
-        console.log(getTaskdata, "getTaskdata")
-        console.log(updatedata2, "here is my data");
-
-        getTaskdata.forEach(item => {
-          console.log(item.CurrentUser, "CurrentUser")
-          // Step 1: Check if CurrentUser matches the stored user
-          if (item.CurrentUser === currentUserEmailRef.current) {
-            // Step 2: Check ApprovalType
-            if (item.MasterApproval.ApprovalType === 0) {
-              console.log(approvedLevel, "approvedLevel first in 0")
-              // If ApprovalType is 0, set state to 'done'
-              setApprovedStatus('Approved');
-              console.log("entere here in 0 for approval level", filterData.FileUID.FileUID, mydat.ApprovedLevel)
-              console.log("entere here in 0", ApprovedStatus)
-              approvedLevel = mydat.ApprovedLevel + 1
-              setFinalStatus = "Approved"
-              console.log(approvedLevel, "approvedLevel second in 1")
-            } else if (item.MasterApproval.ApprovalType === 1) {
-              // Step 3: If ApprovalType is 1, check the Log field
-              let nonNullLogCount = 0;
-              let totalItems = getTaskdata.length;
-
-              getTaskdata.forEach(logItem => {
-                if (logItem.Log !== null) {
-                  nonNullLogCount++;
-                }
-              });
-
-              // If more than 5 out of 6 Logs are not null, set 'approvalInProgress'
-              if (nonNullLogCount >= totalItems - 1) {
-                console.log(approvedLevel, "approvedLevel first in 1")
-                approvedLevel = mydat.ApprovedLevel + 1
-                setFinalStatus = "Approved"
-                setApprovedStatus('Approved');
-                console.log("entere here in 1 for approval level", filterData.FileUID.FileUID, mydat.ApprovedLevel + 1)
-                console.log("entere here in 1", ApprovedStatus)
-                console.log(approvedLevel, "approvedLevel second in 1")
-              }
-            }
-          }
+        const userConfirmed = await Swal.fire({
+          title: 'Are you sure?',
+          text: "Do you want to approve this File Request?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, approve it!',
+          cancelButtonText: 'No, cancel',
         });
-
-      } else {
-        console.log("No matching data found in DMSFileApprovalList.");
-      }
-      //start
-      try {
-        const updatedData1: any = await sp.web.lists.getByTitle("DMSFileApprovalList").items
-          .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel", "FilePreviewUrl")
-          .filter(`FileUID eq '${FileUID}'`)()
+    
+        if (!userConfirmed.isConfirmed) {
+          console.log("User canceled the action.");
+          return;
+        }
+    
+        if(props.actingforuseremail !== '' || props.actingforuseremail !== null || props.actingforuseremail !== undefined){
+          // alert(`here approved and ${props.actingforuseremail} acting for is null`)
+          const updatedData = await sp.web.lists.getByTitle("DMSFileApprovalList").items
+          .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel" , "FilePreviewUrl")
+          .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
           .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
-        console.log(updatedData1, "updatedData")
-
-
-        filepreviewurl = updatedData1[0]?.FilePreviewUrl;
-        Level = updatedData1[0].ApprovedLevel;
-        console.log(updatedData1[0], "DocumentLibraryName")
-
-        const getdatafromfoldermaster = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
-          .filter(`SiteName eq '${updatedData1[0].SiteName}' and DocumentLibraryName eq '${updatedData1[0].DocumentLibraryName}'`)()
-        console.log(getdatafromfoldermaster, "getdatafromfoldermaster")
-
-        let maxLevel = 0;
-        getdatafromfoldermaster.forEach((item) => {
-          if (item.Level >= maxLevel) {
-            maxLevel = item.Level;
-          }
-        })
-
-        console.log("MaxLevel ", maxLevel);
-
-        if (Level === maxLevel) {
-
-          const taskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`)
-            .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
-            .expand("FileUID", "MasterApproval")()
-
-          console.log("getData from DMSFileApprovalTaskList", taskdata);
-
-          taskdata.forEach(async (item) => {
-            if (item.CurrentUser === currentUserEmailRef.current) {
-
-              if (item.MasterApproval.ApprovalType === 0) {
-                setFinalStatus = "FinalApproved";
-                try {
-                  await sp.web.lists.getByTitle("DMSFileApprovalList").items
-                    .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
-                    .then(async (items) => {
-                      if (items.length > 0) {
-                        const itemId = items[0].Id; // Assuming one item per FileUID
-                        // alert(`${itemId} item id is 1`)
-                        await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
-                          Status: "Approved",
-                        });
-                        console.log("Updated DMSFileApprovalList with Approved status");
-                        // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
+          console.log(updatedData , "updatedData")
+          
+          if (updatedData && updatedData.length > 0) {
+            const mydat = updatedData[0]; // Assuming you want to compare using the first item's SiteName
+            filepreviewurl =  mydat?.FilePreviewUrl
+            console.log(mydat?.FilePreviewUrl , "items,,,,")
+            approvedLevel = mydat.ApprovedLevel
+            // Step 3: Fetch data from the second list where SiteName matches
+            const updatedata2 = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
+            .filter(`SiteName eq '${mydat.SiteName}' and DocumentLibraryName eq '${mydat.DocumentLibraryName}' and Level eq ${mydat.ApprovedLevel}`)()
+              .catch((error:any) => console.error("Error fetching data from DMSFolderPermissionMaster:", error));
+            
+              const getTaskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`) 
+              .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log") 
+              .expand("FileUID", "MasterApproval")()
+              console.log(getTaskdata ,"getTaskdata")
+            console.log(updatedata2 , "here is my data");
+           
+            getTaskdata.forEach(item => {
+              console.log(item.CurrentUser , "CurrentUser")
+                // Step 1: Check if CurrentUser matches the stored user
+                if (item.CurrentUser === currentUserEmailRef.current || item.CurrentUser === props.actingforuseremail) {
+                  // Step 2: Check ApprovalType
+                  if (item.MasterApproval.ApprovalType === 0) {
+                    console.log(approvedLevel, "approvedLevel first in 0")
+                    // If ApprovalType is 0, set state to 'done'
+                    setApprovedStatus('Approved');
+                    console.log("entere here in 0 for approval level" ,filterData.FileUID.FileUID , mydat.ApprovedLevel )
+                     console.log("entere here in 0" , ApprovedStatus)
+                     approvedLevel =mydat.ApprovedLevel+1
+                     setFinalStatus = "Approved"
+                     console.log(approvedLevel, "approvedLevel second in 1")
+                  } else if (item.MasterApproval.ApprovalType === 1) {
+                    // Step 3: If ApprovalType is 1, check the Log field
+                    let nonNullLogCount = 0;
+                    let totalItems = getTaskdata.length;
+        
+                    getTaskdata.forEach(logItem => {
+                      if (logItem.Log !== null) {
+                        nonNullLogCount++;
                       }
                     });
-                } catch (error) {
-                  console.log(error, "Error updating DMSFileApprovalList status");
-                }
-                try {
-                  // Update Column Status on Document library or folder
-                  // updatedData1[0].DocumentLibraryName
-                  // FileUID
-                  // New code start
-                  const siteName = updatedData1[0].SiteName
-                  // console.log("siteName",siteName);
-                  const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
-                  // console.log(subsite , "subsite");
-                  // console.log("subsite id",subsite[0].Id)
-
-                  const { web } = await sp.site.openWebById(subsite[0].Id)
-                  // end
-                  // get the details of the file present inside the document library
-                  const file = web.getFileById(filterData.FileUID.FileUID);
-                  const listItem = await file.getItem();
-                  const updatedData = await listItem.update({
-                    Status: "Approved"
-                  });
-                  console.log("updatedData", updatedData);
-                } catch (error) {
-                  console.log(error, "Error updating status column on Libray or Folder");
-                }
-
-
-              } else if (item.MasterApproval.ApprovalType === 1) {
-
-                let approvedUser = 0;
-                let numberOfUser = taskdata.length;
-
-                taskdata.forEach(logItem => {
-                  if (logItem.Log !== null) {
-                    approvedUser++;
+        
+                    // If more than 5 out of 6 Logs are not null, set 'approvalInProgress'
+                    if (nonNullLogCount >= totalItems - 1) {
+                      console.log(approvedLevel, "approvedLevel first in 1")
+                      approvedLevel =mydat.ApprovedLevel+1
+                      setFinalStatus = "Approved"
+                      setApprovedStatus('Approved');
+                      console.log("entere here in 1 for approval level" ,filterData.FileUID.FileUID , mydat.ApprovedLevel+1 )
+                      console.log("entere here in 1" , ApprovedStatus)
+                      console.log(approvedLevel, "approvedLevel second in 1")
+                    }else{
+                      // thhis i have added
+                        setFinalStatus = "Approved"
+                    }
                   }
-                });
-
-                if (approvedUser >= numberOfUser - 1) {
-                  setFinalStatus = "FinalApproved";
-                  try {
-                    await sp.web.lists.getByTitle("DMSFileApprovalList").items
-                      .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
-                      .then(async (items) => {
-                        if (items.length > 0) {
-                          const itemId = items[0].Id; // Assuming one item per FileUID
-                          // alert(`${itemId} item id is 2`)
-                          await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
-                            Status: "Approved",
-                          });
-                          console.log("Updated DMSFileApprovalList with Approved status");
-                          // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
-                        }
-                      });
-                  } catch (error) {
-                    console.log(error, "Error updating DMSFileApprovalList status");
-                  }
-                  try {
-                    // Update Column Status on Document library or folder
-                    // updatedData1[0].DocumentLibraryName
-                    // FileUID
-                    // New code start
-                    const siteName = updatedData1[0].SiteName
-                    // console.log("siteName",siteName);
-                    const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
-                    // console.log(subsite , "subsite");
-                    // console.log("subsite id",subsite[0].Id)
-
-                    const { web } = await sp.site.openWebById(subsite[0].Id)
-                    // end
-                    // get the details of the file present inside the document library
-                    const file = web.getFileById(filterData.FileUID.FileUID);
-                    const listItem = await file.getItem();
-                    const updatedData = await listItem.update({
-                      Status: "Approved"
-                    });
-                    console.log("updatedData", updatedData);
-                  } catch (error) {
-                    console.log(error, "Error updating status column on Libray or Folder");
-                  }
-
                 }
-
-              }
-            }
-
-          })
-
-        } else {
-          setFinalStatus = "Approved";
-          console.log("Level is not equal to max level", Level);
-          console.log("FinalStatus", setFinalStatus);
-
-
+              });
+            
+          } else {
+            console.log("No matching data found in DMSFileApprovalList."); 
+          }
+           //start
+  try {
+    const updatedData1:any = await sp.web.lists.getByTitle("DMSFileApprovalList").items
+    .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel" , "FilePreviewUrl")
+    .filter(`FileUID eq '${FileUID}'`)()
+    .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
+    console.log(updatedData1 , "updatedData")
+  
+  
+      filepreviewurl = updatedData1[0]?.FilePreviewUrl;
+      Level = updatedData1[0].ApprovedLevel;
+      console.log(updatedData1[0] , "DocumentLibraryName")
+  
+      const getdatafromfoldermaster = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
+      .filter(`SiteName eq '${updatedData1[0].SiteName}' and DocumentLibraryName eq '${updatedData1[0].DocumentLibraryName}'`)()
+      console.log(getdatafromfoldermaster , "getdatafromfoldermaster")
+     
+      let maxLevel=0;
+      getdatafromfoldermaster.forEach((item)=>{
+        if(item.Level >= maxLevel){
+          maxLevel=item.Level;
         }
+      })
+  
+      console.log("MaxLevel ",maxLevel);
+  
+      if(Level === maxLevel){
+  
+        const taskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`)
+        .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
+        .expand("FileUID", "MasterApproval")()
+  
+        console.log("getData from DMSFileApprovalTaskList",taskdata);
+  
+        taskdata.forEach(async (item)=>{
+          if(item.CurrentUser === currentUserEmailRef.current || item.CurrentUser === props.actingforuseremail){
+  
+                if(item.MasterApproval.ApprovalType === 0){
+                      setFinalStatus="FinalApproved";
+                      try {
+                        await sp.web.lists.getByTitle("DMSFileApprovalList").items
+                        .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+                        .then(async (items) => {
+                            if (items.length > 0) {
+                                const itemId = items[0].Id; // Assuming one item per FileUID
+                                // alert(`${itemId} item id is 1`)
+                                await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
+                                    Status: "Approved",
+                                });
+                                console.log("Updated DMSFileApprovalList with Approved status");
+                                // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
+                            }
+                        });
+                        
+                      } catch (error) {
+                         console.log(error , "Error updating DMSFileApprovalList status");
+                      }
+                      try {
+                        // Update Column Status on Document library or folder
+                        // updatedData1[0].DocumentLibraryName
+                        // FileUID
+                        // New code start
+                        const siteName=updatedData1[0].SiteName
+                       // console.log("siteName",siteName);
+                       const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
+                       // console.log(subsite , "subsite");
+                       // console.log("subsite id",subsite[0].Id)
+                
+                        const {web} = await sp.site.openWebById(subsite[0].Id)
+                       // end
+                       // get the details of the file present inside the document library
+                       const file=  web.getFileById(filterData.FileUID.FileUID);
+                       const listItem = await file.getItem();        
+                       const updatedData =await listItem.update({
+                         Status:"Approved"  
+                       });
+                       console.log("updatedData",updatedData);
+                      } catch (error) {
+                        console.log(error , "Error updating status column on Libray or Folder");
+                      }
 
-      } catch (error) {
-        console.error("Error fetching list items:", error);
-      }
-      // end
+                     try {
+                      const data=await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID","ApproveAction","ApprovedLevel" , "SiteName").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+                      debugger
+                      console.log("data ",data);
+                 
+                      const id=data[0].Id;
+                      // alert(` here is item id ${id} `)
+                      const filemasterlist = data[0].SiteName;
+           
+                      const updateApprovedStatusstatus = await sp.web.lists
+                    .getByTitle(`DMS${filemasterlist}FileMaster`)
+                    .items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+                      
+                    for (const item of updateApprovedStatusstatus) {
+                      await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(item.Id).update({
+                        Status: "Approved",
+                      });
+                      console.log(`Item with ID ${item.Id} updated successfully.`);
+                    }
+                     } catch (error) {
+                      console.log(`error in updateting file master list`,error);
+                     }
+                    
+                }else if(item.MasterApproval.ApprovalType === 1){
+  
+                    let approvedUser=0;
+                    let numberOfUser=taskdata.length;
+  
+                    taskdata.forEach(logItem => {
+                      if (logItem.Log !== null) {
+                        approvedUser++;
+                      }
+                    });
+  
+                    if(approvedUser >= numberOfUser - 1){
+                          setFinalStatus="FinalApproved";
+                          try {
+                            await sp.web.lists.getByTitle("DMSFileApprovalList").items
+                            .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+                            .then(async (items) => {
+                                if (items.length > 0) {
+                                    const itemId = items[0].Id; // Assuming one item per FileUID
+                                    // alert(`${itemId} item id is 2`)
+                                    await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
+                                        Status: "Approved",
+                                    });
+                                    console.log("Updated DMSFileApprovalList with Approved status");
+                                    // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
+                                }
+                            });
+                          } catch (error) {
+                             console.log(error , "Error updating DMSFileApprovalList status");
+                          }
+                          try {
+                            // Update Column Status on Document library or folder
+                            // updatedData1[0].DocumentLibraryName
+                            // FileUID
+                            // New code start
+                            const siteName=updatedData1[0].SiteName
+                           // console.log("siteName",siteName);
+                           const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
+                           // console.log(subsite , "subsite");
+                           // console.log("subsite id",subsite[0].Id)
+                    
+                            const {web} = await sp.site.openWebById(subsite[0].Id)
+                           // end
+                           // get the details of the file present inside the document library
+                           const file=  web.getFileById(filterData.FileUID.FileUID);
+                           const listItem = await file.getItem();        
+                           const updatedData =await listItem.update({
+                             Status:"Approved"  
+                           });
+                           console.log("updatedData",updatedData);
+                          } catch (error) {
+                            console.log(error , "Error updating status column on Libray or Folder");
+                          }
 
-      payload = {
-        Log: setFinalStatus,
-        LogHistory: isoDate,
-        Remark: remark,
-        // ApprovedLevel:approvedLevel
+                          try {
+                            const data=await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID","ApproveAction","ApprovedLevel" , "SiteName").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+                            debugger
+                            console.log("data ",data);
+                       
+                            const id=data[0].Id;
+                            // alert(` here is item id ${id} `)
+                            const filemasterlist = data[0].SiteName;
+                 
+                            const updateApprovedStatusstatus = await sp.web.lists
+                          .getByTitle(`DMS${filemasterlist}FileMaster`)
+                          .items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+                            
+                          for (const item of updateApprovedStatusstatus) {
+                            await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(item.Id).update({
+                              Status: "Approved",
+                            });
+                            console.log(`Item with ID ${item.Id} updated successfully.`);
+                          }
+                           } catch (error) {
+                            console.log(`error in updateting file master list`,error);
+                           }
+  
+                    }
+  
+                }
+          }
+         
+        })
+  
+      }else{
+        setFinalStatus="Approved";
+        console.log("Level is not equal to max level",Level);
+        console.log("FinalStatus",setFinalStatus);
+  
+  
       }
+  
+  } catch (error) {
+    console.error("Error fetching list items:", error);
+  }
+  // end
+              
+            payload={
+                Log:setFinalStatus,
+                LogHistory:isoDate,
+                Remark:remark,
+                // ApprovedLevel:approvedLevel
+            }
+        }else{
+          // alert(`here approved and ${props.actingforuseremail} acting for is not null`)
+          const updatedData = await sp.web.lists.getByTitle("DMSFileApprovalList").items
+          .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel" , "FilePreviewUrl")
+          .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+          .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
+          console.log(updatedData , "updatedData")
+          
+          if (updatedData && updatedData.length > 0) {
+            const mydat = updatedData[0]; // Assuming you want to compare using the first item's SiteName
+            filepreviewurl =  mydat?.FilePreviewUrl
+            console.log(mydat?.FilePreviewUrl , "items,,,,")
+            approvedLevel = mydat.ApprovedLevel
+            // Step 3: Fetch data from the second list where SiteName matches
+            const updatedata2 = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
+            .filter(`SiteName eq '${mydat.SiteName}' and DocumentLibraryName eq '${mydat.DocumentLibraryName}' and Level eq ${mydat.ApprovedLevel}`)()
+              .catch((error:any) => console.error("Error fetching data from DMSFolderPermissionMaster:", error));
+            
+              const getTaskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`) 
+              .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log") 
+              .expand("FileUID", "MasterApproval")()
+              console.log(getTaskdata ,"getTaskdata")
+            console.log(updatedata2 , "here is my data");
+           
+            getTaskdata.forEach(item => {
+              console.log(item.CurrentUser , "CurrentUser")
+                // Step 1: Check if CurrentUser matches the stored user
+                if (item.CurrentUser === currentUserEmailRef.current || item.CurrentUser === props.actingforuseremail) {
+                  // Step 2: Check ApprovalType
+                  if (item.MasterApproval.ApprovalType === 0) {
+                    console.log(approvedLevel, "approvedLevel first in 0")
+                    // If ApprovalType is 0, set state to 'done'
+                    setApprovedStatus('Approved');
+                    console.log("entere here in 0 for approval level" ,filterData.FileUID.FileUID , mydat.ApprovedLevel )
+                     console.log("entere here in 0" , ApprovedStatus)
+                     approvedLevel =mydat.ApprovedLevel+1
+                     setFinalStatus = "Approved"
+                     console.log(approvedLevel, "approvedLevel second in 1")
+                  } else if (item.MasterApproval.ApprovalType === 1) {
+                    // Step 3: If ApprovalType is 1, check the Log field
+                    let nonNullLogCount = 0;
+                    let totalItems = getTaskdata.length;
+        
+                    getTaskdata.forEach(logItem => {
+                      if (logItem.Log !== null) {
+                        nonNullLogCount++;
+                      }
+                    });
+        
+                    // If more than 5 out of 6 Logs are not null, set 'approvalInProgress'
+                    if (nonNullLogCount >= totalItems - 1) {
+                      console.log(approvedLevel, "approvedLevel first in 1")
+                      approvedLevel =mydat.ApprovedLevel+1
+                      setFinalStatus = "Approved"
+                      setApprovedStatus('Approved');
+                      console.log("entere here in 1 for approval level" ,filterData.FileUID.FileUID , mydat.ApprovedLevel+1 )
+                      console.log("entere here in 1" , ApprovedStatus)
+                      console.log(approvedLevel, "approvedLevel second in 1")
+                    }else{
+                      // thhis i have added
+                        setFinalStatus = "Approved"
+                    }
+                  }
+                }
+              });
+            
+          } else {
+            console.log("No matching data found in DMSFileApprovalList."); 
+          }
+           //start
+  try {
+    const updatedData1:any = await sp.web.lists.getByTitle("DMSFileApprovalList").items
+    .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel" , "FilePreviewUrl")
+    .filter(`FileUID eq '${FileUID}'`)()
+    .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
+    console.log(updatedData1 , "updatedData")
+  
+  
+      filepreviewurl = updatedData1[0]?.FilePreviewUrl;
+      Level = updatedData1[0].ApprovedLevel;
+      console.log(updatedData1[0] , "DocumentLibraryName")
+  
+      const getdatafromfoldermaster = await sp.web.lists.getByTitle("DMSFolderPermissionMaster").items
+      .filter(`SiteName eq '${updatedData1[0].SiteName}' and DocumentLibraryName eq '${updatedData1[0].DocumentLibraryName}'`)()
+      console.log(getdatafromfoldermaster , "getdatafromfoldermaster")
+     
+      let maxLevel=0;
+      getdatafromfoldermaster.forEach((item)=>{
+        if(item.Level >= maxLevel){
+          maxLevel=item.Level;
+        }
+      })
+  
+      console.log("MaxLevel ",maxLevel);
+  
+      if(Level === maxLevel){
+  
+        const taskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}'`)
+        .select("FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
+        .expand("FileUID", "MasterApproval")()
+  
+        console.log("getData from DMSFileApprovalTaskList",taskdata);
+  
+        taskdata.forEach(async (item)=>{
+          if(item.CurrentUser === currentUserEmailRef.current || item.CurrentUser === props.actingforuseremail){
+  
+                if(item.MasterApproval.ApprovalType === 0){
+                      setFinalStatus="FinalApproved";
+                      try {
+                        await sp.web.lists.getByTitle("DMSFileApprovalList").items
+                        .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+                        .then(async (items) => {
+                            if (items.length > 0) {
+                                const itemId = items[0].Id; // Assuming one item per FileUID
+                                // alert(`${itemId} item id is 1`)
+                                await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
+                                    Status: "Approved",
+                                });
+                                console.log("Updated DMSFileApprovalList with Approved status");
+                                // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
+                            }
+                        });
+                        
+                      } catch (error) {
+                         console.log(error , "Error updating DMSFileApprovalList status");
+                      }
+                      try {
+                        // Update Column Status on Document library or folder
+                        // updatedData1[0].DocumentLibraryName
+                        // FileUID
+                        // New code start
+                        const siteName=updatedData1[0].SiteName
+                       // console.log("siteName",siteName);
+                       const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
+                       // console.log(subsite , "subsite");
+                       // console.log("subsite id",subsite[0].Id)
+                
+                        const {web} = await sp.site.openWebById(subsite[0].Id)
+                       // end
+                       // get the details of the file present inside the document library
+                       const file=  web.getFileById(filterData.FileUID.FileUID);
+                       const listItem = await file.getItem();        
+                       const updatedData =await listItem.update({
+                         Status:"Approved"  
+                       });
+                       console.log("updatedData",updatedData);
+                      } catch (error) {
+                        console.log(error , "Error updating status column on Libray or Folder");
+                      }
+                     
+                      try {
+                        const data=await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID","ApproveAction","ApprovedLevel" , "SiteName").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+                        debugger
+                        console.log("data ",data);
+                   
+                        const id=data[0].Id;
+                        // alert(` here is item id ${id} `)
+                        const filemasterlist = data[0].SiteName;
+             
+                        const updateApprovedStatusstatus = await sp.web.lists
+                      .getByTitle(`DMS${filemasterlist}FileMaster`)
+                      .items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+                        
+                      for (const item of updateApprovedStatusstatus) {
+                        await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(item.Id).update({
+                          Status: "Approved",
+                        });
+                        console.log(`Item with ID ${item.Id} updated successfully.`);
+                      }
+                       } catch (error) {
+                        console.log(`error in updateting file master list`,error);
+                       }
+                    
+                }else if(item.MasterApproval.ApprovalType === 1){
+  
+                    let approvedUser=0;
+                    let numberOfUser=taskdata.length;
+  
+                    taskdata.forEach(logItem => {
+                      if (logItem.Log !== null) {
+                        approvedUser++;
+                      }
+                    });
+  
+                    if(approvedUser >= numberOfUser - 1){
+                          setFinalStatus="FinalApproved";
+                          try {
+                            await sp.web.lists.getByTitle("DMSFileApprovalList").items
+                            .filter(`FileUID eq '${filterData.FileUID.FileUID}'`)()
+                            .then(async (items) => {
+                                if (items.length > 0) {
+                                    const itemId = items[0].Id; // Assuming one item per FileUID
+                                    // alert(`${itemId} item id is 2`)
+                                    await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(itemId).update({
+                                        Status: "Approved",
+                                    });
+                                    console.log("Updated DMSFileApprovalList with Approved status");
+                                    // alert(`${itemId} Updated DMSFileApprovalList with Approved status`)
+                                }
+                            });
+                          } catch (error) {
+                             console.log(error , "Error updating DMSFileApprovalList status");
+                          }
+                          try {
+                            // Update Column Status on Document library or folder
+                            // updatedData1[0].DocumentLibraryName
+                            // FileUID
+                            // New code start
+                            const siteName=updatedData1[0].SiteName
+                           // console.log("siteName",siteName);
+                           const subsite = await sp.web.webs.filter(`Title eq '${siteName}'`)();
+                           // console.log(subsite , "subsite");
+                           // console.log("subsite id",subsite[0].Id)
+                    
+                            const {web} = await sp.site.openWebById(subsite[0].Id)
+                           // end
+                           // get the details of the file present inside the document library
+                           const file=  web.getFileById(filterData.FileUID.FileUID);
+                           const listItem = await file.getItem();        
+                           const updatedData =await listItem.update({
+                             Status:"Approved"  
+                           });
+                           console.log("updatedData",updatedData);
+                          } catch (error) {
+                            console.log(error , "Error updating status column on Libray or Folder");
+                          }
+                          
+                          try {
+                            const data=await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID","ApproveAction","ApprovedLevel" , "SiteName").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+                            debugger
+                            console.log("data ",data);
+                       
+                            const id=data[0].Id;
+                            // alert(` here is item id ${id} `)
+                            const filemasterlist = data[0].SiteName;
+                 
+                            const updateApprovedStatusstatus = await sp.web.lists
+                          .getByTitle(`DMS${filemasterlist}FileMaster`)
+                          .items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+                            
+                          for (const item of updateApprovedStatusstatus) {
+                            await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(item.Id).update({
+                              Status: "Approved",
+                            });
+                            console.log(`Item with ID ${item.Id} updated successfully.`);
+                          }
+                           } catch (error) {
+                            console.log(`error in updateting file master list`,error);
+                           }
+                    }
+  
+                }
+          }
+         
+        })
+  
+      }else{
+        setFinalStatus="Approved";
+        console.log("Level is not equal to max level",Level);
+        console.log("FinalStatus",setFinalStatus);
+  
+  
+      }
+     
+  
+  } catch (error) {
+    console.error("Error fetching list items:", error);
+  }
+  // end
+              
+            payload={
+                Log:setFinalStatus,
+                LogHistory:isoDate,
+                Remark:remark,
+                // ApprovedLevel:approvedLevel
+            }
+        }
+        // getApprovalmasterTasklist();
+        // Swal.fire('Success', 'File Approved Successfully', 'success');
+      }catch{
+          console.log("Error Approving file");
+          Swal.fire('Error', 'Error Approving file', 'error');
+      } 
+      setToggleLog(false);
+      getApprovalmasterTasklist();
+      getCurrrentuser()
+      Swal.fire('Success', 'File Approved Successfully', 'success');
+  
     }
-    else if (buttonText === "Reject") {
+
+    // here is reject case
+    else if(buttonText === "Reject"){
       setFinalStatus = 'Rejected'
-      payload = {
-        Log: setFinalStatus,
-        LogHistory: isoDate,
-        Remark: remark,
-        // ApprovedLevel:approvedLevel
+      try{
+        const userConfirmed = await Swal.fire({
+          title: 'Are you sure?',
+          text: "Do you want to Reject this File Request?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, approve it!',
+          cancelButtonText: 'No, cancel',
+        });
+    
+        if (!userConfirmed.isConfirmed) {
+          console.log("User canceled the action.");
+          return;
+        }
+        setFinalStatus = 'Rejected'
+        payload={
+            Log:setFinalStatus,
+            LogHistory:isoDate,
+            Remark:remark,
+            // ApprovedLevel:approvedLevel
+        }
+        const data=await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID","ApproveAction","ApprovedLevel" , "SiteName").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+        debugger
+     console.log("data ",data);
+   
+    const id=data[0].Id; 
+    // alert(` here is item id ${id} `)
+    const filemasterlist = data[0].SiteName;
+    // alert(` here is master list  ${filemasterlist} `)
+    approvedLevel= data[0].ApprovedLevel
+    // alert(` here is approved level ${approvedLevel} : type ${typeof(approvedLevel)}`)
+    debugger
+    try {
+      // const updateRejectstatus1 = await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(id).update({ Status: 'Rejected' }); 
+      // console.log("updateRejectstatus",updateRejectstatus1);
+      const updateRejectstatus = await sp.web.lists
+      .getByTitle(`DMS${filemasterlist}FileMaster`)
+      .items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+  
+    if (updateRejectstatus.length === 0) {
+      console.log("No items found for the given FileUID:", filterData.FileUID.FileUID);
+      return;
+    }
+  
+    // Update the 'Status' column for each filtered item
+    for (const item of updateRejectstatus) {
+      await sp.web.lists.getByTitle(`DMS${filemasterlist}FileMaster`).items.getById(item.Id).update({
+        Status: "Rejected",
+      });
+
+      const subsite = await sp.web.webs.filter(`Title eq '${filemasterlist}'`)();
+      // console.log(subsite , "subsite");
+      // console.log("subsite id",subsite[0].Id)
+
+       const {web} = await sp.site.openWebById(subsite[0].Id)
+      // end
+      // get the details of the file present inside the document library
+      const file=  web.getFileById(filterData.FileUID.FileUID);
+      const listItem = await file.getItem();        
+      const updatedData =await listItem.update({
+        Status:"Rejected"  
+      });
+      console.log(`Item with ID ${item.Id} updated successfully.`);
+    }
+  
+
+    } catch (error) {
+      Swal.fire(`'Error', 'Error Rejecting file 1', ${error}`);
+    }
+   
+   debugger
+
+      // try {
+      //   const updateddatagetitem=await sp.web.lists.getByTitle("DMSFileApprovalList").items.filter(`FileUID eq '${filterData.FileUID.FileUID}'`)();
+      //   console.log(updateddatagetitem , "updateddatagetitem")
+      //   if (updateddatagetitem.length === 0) {
+      //     alert(`"No items found for the given FileUID:", filterData.FileUID.FileUID`);
+      //     console.log("No items found for the given FileUID:", filterData.FileUID.FileUID);
+      //     return;
+      //   }
+      
+      //   for(const item of updateddatagetitem){
+      //     const updateRejectstatus = await sp.web.lists
+      //     .getByTitle('DMSFileApprovalList')
+      //     .items.getById(item.Id).update({
+      //       ApproveAction : 'Rejected',
+      //       Status: 'Rejected',
+      //     })
+      //    console.log(updateRejectstatus , "updateRejectstatus")
+      // } 
+      
+      // } catch (error) {
+      //   Swal.fire(`'Error', 'Error Rejecting file 2', 'error' : ${error}`);
+      // }
+
+    debugger
+    setToggleLog(false);
+    getApprovalmasterTasklist();
+
+    Swal.fire('Success', 'File Rejected Successfully', 'success');
+
+      }catch{
+        console.log("Error Rejecting file");
+        Swal.fire('Error', 'Error Rejecting file', 'error');
       }
-    } else if (buttonText === "Rework") {
-      setFinalStatus = 'Rework'
-      payload = {
-        Log: setFinalStatus,
-        LogHistory: isoDate,
-        Remark: remark,
-        // ApprovedLevel:approvedLevel
-      }
+      setToggleLog(false);
+      getApprovalmasterTasklist();
+      getCurrrentuser()
+      Swal.fire('Success', 'File Approved Successfully', 'success');
 
     }
+    else if(buttonText === "Rework"){
+      try {
+        const userConfirmed = await Swal.fire({
+          title: 'Are you sure?',
+          text: "Do you want to Rework this File Request?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, rework it!',
+          cancelButtonText: 'No, cancel',
+        });
+    
+        if (!userConfirmed.isConfirmed) {
+          console.log("User canceled the action.");
+          return;
+        }
+        setFinalStatus = 'Rework'
+        payload={
+            Log:setFinalStatus,
+            LogHistory:isoDate,
+            Remark:remark,
+            // ApprovedLevel:approvedLevel
+        }
+        setToggleLog(false);
+        getApprovalmasterTasklist();
+        Swal.fire('Success', 'File Rework Successfully', 'success');
+      } catch (error) {
+        console.log("Error Reworking file");
+        Swal.fire('Error', 'Error Reworking file', 'error');
+      }
+  
+      
+    }
 
-    console.log("payload for DMSFileApprovalTaskList", payload);
-
-    const updateddata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.getById(filterData.Id).update(payload);
-
-    console.log("Updated data", updateddata)
-    if (buttonText === "Rework") {
+    console.log("payload for DMSFileApprovalTaskList",payload);
+    
+    const updateddata=await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.getById(filterData.Id).update(payload);
+    
+    console.log("Updated data",updateddata)
+    if(buttonText === "Rework"){
       setFinalStatus = 'Rework'
       // alert(`this is SiteName ${filterData.FileUID.SiteName}`)
       // alert(`this is Filereqno ${filterData.FileUID.RequestNo}`)
       const updateStatusinMaster = await sp.web.lists.getByTitle(`DMS${filterData.FileUID.SiteName}FileMaster`).items.filter(`RequestNo eq '${filterData.FileUID.RequestNo}'`)()
-      console.log(updateStatusinMaster, "updateStatusinMaster")
-      for (let item of updateStatusinMaster) {
-        item.Status = 'Rework';
-        await sp.web.lists.getByTitle(`DMS${filterData.FileUID.SiteName}FileMaster`).items.getById(item.ID).update({ Status: 'Rework' });
+      console.log(updateStatusinMaster , "updateStatusinMaster")
+      for (let item of updateStatusinMaster) { 
+        item.Status = 'Rework'; 
+        await sp.web.lists.getByTitle(`DMS${filterData.FileUID.SiteName}FileMaster`).items.getById(item.ID).update({ Status: 'Rework' }); 
       }
       debugger
-      const getTaskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}' and Log eq null`)
-        .select("*", "FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log")
-        .expand("FileUID", "MasterApproval")();
-
-      if (getTaskdata && getTaskdata.length > 0) {
-        console.log(getTaskdata, "getTaskdatagetTaskdata");
-        for (const item of getTaskdata) {
-          // alert(item.ID)
+      const getTaskdata = await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.filter(`FileUID/FileUID eq '${filterData.FileUID.FileUID}' and LogHistory eq null`) 
+      .select("*", "FileUID/FileUID", "MasterApproval/ApprovalType", "CurrentUser", "Log") 
+      .expand("FileUID", "MasterApproval")();
+     
+  if (getTaskdata && getTaskdata.length > 0) {
+      console.log(getTaskdata, "getTaskdatagetTaskdata");
+      for (const item of getTaskdata) {
+        // alert(item.ID)
           await sp.web.lists.getByTitle("DMSFileApprovalTaskList").items.getById(item.ID).delete();
-        }
-      } else {
-        console.log("No items found to delete.");
       }
-    }
-
-    const data = await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID", "ApproveAction", "ApprovedLevel").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
-
-    console.log("data ", data);
-    const id = data[0].Id;
-
-    const paylaodForDMSFileApprovalList = {
-      ApprovedLevel: approvedLevel,
-      ApproveAction: payload.Log,
-      // Status:setFinalStatus,
-      FilePreviewUrl: filepreviewurl
-    }
-
-    console.log("paylaodForDMSFileApprovalList", paylaodForDMSFileApprovalList);
-
-    const updateddata1 = await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(id).update(paylaodForDMSFileApprovalList);
-
-    console.log("updateddata1", updateddata1);
-
+  } else {
+      console.log("No items found to delete.");
   }
+    }
+
+    const data=await sp.web.lists.getByTitle('DMSFileApprovalList').items.select("ID","ApproveAction","ApprovedLevel").filter(` FileUID eq '${filterData.FileUID.FileUID}'`)();
+
+    console.log("data ",data);
+    const id=data[0].Id;
+      if(buttonText === "Rework"){
+      const paylaodForDMSFileApprovalList = {
+        ApprovedLevel: Number(approvedLevel),
+        ApproveAction: "Submitted",
+        // Status:setFinalStatus,
+        FilePreviewUrl: filepreviewurl
+      }
+      console.log("paylaodForDMSFileApprovalList", paylaodForDMSFileApprovalList);
+  
+      const updateddata1 = await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(id).update(paylaodForDMSFileApprovalList);
+  
+      console.log("updateddata1", updateddata1);
+    }else{
+      const paylaodForDMSFileApprovalList = {
+        ApprovedLevel: Number(approvedLevel),
+        ApproveAction: payload.Log,
+        // Status:setFinalStatus,
+        FilePreviewUrl: filepreviewurl
+      }
+      console.log("paylaodForDMSFileApprovalList", paylaodForDMSFileApprovalList);
+  
+      const updateddata1 = await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(id).update(paylaodForDMSFileApprovalList);
+  
+      console.log("updateddata1", updateddata1);
+    }
+
+    setToggleLog(false);
+    getApprovalmasterTasklist();
+    getCurrrentuser()
+    // const paylaodForDMSFileApprovalList={
+    //   ApprovedLevel:Number(approvedLevel),
+    //   ApproveAction:payload.Log,
+    //   // Status:setFinalStatus,
+    //     FilePreviewUrl: filepreviewurl 
+    // }
+    //  alert(`here is ${payload.Log} : log history ${payload.LogHistory} : paylaod.remark ${payload.Remark}`)
+    // console.log("paylaodForDMSFileApprovalList",paylaodForDMSFileApprovalList);
+
+    // const updateddata1=await sp.web.lists.getByTitle("DMSFileApprovalList").items.getById(id).update(paylaodForDMSFileApprovalList);
+
+    // console.log("updateddata1",updateddata1);
+   
+}
   const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
   // const spinner = document.getElementById("spinner") as HTMLElement;
 
@@ -998,7 +1952,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
                                   </td>
                                   <td style={{ minWidth: '150px', maxWidth: '150px' }}>
 
-                                    {item?.Modified}
+                                    {moment(item?.LogHistory).format("DD-MMM-YYYY")}
 
 
                                   </td>
@@ -1008,8 +1962,8 @@ const DMSMyApprovalAction = ({ props }: any) => {
                                     {item.Remark}
                                   </td>
                                   <td style={{ minWidth: '70px', maxWidth: '70px', textAlign: 'center' }}>
-                                    {/* <div className="finish mb-0"></div> */}
-                                    <div className="finish mb-0">  {item.FileUID.Status} </div>
+                                    {/* <div className="finish mb-0"></div>{item.FileUID.Status} */}
+                                    <div className="finish mb-0">  {item.Log !=""?item.Log :"Pending" } </div>
                                   </td>
                                 </tr>
                               )

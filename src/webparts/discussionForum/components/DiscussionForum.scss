@@ -12,7 +12,7 @@ table th .inputcss {
   z-index: 9;
 }
 .floatleft{float: left;}
-.fontclssnew{float: left; padding: 7px;}
+.fontclssnew{float: left; padding: 7px; width: 90px; text-overflow: ellipsis; overflow: hidden; white-space:nowrap; }
 #cardCollpase4 .mtable {
   margin-top: 0px !important;
 }

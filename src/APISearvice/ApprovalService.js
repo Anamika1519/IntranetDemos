@@ -1,4 +1,10 @@
 import Swal from 'sweetalert2';
+import { getSP } from '../webparts/addBusinessApp/loc/pnpjsConfig';
+import { SPFI } from '@pnp/sp';
+import { Web } from "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+const sp = getSP();
 export const getLevel = async (sp) => {
   let arr = []
   await sp.web.lists.getByTitle("ARGLevelMaster").items.select("Level,Id").getAll().then((res) => {
@@ -87,52 +93,140 @@ export const UpdateContentMaster = async (sp, contentmasteritemid, itemData) => 
 }
 
 //My request
+export const getListDataFromSiteCollection = async (_sp, listName, status, portal, SiteBaseURL) => {
+  // Setup PnPJs for a specific site collection URL
+  let arr = [];
+  console.log("sdsssss", sp, _sp)
+  debugger
+  let apiUrl;
+  let FinalStatus = "";
+  if (status == "Pending") {
+    FinalStatus = "Not Started"
+  } else if (status == "Approved") {
+    FinalStatus = "Completed"
+  }
+    let currentUser;
+    await _sp.web.currentUser()
+      .then(user => {
+        console.log("user", user);
+        currentUser = user.Email; // Get the current user's Email
+      })
+      .catch(error => {
+        console.error("Error fetching current user: ", error);
+        return [];
+      });
+    if (!currentUser) return arr; // Return empty array if user fetch failed
+    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Requestor_x0020_Name/ID,Requestor_x0020_Name/Title,Requestor_x0020_Name/EMail&$expand=Requestor_x0020_Name&$filter=${`Requestor_x0020_Name/EMail eq 'Taha.Ahmed@alrostamanigroup.ae' and WFStatus eq '${FinalStatus}'`}`;
+  
+
+  try {
+    console.log("apiUrlapiUrl", apiUrl);
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    // Wait for the response to be converted to JSON
+    const data = await response.json();
+    // Immediately handle data
+    console.log('List Items ellllllllnew:', data.value);
+    // You can now manipulate or return the data as needed
+    if (data.value.length > 0) {
+      arr = data.value;
+    } else {
+      arr = []
+    }
+    return arr;  // Directly returning the array if needed
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+export const getDataFromMultipleSites = async (_sp, listName, status,  portal, SiteBaseURL) => {
+  const allData = [];
+  const siteUrls = [
+    SiteBaseURL
+  ];
+  // Loop through each site collection URL and fetch data
+  for (const siteUrl of siteUrls) {
+    const data = await getListDataFromSiteCollection(_sp, listName, status,  portal, siteUrl);
+    allData.push(...data);
+    console.log("dadadadadad",data);
+  }
+  console.log('Combined data from all site collections:', allData);
+  return allData;
+}
 
 export const getRequestListsData = async (_sp, status) => {
-
   let arr = []
-
   let Status = status == "Pending" ? "Submitted" : status;
   await _sp.web.lists.getByTitle("AllRequestLists").items.orderBy("Created", false).getAll()
-
-    .then((res) => {
-
+    .then(async (res) => {
       console.log("AllRequestLists", res);
-
       let AllRequestArr = [];
-
-
       for (let i = 0; i < res.length; i++) {
-
-        getMyRequestsdata(_sp, res[i].Title, Status).then((resData) => {
-
-          for (let j = 0; j < resData.length; j++) {
-
-            AllRequestArr.push(resData[j])
-
-          }
-
-
-        })
-
+        if (res[i].RedirectionLinkSource == "Others" && res[i].Portal == "Others") {
+          //alert("othererrr")
+          await getDataFromMultipleSites(_sp, res[i].Title, status,  res[i].RedirectionLinkSource, res[i].SiteBaseURL)
+            .then((resData) => {
+              if (resData && resData.length > 0) {
+                for (let j = 0; j < resData.length; j++) {
+                  AllRequestArr.push({
+                    ID: resData[j].ID,
+                    RequestID: resData[j].ID,
+                    ApprovalTitle: resData[j].Title,
+                    Author: resData[j].Requestor_x0020_Name,
+                    ProcessName: res[i].ProcessName,
+                    Created: resData[j].Created,
+                    Status: resData[j].TaskStatus,
+                    TaskID: resData[j].MasterID,
+                    AppID: res[i].AppId,
+                    RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
+                  })
+                }
+              }
+              // Handle the combined data here
+              console.log("Final combined data:", data);
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+        } else {
+          getMyRequestsdata(_sp, res[i].Title, Status).then((resData) => {
+            if (resData && resData.length > 0) {
+              for (let j = 0; j < resData.length; j++) {
+                AllRequestArr.push({
+                  ID: resData[j].ID,
+                  RequestID: resData[j].RequestID,
+                  ApprovalTitle: resData[j].ApprovalTitle,
+                  Author: resData[j].Author,
+                  ProcessName: resData[j].ProcessName,
+                  Created: resData[j].Created,
+                  Status: resData[j].Status,
+                  TaskID: "",
+                  AppID: "",
+                  RedirectionLink: resData[j].RedirectionLink
+                })
+                //AllRequestArr.push(resData[j])
+              }
+            }
+          })
+        }
       }
       AllRequestArr = AllRequestArr.sort((a, b) => {
         return a.Created === new Date(b.Created) ? 0 : new Date(a.Created) ? -1 : 1;
       });
       console.log("AllRequestArr", AllRequestArr);
-
       arr = AllRequestArr;
-
     })
-
     .catch((error) => {
-
       console.log("Error fetching data: ", error);
-
     });
-
   return arr;
-
 }
 export const getMyRequestsdata = async (_sp, listName, status) => {
 
@@ -197,6 +291,7 @@ export const getMyRequestsdata = async (_sp, listName, status) => {
   return arr;
 
 }
+
 // Intranet My Request
 export const getRequestListsDataIntranet = async (_sp, status) => {
   let arr = []
@@ -370,36 +465,36 @@ export const getMyApproval = async (sp, status, actingfor) => {
   try {
     // alert(`Actingfor is ${actingfor}`);
     let arr = [];
-    
+
     if (!actingfor) {
       // alert(`Actingfor is null ${actingfor}`);
       const currentUser = await sp.web.currentUser();
-      
+
       arr = await sp.web.lists.getByTitle("ARGMyRequest").items.select("*,Requester/Id,Requester/Title,Approver/Id,Approver/Title", "Approver/EMail")
         .expand("Approver,Requester")
         .filter(`ApproverId eq ${currentUser.Id} and Status eq '${status}'`)
         .orderBy("Created", false)
         .getAll();
-        
+
       console.log(arr, 'arr of intranet if actingfor is null');
     } else {
       // alert(`Actingfor is not null ${actingfor}`);
       const user = await sp.web.siteUsers.getByEmail(actingfor)();
       // alert(user.Id);
-      
+
       if (user.Id) {
-        arr = await sp.web.lists.getByTitle("ARGMyRequest").items.select("*,Requester/Id,Requester/Title,Approver/Id,Approver/Title" ,"Approver/EMail")
+        arr = await sp.web.lists.getByTitle("ARGMyRequest").items.select("*,Requester/Id,Requester/Title,Approver/Id,Approver/Title", "Approver/EMail")
           .expand("Approver,Requester")
           .filter(`ApproverId eq ${user.Id} and Status eq '${status}'`)
           .orderBy("Created", false)
           .getAll();
-        
+
         console.log(arr, 'arr of intranet if actingfor is not null');
       } else {
         console.log("User not found in Approval");
       }
     }
-    
+
     return arr;
   } catch (error) {
     console.error("Error fetching list items:", error);

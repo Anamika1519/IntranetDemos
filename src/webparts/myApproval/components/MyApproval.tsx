@@ -335,8 +335,8 @@ const MyApprovalContext = ({ props }: any) => {
 
 
       let arr = [];
-      let approvalData: any[] = [];
-      if (actingfor === "") {
+      let approvalData:any[]=[];
+      if (!actingfor) {
         const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select(
           "Log", "CurrentUser", "Remark"
           , "LogHistory"
@@ -358,7 +358,7 @@ const MyApprovalContext = ({ props }: any) => {
 
         )
           .expand("FileUID", "MasterApproval")
-          .filter(`(CurrentUser eq '${currentUserEmailRef.current}') and FileUID/Status eq '${value}'`).orderBy("Created", false).getAll();
+          .filter(`CurrentUser eq '${currentUserEmailRef.current}' and FileUID/Status eq '${value}'`).orderBy("Created", false).getAll();
         console.log(items, "DMSFileApprovalTaskList");
         items.map((item) => {
           if (item.CurrentUser !== currentUserEmailRef.current) {
@@ -371,10 +371,10 @@ const MyApprovalContext = ({ props }: any) => {
           const requestedbyuserTitle = await getUserTitleByEmail(item?.FileUID?.RequestedBy);
           return { ...item, RequestedByTitle: requestedbyuserTitle };
         }));
-        approvalData = updatedItems
+        approvalData=updatedItems
         setMylistdata(updatedItems);
       }
-      if (actingfor !== "") {
+      if (actingfor !== "" && actingfor !== undefined) {
         const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select(
           "Log", "CurrentUser", "Remark"
           , "LogHistory"
@@ -396,7 +396,7 @@ const MyApprovalContext = ({ props }: any) => {
 
         )
           .expand("FileUID", "MasterApproval")
-          .filter(`(CurrentUser eq '${actingfor}') and FileUID/Status eq '${value}'`).orderBy("Created", false).getAll();
+          .filter(`CurrentUser eq '${actingfor}' and FileUID/Status eq '${value}'`).orderBy("Created", false).getAll();
         console.log(items, "DMSFileApprovalTaskList");
         items.map((item) => {
           if (item.CurrentUser !== currentUserEmailRef.current) {
@@ -409,7 +409,7 @@ const MyApprovalContext = ({ props }: any) => {
           const requestedbyuserTitle = await getUserTitleByEmail(item?.FileUID?.RequestedBy);
           return { ...item, RequestedByTitle: requestedbyuserTitle };
         }));
-        approvalData = updatedItems;
+        approvalData=updatedItems;
         setMylistdata(updatedItems);
       }
 
@@ -417,41 +417,42 @@ const MyApprovalContext = ({ props }: any) => {
       //   const requestedbyuserTitle = await getUserTitleByEmail(item?.FileUID?.RequestedBy);
       //   return { ...item, RequestedByTitle: requestedbyuserTitle };
       // }));
-      const Item2: any = await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
+      if (!actingfor) {
+      const Item2 :any = await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
         "*",
-        "Folderdetail"
-        , "Folderdetail/SiteTitle"
-        , "Folderdetail/DocumentLibraryName"
-        , "Folderdetail/CurrentUser"
-        , "Folderdetail/FolderPath"
-        , "Folderdetail/FolderName"
-        , "Folderdetail/ParentFolderId"
-        , "Folderdetail/Department"
-        , "Folderdetail/Devision"
-        , "Folderdetail/RequestNo"
-        , "FolderMeta"
-        , "FolderMeta/SiteName"
-        , "FolderMeta/DocumentLibraryName"
-        , "FolderMeta/ColumnName",
+        "Folderdetail"	            
+        ,"Folderdetail/SiteTitle"	       
+        ,"Folderdetail/DocumentLibraryName"	
+        ,"Folderdetail/CurrentUser"
+        ,"Folderdetail/FolderPath"
+        ,"Folderdetail/FolderName"
+        ,"Folderdetail/ParentFolderId"
+        ,"Folderdetail/Department"	
+        ,"Folderdetail/Devision"	
+        ,"Folderdetail/RequestNo"	
+        ,"FolderMeta"	
+        ,"FolderMeta/SiteName"	
+        ,"FolderMeta/DocumentLibraryName"	
+        ,"FolderMeta/ColumnName",
         "Folderdetail/Processname",
         "Folderdetail/Status",
         "Approver"
-      ).expand("Folderdetail", "FolderMeta")
-        .filter(`Approver eq '${currentUserEmailRef.current}'`)();
-      console.log("Item2 get from dmsfolderdeligationapprovaltasklist", Item2)
-      const normalizeItem2 = async (item: any) => ({
+      ).expand("Folderdetail" ,"FolderMeta")
+      .filter(`Approver eq '${currentUserEmailRef.current}' and Folderdetail/Status eq '${value}'`)();
+      console.log("Item2 get from dmsfolderdeligationapprovaltasklist",Item2)
+      const normalizeItem2 = async(item:any) => ({
         Log: item?.Log || '', // Replace with appropriate mappings
         CurrentUser: item?.Folderdetail?.CurrentUser || '',
         Remark: item?.Remark || '',
         LogHistory: item?.LogHistory || '',
         // ProcessName:  item?.Folderdetail?.Processname,
-        RequestedByTitle: await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
+        RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
         FileUID: {
           FileUID: item?.FolderMeta?.FileUID || item?.Folderdetail?.RequestNo,
           SiteName: item?.FolderMeta?.SiteName || '',
           DocumentLibraryName: item?.FolderMeta?.DocumentLibraryName || '',
           // FileName: item?.FolderMeta?.FolderName || '',
-          FileName: item?.Folderdetail?.FolderName === null ? item?.Folderdetail?.DocumentLibraryName : item?.Folderdetail?.FolderName,
+          FileName:item?.Folderdetail?.FolderName === null ? item?.Folderdetail?.DocumentLibraryName :item?.Folderdetail?.FolderName,
           RequestNo: item?.Folderdetail?.RequestNo || '',
           Status: item?.Folderdetail?.Status || '',
           FolderPath: item?.Folderdetail?.FolderPath || '',
@@ -459,7 +460,7 @@ const MyApprovalContext = ({ props }: any) => {
           // RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
           Created: item?.Created || '',
           ApproveAction: item?.ApproveAction || '',
-          Processname: item?.Folderdetail?.Processname
+          Processname:  item?.Folderdetail?.Processname
         },
         MasterApproval: {
           ApprovalType: item?.ApprovalType || '',
@@ -469,16 +470,79 @@ const MyApprovalContext = ({ props }: any) => {
       });
       // const normalizeItem3 = Item2.map(normalizeItem2);
       const normalizeItem3 = await Promise.all(Item2.map(normalizeItem2));
-      console.log("normalizeItem3", normalizeItem3);
+      console.log("normalizeItem3",normalizeItem3);
       console.log(approvalData, "approvalData 666");
-      const CombinedItems = [...approvalData, ...normalizeItem3];
-      console.log(CombinedItems, "CombinedItems")
+       const CombinedItems  = [...approvalData, ...normalizeItem3];
+       console.log(CombinedItems , "CombinedItems")
       setMylistdata(CombinedItems);
       // setMylistdata(updatedItems);
 
 
       // return arr = CombinedItems
+    }
+    if (actingfor !== "" && actingfor !== undefined) {
+      const Item2 :any = await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
+        "*",
+        "Folderdetail"	            
+        ,"Folderdetail/SiteTitle"	       
+        ,"Folderdetail/DocumentLibraryName"	
+        ,"Folderdetail/CurrentUser"
+        ,"Folderdetail/FolderPath"
+        ,"Folderdetail/FolderName"
+        ,"Folderdetail/ParentFolderId"
+        ,"Folderdetail/Department"	
+        ,"Folderdetail/Devision"	
+        ,"Folderdetail/RequestNo"	
+        ,"FolderMeta"	
+        ,"FolderMeta/SiteName"	
+        ,"FolderMeta/DocumentLibraryName"	
+        ,"FolderMeta/ColumnName",
+        "Folderdetail/Processname",
+        "Folderdetail/Status",
+        "Approver"
+      ).expand("Folderdetail" ,"FolderMeta")
+      .filter(`Approver eq '${actingfor}' and Folderdetail/Status eq '${value}'`)();
+      console.log("Item2 get from dmsfolderdeligationapprovaltasklist",Item2)
+      const normalizeItem2 = async(item:any) => ({
+        Log: item?.Log || '', // Replace with appropriate mappings
+        CurrentUser: item?.Folderdetail?.CurrentUser || '',
+        Remark: item?.Remark || '',
+        LogHistory: item?.LogHistory || '',
+        // ProcessName:  item?.Folderdetail?.Processname,
+        RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
+        FileUID: {
+          FileUID: item?.FolderMeta?.FileUID || item?.Folderdetail?.RequestNo,
+          SiteName: item?.FolderMeta?.SiteName || '',
+          DocumentLibraryName: item?.FolderMeta?.DocumentLibraryName || '',
+          // FileName: item?.FolderMeta?.FolderName || '',
+          FileName:item?.Folderdetail?.FolderName === null ? item?.Folderdetail?.DocumentLibraryName :item?.Folderdetail?.FolderName,
+          RequestNo: item?.Folderdetail?.RequestNo || '',
+          Status: item?.Folderdetail?.Status || '',
+          FolderPath: item?.Folderdetail?.FolderPath || '',
+          // RequestedBy: item?.RequestedBy || item?.Folderdetail?.CurrentUser || '',
+          // RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
+          Created: item?.Created || '',
+          ApproveAction: item?.ApproveAction || '',
+          Processname:  item?.Folderdetail?.Processname
+        },
+        MasterApproval: {
+          ApprovalType: item?.ApprovalType || '',
+          Level: item?.Level || '',
+          DocumentLibraryName: item?.DocumentLibraryName || ''
+        }
+      });
+      // const normalizeItem3 = Item2.map(normalizeItem2);
+      const normalizeItem3 = await Promise.all(Item2.map(normalizeItem2));
+      console.log("normalizeItem3",normalizeItem3);
+      console.log(approvalData, "approvalData 666");
+       const CombinedItems  = [...approvalData, ...normalizeItem3];
+       console.log(CombinedItems , "CombinedItems")
+      setMylistdata(CombinedItems);
+      // setMylistdata(updatedItems);
 
+
+      // return arr = CombinedItems
+    }
     } catch (error) {
       console.error("Error fetching list items:", error);
     }
@@ -504,7 +568,7 @@ const MyApprovalContext = ({ props }: any) => {
     }
   };
 
-  const getTaskItemsbyID = async (e: any, itemid: any, ProcessName: string) => {
+  const getTaskItemsbyID = async (e: any, itemid: any,ProcessName:string) => {
     // currentItemID = itemid
     currentItemID = itemid;
     setActiveComponent("Approval Action");
@@ -603,7 +667,6 @@ const MyApprovalContext = ({ props }: any) => {
   //const [activeTab, setActiveTab] = useState("home1");
   const [activeTab, setActiveTab] = useState("Intranet");
   const handleTabClick = async (tab: React.SetStateAction<string>) => {
-
     setActiveTab(tab);
     setLoading(true);
     console.log(
@@ -2502,9 +2565,9 @@ const MyApprovalContext = ({ props }: any) => {
                                   <div>
                                     {folderActionOrFileAction === "New File Request" && (
                                       <>
-                                        <DMSMyApprovalAction props={currentItemID} />
-                                        <div className="col-sm-12 text-center">
-                                          {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
+                                      <DMSMyApprovalAction props={{currentItemID , actingforuseremail}} />
+                                    <div className="col-sm-12 text-center">
+                                      {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
 
                                           <button type="button" className="btn cancel-btn newp waves-effect waves-light m-3" style={{ fontSize: '0.875rem' }} onClick={() => setShowNestedDMSTable(false)}>
                                             <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }}
@@ -2516,9 +2579,9 @@ const MyApprovalContext = ({ props }: any) => {
                                     )}
                                     {folderActionOrFileAction === "New Folder Request" && (
                                       <>
-                                        <DMSMyFolderApprovalAction props={currentItemID} />
-                                        <div className="col-sm-12 text-center">
-                                          {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
+                                      <DMSMyFolderApprovalAction props={{currentItemID , actingforuseremail}} />
+                                    <div className="col-sm-12 text-center">
+                                      {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
 
                                           <button type="button" className="btn cancel-btn newp waves-effect waves-light m-3" style={{ fontSize: '0.875rem' }} onClick={() => setShowNestedDMSTable(false)}>
                                             <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }}

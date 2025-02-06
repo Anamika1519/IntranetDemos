@@ -200,10 +200,10 @@ const DMSMyApprovalAction = ({ props }: any) => {
         , "MasterApproval/DocumentLibraryName"
       )
         .expand("FileUID", "MasterApproval")
-        .filter(`FileUID/FileUID eq '${props}'`)
+        .filter(`FileUID/FileUID eq '${props.currentItemID}'`)
         .orderBy("Modified", false)();
-      console.log(items, "DMSFileApprovalTaskList");
-      // Fetch user titles
+        console.log(items, "DMSFileApprovalTaskList");
+         // Fetch user titles
       const updatedItems = await Promise.all(items.map(async (item) => {
         const userTitle = await getUserTitleByEmail(item.FileUID.RequestedBy);
         const assignedtouserTitle = await getUserTitleByEmail(item.CurrentUser);
@@ -220,7 +220,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
         console.log(currentUserEmailRef.current, "currentUserEmailRef.current")
         console.log(item.CurrentUser, "item.CurrentUser")
         console.log(item.Log, "item.Log")
-        if (currentUserEmailRef.current === item.CurrentUser) {
+            if(currentUserEmailRef.current === item.CurrentUser || props.actingforuseremail === item.CurrentUser){
           if (item.LogHistory === null) {
             setToggleLog(true);
           }
@@ -265,7 +265,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
       const { web } = await sp.site.openWebById(siteData[0].SiteID);
 
       // Get the list item  corresponding to the file
-      const fileItem: any = await web.getFileById(props).expand("ListItemAllFields")();
+         const fileItem:any = await web.getFileById(props.currentItemID).expand("ListItemAllFields")();
       console.log("fileItem", fileItem.ListItemAllFields.Status);
 
       // fetched the columns details corresponding to the file 
@@ -1426,7 +1426,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
           console.log("Error Approving file");
           Swal.fire('Error', 'Error Approving file', 'error');
       } 
-      setToggleLog(false);
+      setToggleLog((prevData)=>!prevData);
       getApprovalmasterTasklist();
       getCurrrentuser()
       Swal.fire('Success', 'File Approved Successfully', 'success');
@@ -1444,7 +1444,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, approve it!',
+          confirmButtonText: 'Yes, reject it!',
           cancelButtonText: 'No, cancel',
         });
     
@@ -1534,7 +1534,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
       // }
 
     debugger
-    setToggleLog(false);
+    setToggleLog((prevData)=>!prevData);
     getApprovalmasterTasklist();
 
     Swal.fire('Success', 'File Rejected Successfully', 'success');
@@ -1543,10 +1543,10 @@ const DMSMyApprovalAction = ({ props }: any) => {
         console.log("Error Rejecting file");
         Swal.fire('Error', 'Error Rejecting file', 'error');
       }
-      setToggleLog(false);
+      setToggleLog((prevData)=>!prevData);
       getApprovalmasterTasklist();
       getCurrrentuser()
-      Swal.fire('Success', 'File Approved Successfully', 'success');
+      Swal.fire('Success', 'File Rejected Successfully', 'success');
 
     }
     else if(buttonText === "Rework"){
@@ -1573,7 +1573,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
             Remark:remark,
             // ApprovedLevel:approvedLevel
         }
-        setToggleLog(false);
+        setToggleLog((prevData)=>!prevData);
         getApprovalmasterTasklist();
         Swal.fire('Success', 'File Rework Successfully', 'success');
       } catch (error) {
@@ -1645,7 +1645,7 @@ const DMSMyApprovalAction = ({ props }: any) => {
       console.log("updateddata1", updateddata1);
     }
 
-    setToggleLog(false);
+    setToggleLog((prevData)=>!prevData);
     getApprovalmasterTasklist();
     getCurrrentuser()
     // const paylaodForDMSFileApprovalList={

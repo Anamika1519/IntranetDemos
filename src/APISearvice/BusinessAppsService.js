@@ -142,10 +142,10 @@ export const getListDataFromSiteCollection = async (_sp, listName, status, Actin
   console.log("sdsssss", sp, _sp)
   debugger
   let apiUrl;
-  let FinalStatus ="";
-  if(status == "Pending"){
+  let FinalStatus = "";
+  if (status == "Pending") {
     FinalStatus = "Not Started"
-  } else  if(status == "Approved"){
+  } else if (status == "Approved") {
     FinalStatus = "Completed"
   }
   if (Actingfor != null && Actingfor != undefined && Actingfor != "") {
@@ -205,7 +205,7 @@ export const getDataFromMultipleSites = async (_sp, listName, status, Actingfor,
   for (const siteUrl of siteUrls) {
     const data = await getListDataFromSiteCollection(_sp, listName, status, Actingfor, portal, siteUrl);
     allData.push(...data);
-    console.log("dadadadadad",data);
+    console.log("dadadadadad", data);
   }
 
   console.log('Combined data from all site collections:', allData);
@@ -248,19 +248,19 @@ export const getMyApprovalsdata = async (_sp, listName, status, Actingfor, porta
 
     if (!currentUser) return arr; // Return empty array if user fetch failed
 
-      await _sp.web.lists.getByTitle(listName).items
-        .select("*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail").expand("Author,AssignedTo")
-        .filter(`AssignedTo/EMail eq '${currentUser}' and Status eq '${status}'`)
-        .orderBy("Created", false).getAll()
-        .then((res) => {
-          console.log(`--MyApproval${listName}`, res);
-          arr = res
-        })
-        .catch((error) => {
-          console.log("Error fetching data: ", error);
-        });
-      return arr;
-    
+    await _sp.web.lists.getByTitle(listName).items
+      .select("*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail").expand("Author,AssignedTo")
+      .filter(`AssignedTo/EMail eq '${currentUser}' and Status eq '${status}'`)
+      .orderBy("Created", false).getAll()
+      .then((res) => {
+        console.log(`--MyApproval${listName}`, res);
+        arr = res
+      })
+      .catch((error) => {
+        console.log("Error fetching data: ", error);
+      });
+    return arr;
+
   }
   console.log("arrrrrrr", arr)
 }
@@ -499,16 +499,28 @@ export const getApprovalListsData = async (_sp, status, Actingfor) => {
                     // AllApprovalArr.push(resData[j])
                     AllApprovalArr.push({
                       ID: resData[j].ID,
-                      RequestID: resData[j].ID,
-                      ApprovalTitle: resData[j].Title,
+                      RequestID: resData[j].Title,
+                      ApprovalTitle: "",
                       Author: resData[j].Requestor_x0020_Name,
                       ProcessName: res[i].ProcessName,
                       Created: resData[j].Created,
                       Status: resData[j].TaskStatus,
-                      TaskID: resData[j].MasterID,
+                      TaskID: resData[j].ID,
                       AppID: res[i].AppId,
                       RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
                     })
+                    // AllApprovalArr.push({
+                    //   ID: resData[j].ID,
+                    //   RequestID: resData[j].ID,
+                    //   ApprovalTitle: resData[j].Title,
+                    //   Author: resData[j].Requestor_x0020_Name,
+                    //   ProcessName: res[i].ProcessName,
+                    //   Created: resData[j].Created,
+                    //   Status: resData[j].TaskStatus,
+                    //   TaskID: resData[j].MasterID,
+                    //   AppID: res[i].AppId,
+                    //   RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
+                    // })
                   }
                 }
                 // Handle the combined data here
@@ -564,15 +576,27 @@ export const getApprovalListsData = async (_sp, status, Actingfor) => {
                   if (resData && resData.length > 0) {
                     for (let j = 0; j < resData.length; j++) {
                       // AllApprovalArr.push(resData[j])
+                      // AllApprovalArr.push({
+                      //   ID: resData[j].ID,
+                      //   RequestID: resData[j].ID,
+                      //   ApprovalTitle: resData[j].Title,
+                      //   Author: resData[j].Requestor_x0020_Name,
+                      //   ProcessName: res[i].ProcessName,
+                      //   Created: resData[j].Created,
+                      //   Status: resData[j].TaskStatus,
+                      //   TaskID: resData[j].MasterID,
+                      //   AppID: res[i].AppId,
+                      //   RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
+                      // })
                       AllApprovalArr.push({
                         ID: resData[j].ID,
-                        RequestID: resData[j].ID,
-                        ApprovalTitle: resData[j].Title,
+                        RequestID: resData[j].Title,
+                        ApprovalTitle: "",
                         Author: resData[j].Requestor_x0020_Name,
                         ProcessName: res[i].ProcessName,
                         Created: resData[j].Created,
                         Status: resData[j].TaskStatus,
-                        TaskID: resData[j].MasterID,
+                        TaskID: resData[j].ID,
                         AppID: res[i].AppId,
                         RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
                       })

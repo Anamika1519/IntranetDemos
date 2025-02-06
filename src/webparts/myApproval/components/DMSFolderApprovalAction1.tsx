@@ -37,6 +37,7 @@ const DMSFolderApproval = ({props}:any) => {
           >([{ id: 0, selectionType: "One", approvedUserList: [] }]);
 
     const [toggleLog,setToggleLog]=useState(false);
+    const [refresh, setRefresh]=useState(false)
     const [remark,setRemark]=useState("");
     const  getUserTitle=async(userEmail:any)=>{
       try {
@@ -65,7 +66,7 @@ const DMSFolderApproval = ({props}:any) => {
    useEffect(()=>{
         const fechDataFromDMSFolderDeligationMaster=async()=>{
             let requestNumber='DMS2025-01-21T06:14:51.809Z'
-            const items = await sp.web.lists.getByTitle('DMSFolderDeligationMaster').items.select("*").filter(`RequestNo eq '${props}'`)();
+            const items = await sp.web.lists.getByTitle('DMSFolderDeligationMaster').items.select("*").filter(`RequestNo eq '${props.currentItemID}'`)();
             console.log("items",items);
             itemIdOfDMSFolderDeligationMaster=items[0].ID;
             folderPath=items[0].FolderPath;
@@ -181,7 +182,7 @@ const DMSFolderApproval = ({props}:any) => {
             setSiteName(items[0].SiteTitle)
         }
         fechDataFromDMSFolderDeligationMaster();
-    },[])
+    },[refresh])
     useEffect(()=>{
       const fetchDataFromDMSFolderDeligationApprovalTask=async()=>{
         try {
@@ -213,12 +214,12 @@ const DMSFolderApproval = ({props}:any) => {
             "Approver"
         )
         .expand("Folderdetail" ,"FolderMeta")
-        .filter(`Folderdetail/RequestNo eq '${props}'`)
+        .filter(`Folderdetail/RequestNo eq '${props.currentItemID}'`)
         .orderBy("Modified", false)();
           console.log("listData",listData)
           listData.forEach((item)=>{
             console.log("item to check and show approve" , item)
-            if(currentUserEmailRef.current === item.Approver && item.Log === null){
+            if((props.actingforuseremail=== item.Approver && item.Log === null) || (currentUserEmailRef.current === item.Approver && item.Log === null)){
                 setToggleLog(true);
             }
              console.log("FileUID" , item.Folderdetail.RequestNo)
@@ -247,7 +248,7 @@ const DMSFolderApproval = ({props}:any) => {
         }
       }
       fetchDataFromDMSFolderDeligationApprovalTask();
-    },[])
+    },[refresh])
     
     const handleRemark=(event:any)=>{
         event.preventDefault();
@@ -265,7 +266,26 @@ const DMSFolderApproval = ({props}:any) => {
         console.log("buttonText",buttonText);
 
         if(buttonText === "Approve"){
-            // listData.forEach(async(task)=>{
+          
+            
+            try {
+              const userConfirmed = await Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to approve this Folder Request?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, approve it!',
+                cancelButtonText: 'No, cancel',
+              });
+          
+              if (!userConfirmed.isConfirmed) {
+                console.log("User canceled the action.");
+                return;
+              }
+
+              // listData.forEach(async(task)=>{
             //     if(task.ApproverEmail === currentUserEmailRef.current){
             //         if(task.Log === null){
             //             try {
@@ -282,156 +302,246 @@ const DMSFolderApproval = ({props}:any) => {
             //         }
             //     }
             // })
-            await Promise.all(
-                listData.map(async (task) => {
-                  if (task.ApproverEmail === currentUserEmailRef.current && task.Log === null) {
-                    try {
-                      await sp.web.lists
-                        .getByTitle("DMSFolderDeligationApprovalTask")
-                        .items.getById(task.itemId)
-                        .update({
-                          Log: "Approved",
-                          Remark: remark,
-                          LogHistory:new Date().toISOString()
-                        });
-                      console.log(`Item ${task.itemId} updated successfully.`);
-                    } catch (error) {
-                      console.error(`Error updating item ${task.itemId}:`, error);
+              console.log("props.actingforuseremail",props.actingforuseremail)
+              if(props.actingforuseremail !== undefined){
+                await Promise.all(
+                  listData.map(async (task) => {
+                    if ((task.ApproverEmail === props.actingforuseremail && task.Log === null)) {
+                      console.log("Task daat",task)
+                      try {
+                        await sp.web.lists
+                          .getByTitle("DMSFolderDeligationApprovalTask")
+                          .items.getById(task.itemId)
+                          .update({
+                            Log: "Approved",
+                            Remark: remark,
+                            LogHistory:new Date().toISOString()
+                          });
+                        console.log(`Item ${task.itemId} updated successfully.`);
+                      } catch (error) {
+                        console.error(`Error updating item ${task.itemId}:`, error);
+                      }
                     }
+                  })
+                );
+              }else{
+                await Promise.all(
+                  listData.map(async (task) => {
+                    if ((task.ApproverEmail === currentUserEmailRef.current && task.Log === null) ) {
+                      console.log("Task daat",task)
+                      try {
+                        await sp.web.lists
+                          .getByTitle("DMSFolderDeligationApprovalTask")
+                          .items.getById(task.itemId)
+                          .update({
+                            Log: "Approved",
+                            Remark: remark,
+                            LogHistory:new Date().toISOString()
+                          });
+                        console.log(`Item ${task.itemId} updated successfully.`);
+                      } catch (error) {
+                        console.error(`Error updating item ${task.itemId}:`, error);
+                      }
+                    }
+                  })
+                );
+              }
+              
+              let requestNumber='DMS2025-01-21T06:14:51.809Z'
+              const listData1=await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
+                "*",
+                "Folderdetail"	            
+                ,"Folderdetail/SiteTitle"	       
+                ,"Folderdetail/DocumentLibraryName"	
+                ,"Folderdetail/CurrentUser"
+                ,"Folderdetail/FolderPath"
+                ,"Folderdetail/FolderName"
+                ,"Folderdetail/ParentFolderId"
+                ,"Folderdetail/Department"	
+                ,"Folderdetail/Devision"	
+                ,"Folderdetail/RequestNo"	
+                ,"Folderdetail/Status"	
+                ,"Folderdetail/Created"	
+                ,"Remark"	
+                ,"Log"	
+                ,"LogHistory"	
+                ,"FolderMeta"	
+                ,"FolderMeta/SiteName"	
+                ,"FolderMeta/DocumentLibraryName"	
+                ,"FolderMeta/ColumnName",
+                // "Folderdetail/ProcessName",
+                "Approver"
+            )
+            .expand("Folderdetail" ,"FolderMeta")
+            .filter(`Folderdetail/RequestNo eq '${props.currentItemID}'`)
+            .orderBy("Modified", false)();
+              // Check if all `Log` values are "Approved"
+              const allApproved = listData1.every(item => item.Log === "Approved");
+              if (allApproved) {
+                  try {
+                    // Update the list item
+                      //   let requestNumber='DMS2024-12-28T05:16:59.110Z'
+                      //   const data=await sp.web.lists.getByTitle('DMSFolderDeligationMaster').items.select('*',"ID").filter(`RequestNo eq '${requestNumber}'`)()
+                    
+                     // Update the list item
+                      await sp.web.lists.getByTitle('DMSFolderDeligationMaster').items.getById(itemIdOfDMSFolderDeligationMaster).update({
+                          Status: "Approved",
+                      });
+                      console.log(`List item ${itemIdOfDMSFolderDeligationMaster} updated successfully.`);
+                      const folderMasterData=await sp.web.lists.getByTitle('DMSFolderMaster').items.select("*","ID").filter(`FolderPath eq '${folderPath}'`)();
+                      await sp.web.lists.getByTitle('DMSFolderMaster').items.getById(folderMasterData[0].ID).update({
+                        IsActive: true,
+                      });
+  
+                  } catch (error) {
+                    console.error("Error updating list item:", error);
                   }
-                })
-              );
-            let requestNumber='DMS2025-01-21T06:14:51.809Z'
-            const listData1=await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
-              "*",
-              "Folderdetail"	            
-              ,"Folderdetail/SiteTitle"	       
-              ,"Folderdetail/DocumentLibraryName"	
-              ,"Folderdetail/CurrentUser"
-              ,"Folderdetail/FolderPath"
-              ,"Folderdetail/FolderName"
-              ,"Folderdetail/ParentFolderId"
-              ,"Folderdetail/Department"	
-              ,"Folderdetail/Devision"	
-              ,"Folderdetail/RequestNo"	
-              ,"Folderdetail/Status"	
-              ,"Folderdetail/Created"	
-              ,"Remark"	
-              ,"Log"	
-              ,"LogHistory"	
-              ,"FolderMeta"	
-              ,"FolderMeta/SiteName"	
-              ,"FolderMeta/DocumentLibraryName"	
-              ,"FolderMeta/ColumnName",
-              // "Folderdetail/ProcessName",
-              "Approver"
-          )
-          .expand("Folderdetail" ,"FolderMeta")
-          .filter(`Folderdetail/RequestNo eq '${props}'`)
-          .orderBy("Modified", false)();
-            // Check if all `Log` values are "Approved"
-            const allApproved = listData1.every(item => item.Log === "Approved");
-            if (allApproved) {
-                try {
-                  // Update the list item
-                    //   let requestNumber='DMS2024-12-28T05:16:59.110Z'
-                    //   const data=await sp.web.lists.getByTitle('DMSFolderDeligationMaster').items.select('*',"ID").filter(`RequestNo eq '${requestNumber}'`)()
-                  
-                   // Update the list item
-                    await sp.web.lists.getByTitle('DMSFolderDeligationMaster').items.getById(itemIdOfDMSFolderDeligationMaster).update({
-                        Status: "Approved",
-                    });
-                    console.log(`List item ${itemIdOfDMSFolderDeligationMaster} updated successfully.`);
-                    const folderMasterData=await sp.web.lists.getByTitle('DMSFolderMaster').items.select("*","ID").filter(`FolderPath eq '${folderPath}'`)();
-                    await sp.web.lists.getByTitle('DMSFolderMaster').items.getById(folderMasterData[0].ID).update({
-                      IsActive: true,
-                    });
-
-                } catch (error) {
-                  console.error("Error updating list item:", error);
+              } else {
+                  console.log("Not all Log values are Approved.");
                 }
-            } else {
-                console.log("Not all Log values are Approved.");
+              if(allApproved){
+                Swal.fire('Approved','Folder approved successfully','success')
+                setRefresh(!refresh)
+                setToggleLog((prevData)=>!prevData);
+              }else{
+                Swal.fire('Approved','Folder approved successfully','success')
+                setRefresh(!refresh)
+                setToggleLog((prevData)=>!prevData);
               }
-            if(allApproved){
-              Swal.fire('Approved','Folder approved successfully','success')
-            }else{
-              Swal.fire('Approved','Folder approved successfully','success')
+            } catch (error) {
+              console.error("Error in Approving Folder", error);
             }
+
         }else if(buttonText === "Reject"){
-            await Promise.all(
-            listData.map(async(task)=>{
-                if(task.ApproverEmail === currentUserEmailRef.current){
-                    if(task.Log === null){
-                        try {
-                            // Update the item
-                            await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.getById(task.itemId).update({
-                              Log: 'Reject',
-                              Remark:remark,
-                              LogHistory:new Date().toISOString()
-                            });
-                            console.log(`Item ${task.itemId} in list DMSFolderDeligationApprovalTask updated successfully.`);
-                          } catch (error) {
-                            console.error("Error updating list item:", error);
-                          }
-                      
+          try {
+            const userConfirmed = await Swal.fire({
+              title: 'Are you sure?',
+              text: "Do you want to Reject this Folder Request?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, Reject it!',
+              cancelButtonText: 'No, cancel',
+            });
+        
+            if (!userConfirmed.isConfirmed) {
+              console.log("User canceled the action.");
+              return;
+            }
+            if(props.actingforuseremail !== undefined){
+              await Promise.all(
+              listData.map(async(task)=>{
+                  if( task.ApproverEmail === props?.actingforuseremail){
+                      if(task.Log === null){
+                          try {
+                              // Update the item
+                              await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.getById(task.itemId).update({
+                                Log: 'Reject',
+                                Remark:remark,
+                                LogHistory:new Date().toISOString()
+                              });
+                              console.log(`Item ${task.itemId} in list DMSFolderDeligationApprovalTask updated successfully.`);
+                            } catch (error) {
+                              console.error("Error updating list item:", error);
+                            }
+                        
+                      }
+                  }else{
+                      if(task.Log === null){
+                          try {
+                              // Update the item
+                              await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.getById(task.itemId).update({
+                                Log: 'Auto Reject',
+                                LogHistory:new Date().toISOString() 
+                              });
+                              console.log(`Item ${task.itemId} in list DMSFolderDeligationApprovalTask updated successfully.`);
+                            } catch (error) {
+                              console.error("Error updating list item:", error);
+                            }
+                      }
+                  }
+              }))
+            }else{
+              await Promise.all(
+                listData.map(async(task)=>{
+                    if( task.ApproverEmail === currentUserEmailRef.current){
+                        if(task.Log === null){
+                            try {
+                                // Update the item
+                                await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.getById(task.itemId).update({
+                                  Log: 'Reject',
+                                  Remark:remark,
+                                  LogHistory:new Date().toISOString()
+                                });
+                                console.log(`Item ${task.itemId} in list DMSFolderDeligationApprovalTask updated successfully.`);
+                              } catch (error) {
+                                console.error("Error updating list item:", error);
+                              }
+                          
+                        }
+                    }else{
+                        if(task.Log === null){
+                            try {
+                                // Update the item
+                                await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.getById(task.itemId).update({
+                                  Log: 'Auto Reject',
+                                  LogHistory:new Date().toISOString() 
+                                });
+                                console.log(`Item ${task.itemId} in list DMSFolderDeligationApprovalTask updated successfully.`);
+                              } catch (error) {
+                                console.error("Error updating list item:", error);
+                              }
+                        }
                     }
-                }else{
-                    if(task.Log === null){
-                        try {
-                            // Update the item
-                            await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.getById(task.itemId).update({
-                              Log: 'Auto Reject',
-                              LogHistory:new Date().toISOString() 
-                            });
-                            console.log(`Item ${task.itemId} in list DMSFolderDeligationApprovalTask updated successfully.`);
-                          } catch (error) {
-                            console.error("Error updating list item:", error);
-                          }
-                    }
-                }
-            }))
-
-            try {
-                await sp.web.lists
-                  .getByTitle("DMSFolderDeligationMaster")
-                  .items.getById(itemIdOfDMSFolderDeligationMaster)
-                  .update({
-                    Status: "Reject",
-                  });
-                console.log(
-                  `Master list item ${itemIdOfDMSFolderDeligationMaster} updated to 'Reject' successfully.`
-                );
-              } catch (error) {
-                console.error(
-                  `Error updating master list item ${itemIdOfDMSFolderDeligationMaster}:`,
-                  error
-                );
-              }
-
+                }))
+            }
               try {
-                const folderMasterData=await sp.web.lists.getByTitle('DMSFolderMaster').items.select("*","ID").filter(`FolderPath eq '${folderPath}'`)();
-                console.log("folderMasterData",folderMasterData);
-                if(folderMasterData.length >0){
-                  await sp.web.lists.getByTitle('DMSFolderMaster').items.getById(folderMasterData[0].ID).delete();
-                  console.log("item deleted from dms folder master");
+                  await sp.web.lists
+                    .getByTitle("DMSFolderDeligationMaster")
+                    .items.getById(itemIdOfDMSFolderDeligationMaster)
+                    .update({
+                      Status: "Rejected",
+                    });
+                  console.log(
+                    `Master list item ${itemIdOfDMSFolderDeligationMaster} updated to 'Reject' successfully.`
+                  );
+                } catch (error) {
+                  console.error(
+                    `Error updating master list item ${itemIdOfDMSFolderDeligationMaster}:`,
+                    error
+                  );
                 }
-
-                const masterSiteUrldata=await sp.web.lists.getByTitle("MasterSiteURL").items.filter(`Title eq '${folderMasterData[0].SiteTitle}'`).select("*")();
-                const siteID=masterSiteUrldata[0].SiteID;
-                const {web}=await sp.site.openWebById(siteID);
-                if(folderMasterData[0].IsLibrary ===true){
-                  const data=await web.lists.getByTitle(folderMasterData[0].DocumentLibraryName).delete();
-                  console.log("Library deleted succesfully",data);
-                }else if(folderMasterData[0].IsFolder ===true){
-                  const data=await web.getFolderByServerRelativePath(`${folderMasterData[0].FolderPath}`).delete();
-                  console.log("Folder deleted succesfully",data);
+  
+                try {
+                  const folderMasterData=await sp.web.lists.getByTitle('DMSFolderMaster').items.select("*","ID").filter(`FolderPath eq '${folderPath}'`)();
+                  console.log("folderMasterData",folderMasterData);
+                  if(folderMasterData.length >0){
+                    await sp.web.lists.getByTitle('DMSFolderMaster').items.getById(folderMasterData[0].ID).delete();
+                    console.log("item deleted from dms folder master");
+                  }
+  
+                  const masterSiteUrldata=await sp.web.lists.getByTitle("MasterSiteURL").items.filter(`Title eq '${folderMasterData[0].SiteTitle}'`).select("*")();
+                  const siteID=masterSiteUrldata[0].SiteID;
+                  const {web}=await sp.site.openWebById(siteID);
+                  if(folderMasterData[0].IsLibrary ===true){
+                    const data=await web.lists.getByTitle(folderMasterData[0].DocumentLibraryName).delete();
+                    console.log("Library deleted succesfully",data);
+                  }else if(folderMasterData[0].IsFolder ===true){
+                    const data=await web.getFolderByServerRelativePath(`${folderMasterData[0].FolderPath}`).delete();
+                    console.log("Folder deleted succesfully",data);
+                  }
+  
+                } catch (error) {
+                  console.log("Error in deleting the folders details and folders",error);
                 }
-
-              } catch (error) {
-                console.log("Error in deleting the folders details and folders",error);
-              }
-              Swal.fire('Rejected','Folder Rejected successfully','success')
+                Swal.fire('Rejected','Folder Rejected successfully','success')
+                setRefresh(!refresh)
+                setToggleLog((prevData)=>!prevData);
+          } catch (error) {
+            console.error("Error in Rejecting Folder", error);
+          }
+         
         }
     }
   return (

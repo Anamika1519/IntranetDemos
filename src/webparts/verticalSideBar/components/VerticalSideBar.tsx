@@ -121,17 +121,28 @@ const VerticalContext = ({ _context }: any) => {
   
       console.log('%c Start',"background-color:red");
   
-      await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title").expand("Audience").orderBy("Order0", true).getAll().then((res: any) => {
-      console.log('%c res',"background-color:red",res);
-      const items: NavItem[] = res.map((item: any) => {
-        return {
-          Title: item.Title,
-          Url: item.Url,
-          Icon: item.Icon,
-          ParentId: item.ParentId,
-          ID: item.ID
-        };
-      });
+      // await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title").expand("Audience").orderBy("Order0", true).getAll().then((res: any) => {
+      // console.log('%c res',"background-color:red",res);
+      // const items: NavItem[] = res.map((item: any) => {
+      //   return {
+      //     Title: item.Title,
+      //     Url: item.Url,
+      //     Icon: item.Icon,
+      //     ParentId: item.ParentId,
+      //     ID: item.ID
+      //   };
+      // });
+      await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title , IsActive").expand("Audience").filter("IsActive eq 1").orderBy("Order0", true).getAll().then((res: any) => {
+        console.log('%c res',"background-color:red",res);
+        const items: NavItem[] = res.map((item: any) => {
+          return {
+            Title: item.Title,
+            Url: item.Url,
+            Icon: item.Icon,
+            ParentId: item.ParentId,
+            ID: item.ID
+          };
+        });
       // localStorage.setItem('Navitems', JSON.stringify(items))
      // setNavItems(res);
       let securednavitems= res.filter((nav:any)=>

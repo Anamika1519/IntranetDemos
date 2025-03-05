@@ -1,6 +1,3 @@
-
-
-
 import { escape, set } from "@microsoft/sp-lodash-subset";
 
 import React, { useEffect, useState } from "react";
@@ -250,7 +247,8 @@ const MyRequestContext = ({ props }: any) => {
 
   }>({});
 
-  const [activeTab, setActiveTab] = useState("Intranet");
+  // const [activeTab, setActiveTab] = useState("Intranet");
+  const [activeTab, setActiveTab] = useState("Automation");
   const [StatusTypeData, setStatusTypeData] = useState([
     { id: "Pending", name: "Pending" },
     { id: "Approved", name: "Approved" },
@@ -315,10 +313,11 @@ const MyRequestContext = ({ props }: any) => {
     // });
     // let datsis = Automationdata1.sort((a, b) => new Date(b.Created).getTime() - new Date(a.Created).getTime());
     setAutomationData(Automationdata);
+    setMyApprovalsData(Automationdata);
     console.log(myrequestdata, "myrequestdata",Automationdata);
     let myrequestdatadms: any = await gteDMSApproval(sp, status)
     console.log(myrequestdatadms, "myrequestdatadms");
-    setMyApprovalsData(await getMyRequest(sp, status));
+    // setMyApprovalsData(await getMyRequest(sp, status));
 
     setmyRequestDataAll(myrequestdata);
     setMyRequestDataAllDMS(myrequestdatadms);
@@ -871,6 +870,12 @@ const MyRequestContext = ({ props }: any) => {
     setShowModal2(false);
     setShowNestedDMSTable("");
   };
+
+    React.useEffect(() => {
+      if (currentPage > totalPages) {
+        setCurrentPage(1); 
+      }
+    }, [filteredMyApprovalData]);
 
   return (
 

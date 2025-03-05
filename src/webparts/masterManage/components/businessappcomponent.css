@@ -1,0 +1,8 @@
+button[data-id="undo"],
+button[data-id="share"],
+button[data-id="more"],
+button[data-id="SPListPresenceCommand"],
+button[data-id="managePermissions"],
+button[data-id="expand"] {
+  display: none !important;
+}

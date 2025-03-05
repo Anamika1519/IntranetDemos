@@ -20,6 +20,7 @@ import HorizontalNavbar from '../../horizontalNavBar/components/HorizontalNavBar
 //import styles from "../components/MasterManage.module.scss"
 import { IMasterManageProps } from './IMasterManageProps';
 import { useEffect, useState } from 'react';
+import { BusinessAppsComponent } from './BusinessAppsComponent';
 const endsWith = (str: string, ending: string) => {
   console.log("strrrr",str,ending)
   return str.slice(-ending.length) === ending;
@@ -31,6 +32,12 @@ export const MastersettingContext = ({ props }: any) => {
   const [showIframe, setShowIframe] = useState(false);
   const [iframeUrl, setIframeUrl] = useState('');
   const handleCardClick = (url:any) => {
+    if (url.Title === "Business Apps") {
+      setSelectedItem(url); // Set item to render BusinessAppsComponent
+      setShowIframe(true);
+    } else {
+      window.location.href = url.LinkUrl; // Navigate for other items
+    }
     setIframeUrl(url);
     setShowIframe(true);
     // hideElementsInIframe()
@@ -70,6 +77,7 @@ export const MastersettingContext = ({ props }: any) => {
     }
   }, [showIframe, iframeUrl]);
   const handleBackClick = () => {
+    // alert("Back clicked"+ showIframe);
     setShowIframe(false);
   };
   function hideElementsInIframe() {
@@ -262,7 +270,19 @@ function checkUrlForMembershipGroupId() {
 
 // Call the function
 checkUrlForMembershipGroupId();
+const [selectedItem, setSelectedItem] = useState(null);
 
+// const handleCardClick = (item) => {
+//   if (item.Title === "Business Apps") {
+//     setSelectedItem(item); // Set item to render BusinessAppsComponent
+//   } else {
+//     window.location.href = item.LinkUrl; // Navigate for other items
+//   }
+// };
+
+// const handleBackClick = () => {
+//   setSelectedItem(null); // Reset state to go back
+// };
   return (
 
     <div id="wrapper" ref={elementRef}>
@@ -298,7 +318,7 @@ checkUrlForMembershipGroupId();
                     }) : (<div>Access Denied</div>)
                 } */}
            
-      {!showIframe ? (
+      {/* {!showIframe ? (
         IsUserAlllowed ? (
           settingArray.map((item) => {
             const ImageUrl = item.ImageIcon == undefined || item.ImageIcon == null ? "" : JSON.parse(item.ImageIcon);
@@ -346,7 +366,52 @@ checkUrlForMembershipGroupId();
             title="Content"
           ></iframe>
         </div>
+      )} */}
+
+{!selectedItem 
+? ( // Show cards when no selection
+        IsUserAlllowed ? (
+          settingArray.map((item) => {
+            const ImageUrl =
+              item.ImageIcon == undefined || item.ImageIcon == null
+                ? ""
+                : JSON.parse(item.ImageIcon);
+
+            return (
+              <div className="col-sm-3 col-md-3 mt-2" key={item.Title}>
+                <div
+                  className="card-master box1"
+                  onClick={() => handleCardClick(item)}
+                >
+                  <div className="icon">
+                    <img
+                      src={ImageUrl?.serverUrl + ImageUrl?.serverRelativeUrl}
+                      alt="Icon"
+                    />
+                  </div>
+                  <p className="text-dark">{item.Title}</p>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div>Access Denied</div>
+        )
+      ) : (
+        // Render BusinessAppsComponent when Business Apps is clicked
+        <div>
+          <button
+            style={{ margin: "10px" }}
+            className="btn btn-secondary"
+            onClick={handleBackClick}
+          >
+            Back
+          </button>
+          <BusinessAppsComponent data={selectedItem} />
+        </div>
       )}
+
+
       <div id="iframeContainer" style={{ marginTop: '20px' }}></div>
   
 

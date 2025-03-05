@@ -284,7 +284,7 @@ const MyApprovalContext = ({ props }: any) => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -560,6 +560,9 @@ const MyApprovalContext = ({ props }: any) => {
     getCurrrentuser();
   }, []);
 
+ 
+
+
   const truncateText = (text: string, maxLength?: any) => {
     if (text) {
       return text.length > maxLength
@@ -665,28 +668,36 @@ const MyApprovalContext = ({ props }: any) => {
   }>({});
 
   //const [activeTab, setActiveTab] = useState("home1");
-  const [activeTab, setActiveTab] = useState("Intranet");
+  // const [activeTab, setActiveTab] = useState("Intranet");
+  const [activeTab, setActiveTab] = useState("Automation");
   const handleTabClick = async (tab: React.SetStateAction<string>) => {
     setActiveTab(tab);
     setLoading(true);
-    console.log(
-      "tab",
-      tab,
-      myApprovalsDataAutomation,
-      myApprovalsDataAll,
-      myApprovalsData
-    );
-
-    if (tab == "Intranet") {
-      setMyApprovalsData(myApprovalsDataAll);
-    } else if (tab == "DMS") {
-      setMyApprovalsData(Mylistdata);
-    } else if (tab == "Automation") {
-      //ApiCall("Pending");
-      setMyApprovalsData(myApprovalsDataAutomation);
-      //setMyApprovalsDataAutomation(myApprovalsDataAutomation);
+    try {
+      console.log(
+        "tab",
+        tab,
+        myApprovalsDataAutomation,
+        myApprovalsDataAll,
+        myApprovalsData
+      );
+  
+      if (tab == "Intranet") {
+        setMyApprovalsData(myApprovalsDataAll);
+      } else if (tab == "DMS") {
+        setMyApprovalsData(Mylistdata);
+      } else if (tab == "Automation") {
+        //ApiCall("Pending");
+        setMyApprovalsData(myApprovalsDataAutomation);
+        //setMyApprovalsDataAutomation(myApprovalsDataAutomation);
+      }
+    } catch (error) {
+      console.log("Error in after tab click",error)
+    }finally{
+      setLoading(false);
     }
-    setLoading(false);
+    
+    
   };
 
   React.useEffect(() => {
@@ -698,20 +709,26 @@ const MyApprovalContext = ({ props }: any) => {
   const ApiCall = async (status: string) => {
     // if(activeTab == "Intranet"){
     setLoading(true);
-    let MyApprovaldata = await getMyApproval(sp, status);
-    let Automationdata1 = await getApprovalListsData(sp, status);
-    let typedata = await getType(sp);
-    setMyApprovalsData(MyApprovaldata);
-    setMyApprovalsDataAll(MyApprovaldata);
-    //}
-    //else if(activeTab == "Automation"){
-    let Automationdata = Automationdata1.sort((a, b) => {
-      return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
-    });
-    setMyApprovalsDataAutomation(Automationdata);
-    setLoading(false);
-    console.log("Automationdata", Automationdata);
-    // }
+    try {
+      let MyApprovaldata = await getMyApproval(sp, status);
+      let Automationdata1 = await getApprovalListsData(sp, status);
+      let typedata = await getType(sp);
+      // setMyApprovalsData(MyApprovaldata);
+      setMyApprovalsDataAll(MyApprovaldata);
+      //}
+      //else if(activeTab == "Automation"){
+      // }
+      let Automationdata = Automationdata1.sort((a, b) => {
+        return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
+      });
+      setMyApprovalsDataAutomation(Automationdata);
+      setMyApprovalsData(Automationdata);
+      console.log("Automationdata", Automationdata);
+    } catch (error) {
+      console.log("Error in api call to fetch the data",error)
+    }finally{
+      setLoading(false);
+    }
   };
 
   // const FilterDiscussionData = async (optionFilter: string) => {
@@ -721,41 +738,48 @@ const MyApprovalContext = ({ props }: any) => {
   // };
   const handleStatusChange = async (name: string, value: string, actingfor: any) => {
     setLoading(true);
-    actingforuseremail = actingfor
-    // alert(`Status value is ${value} is acting for ${actingfor}`)
-    if (actingforuseremail === undefined || actingforuseremail === null || actingforuseremail === "") {
-      // alert("acting for is undefined")
-    }
-
-    if (value === "") {
-      // Show all records if no type is selected
-      console.log("No status selected");
-    } else {
-      // Filter records based on the selected type
-      let MyApprovaldata = await getMyApproval(sp, value, actingfor);
-      let Automationdata = await getApprovalListsData(sp, value, actingfor);
-      // let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
-      let MyDMSAPPROVALDATA: any = await getApprovalmasterTasklist(value, actingfor)
-      console.log("MyDMSAPPROVALDATA", MyDMSAPPROVALDATA)
-      setMyApprovalsDataAll(MyApprovaldata);
-      setMyApprovalsDataAutomation(Automationdata);
-      if (activeTab == "Intranet") {
-        setMyApprovalsData(MyApprovaldata);
-      } else if (activeTab == "DMS") {
-        // alert(value)
-        setMyApprovalsData(MyDMSAPPROVALDATA);
-      } else if (activeTab == "Automation") {
-        setMyApprovalsData(Automationdata);
-        console.log("Automationdata", Automationdata);
+    try {
+      actingforuseremail = actingfor
+      // alert(`Status value is ${value} is acting for ${actingfor}`)
+      if (actingforuseremail === undefined || actingforuseremail === null || actingforuseremail === "") {
+        // alert("acting for is undefined")
       }
-      // else if (activeTab == "Automation") {
-      //   setMyApprovalsData(null);
-      //   setMyApprovalsData(MyDMSAPPROVALDATA);
-      //   setMyApprovalsData(Mylistdata);
-      //   console.log("Automationdata", Automationdata);
-      // }
+
+      if (value === "") {
+        // Show all records if no type is selected
+        console.log("No status selected");
+      } else {
+        // Filter records based on the selected type
+        let MyApprovaldata = await getMyApproval(sp, value, actingfor);
+        let Automationdata = await getApprovalListsData(sp, value, actingfor);
+        // let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
+        let MyDMSAPPROVALDATA: any = await getApprovalmasterTasklist(value, actingfor)
+        console.log("MyDMSAPPROVALDATA", MyDMSAPPROVALDATA)
+        setMyApprovalsDataAll(MyApprovaldata);
+        setMyApprovalsDataAutomation(Automationdata);
+        if (activeTab == "Intranet") {
+          setMyApprovalsData(MyApprovaldata);
+        } else if (activeTab == "DMS") {
+          // alert(value)
+          setMyApprovalsData(MyDMSAPPROVALDATA);
+        } else if (activeTab == "Automation") {
+          setMyApprovalsData(Automationdata);
+          console.log("Automationdata", Automationdata);
+        }
+        // else if (activeTab == "Automation") {
+        //   setMyApprovalsData(null);
+        //   setMyApprovalsData(MyDMSAPPROVALDATA);
+        //   setMyApprovalsData(Mylistdata);
+        //   console.log("Automationdata", Automationdata);
+        // }
+      }
+    } catch (error) {
+      console.log("Error in status change",error)
+    }finally{
+      setLoading(false);
     }
-    setLoading(false);
+    
+    
   };
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -955,7 +979,12 @@ const MyApprovalContext = ({ props }: any) => {
 
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
-
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+      setCurrentGroup(1);
+    }
+  }, [filteredMyApprovalData,currentGroup]);
   // const fetchOptions = async () => {
 
   //   try {
@@ -1152,6 +1181,11 @@ const MyApprovalContext = ({ props }: any) => {
     }
   };
 
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1); 
+    }
+  }, [filteredMyApprovalData]);
   return (
     <div id="wrapper" ref={elementRef}>
       <div className="app-menu" id="myHeader">
@@ -1636,7 +1670,7 @@ const MyApprovalContext = ({ props }: any) => {
                                     isActivedata
                                   )}
                                   <tbody>
-                                    {loading && currentData?.length == 0 && (
+                                    {loading && (
                                       <div className="loadernewadd">
                                         <div>
                                           <img

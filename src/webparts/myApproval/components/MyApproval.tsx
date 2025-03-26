@@ -284,7 +284,7 @@ const MyApprovalContext = ({ props }: any) => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      //setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -819,6 +819,9 @@ const MyApprovalContext = ({ props }: any) => {
     getCurrrentuser();
   }, []);
 
+ 
+
+
   const truncateText = (text: string, maxLength?: any) => {
     if (text) {
       return text.length > maxLength
@@ -988,7 +991,7 @@ const MyApprovalContext = ({ props }: any) => {
 
   // };
   const handleStatusChange = async (name: string, value: string, actingfor: any) => {
-
+    setLoading(true);
     actingforuseremail = actingfor
     // alert(`Status value is ${value} is acting for ${actingfor}`)
     if (actingforuseremail === undefined || actingforuseremail === null || actingforuseremail === "") {
@@ -999,8 +1002,6 @@ const MyApprovalContext = ({ props }: any) => {
       // Show all records if no type is selected
       console.log("No status selected");
     } else {
-      setLoading(true);
-      setStatusChange(true);
       // Filter records based on the selected type
       let MyApprovaldata = await getMyApproval(sp, value, actingfor);
       let Automationdata = await getApprovalListsData(sp, value, actingfor);
@@ -1015,15 +1016,9 @@ const MyApprovalContext = ({ props }: any) => {
         // alert(value)
         setMyApprovalsData(MyDMSAPPROVALDATA);
       } else if (activeTab == "Automation") {
-        setMyApprovalsData(Automationdata.sort((a, b) => b.Created - a.Created));
+        setMyApprovalsData(Automationdata);
         console.log("Automationdata", Automationdata);
       }
-      setTimeout(() => {
-        setStatusChange(false)
-      }, 5000);
-      setTimeout(() => {
-        setLoading(false);
-      }, 7000);
       // else if (activeTab == "Automation") {
       //   setMyApprovalsData(null);
       //   setMyApprovalsData(MyDMSAPPROVALDATA);
@@ -1031,7 +1026,7 @@ const MyApprovalContext = ({ props }: any) => {
       //   console.log("Automationdata", Automationdata);
       // }
     }
-
+    setLoading(false);
   };
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -1231,7 +1226,12 @@ const MyApprovalContext = ({ props }: any) => {
 
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
-
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+      setCurrentGroup(1);
+    }
+  }, [filteredMyApprovalData,currentGroup]);
   // const fetchOptions = async () => {
 
   //   try {
@@ -1428,6 +1428,11 @@ const MyApprovalContext = ({ props }: any) => {
     }
   };
 
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1); 
+    }
+  }, [filteredMyApprovalData]);
   return (
     <div id="wrapper" ref={elementRef}>
       <div className="app-menu" id="myHeader">

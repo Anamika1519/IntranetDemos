@@ -794,7 +794,8 @@ const MyRequestContext = ({ props }: any) => {
 
       }
       setTimeout(() => {
-        setStatusChange(false)
+        setStatusChange(false);
+        setLoading(false);
       }, 10000);
       
       // else if (activeTab == "Automation") {
@@ -995,12 +996,14 @@ const MyRequestContext = ({ props }: any) => {
                           <a
                             aria-disabled
 
-                            // onClick={() => handleTabClick("Intranet")}
+                             //onClick={() => handleTabClick("Intranet")}
 
                             className={`nav-link myapprovalcomingsoon ${activeTab === "Intranet" ? "active" : ""
 
                               }`}
+                            // className={`nav-link ${activeTab === "Intranet" ? "active" : ""
 
+                            // }`}
                             aria-selected={activeTab === "Intranet"}
 
                             role="tab"

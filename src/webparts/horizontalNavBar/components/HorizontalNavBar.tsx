@@ -484,7 +484,7 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
             </div> */}
           </div>
           <div className="dropdown">
-            <div className='d-flex newalinc' onClick={toggleDropdown} style={{ gap: '2px', cursor: 'pointer' }}>
+            <div className='d-flex newalinc' onClick={toggleDropdown} style={{ gap: '2px', cursor: 'auto' }}>
               <div >
                 {currentUserEmail !== "" && CurrenuserProfilepic != null && Number(CurrentuserPicturePlaceholderState) == 0 ?
                   <img src={`${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${currentUserEmail}`}
@@ -526,7 +526,7 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
               </div>
               <div className='dropcssUser desktoView'>
                 <div>{currentUser}</div>
-                <div><ChevronDown size={12} /></div>
+                {/* <div><ChevronDown size={12} /></div> */}
               </div>
             </div>
             <div id="myDropdown" className={`dropdown-content newdrop ${isOpen ? 'show' : ''}`}>

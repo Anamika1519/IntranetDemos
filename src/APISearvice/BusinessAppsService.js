@@ -1232,7 +1232,7 @@ export const getApprovalListsData = async (_sp, status, Actingfor) => {
                       ID: resData[j].ID,
                       RequestID: resData[j].Title,
                       // ApprovalTitle: "",
-                      ApprovalTitle:resData[i]?.RequestTitle!= ""? resData[i]?.RequestTitle:"",
+                      ApprovalTitle:resData[j]?.RequestTitle!= ""? resData[j]?.RequestTitle:"",
                       Author: resData[j].Requestor_x0020_Name,
                       ProcessName: res[i].ProcessName,
                       Created: new Date(resData[j].Created),

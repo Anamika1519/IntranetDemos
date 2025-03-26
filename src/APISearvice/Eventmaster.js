@@ -1,47 +1,47 @@
 import Swal from 'sweetalert2';
-export const getAllEventMaster = async (_sp,isSuperAdmin) => {
+export const getAllEventMaster = async (_sp, isSuperAdmin) => {
   let arr = []
   let str = "Announcements"
-  const currentUser = await _sp.web.currentUser(); 
-  if(isSuperAdmin == "yes"){
-  await _sp.web.lists.getByTitle("ARGEventMaster").items.select("*,Entity/ID,Entity/Entity").expand("Entity").orderBy("Created",false).getAll()
-    .then((res) => {
-      console.log(res);
+  const currentUser = await _sp.web.currentUser();
+  if (isSuperAdmin == "yes") {
+    await _sp.web.lists.getByTitle("ARGEventMaster").items.select("*,Entity/ID,Entity/Entity").expand("Entity").orderBy("Created", false).getAll()
+      .then((res) => {
+        console.log(res);
 
-      //res.filter(x=>x.Category?.Category==str)
-      arr = res;
-    })
-    .catch((error) => {
-      console.log("Error fetching data: ", error);
-    });
-  }else{
+        //res.filter(x=>x.Category?.Category==str)
+        arr = res;
+      })
+      .catch((error) => {
+        console.log("Error fetching data: ", error);
+      });
+  } else {
     await _sp.web.lists.getByTitle("ARGEventMaster").items
-    .select("*,Entity/ID,Entity/Entity,Author/ID").expand("Entity,Author")
-    .filter(`AuthorId eq '${currentUser.Id}'`)
-    .orderBy("Created",false).getAll()
-    .then((res) => {
-      console.log(res);
+      .select("*,Entity/ID,Entity/Entity,Author/ID").expand("Entity,Author")
+      .filter(`AuthorId eq '${currentUser.Id}'`)
+      .orderBy("Created", false).getAll()
+      .then((res) => {
+        console.log(res);
 
-      //res.filter(x=>x.Category?.Category==str)
-      arr = res;
-    })
-    .catch((error) => {
-      console.log("Error fetching data: ", error);
-    });
+        //res.filter(x=>x.Category?.Category==str)
+        arr = res;
+      })
+      .catch((error) => {
+        console.log("Error fetching data: ", error);
+      });
   }
   return arr;
 }
-export const getAllEventMasternonselected = async (_sp,Idnum) => {
+export const getAllEventMasternonselected = async (_sp, Idnum) => {
   debugger
   let arr = []
   let str = "Announcements"
   await _sp.web.lists.getByTitle("ARGEventMaster").items.select("*,Entity/ID,Entity/Entity").expand("Entity").filter(`ID ne ${Idnum}`)
-  .top(3).orderBy("EventDate",true).getAll()
+    .top(3).orderBy("EventDate", true).getAll()
     .then((res) => {
-      
 
-      let resnew= res.slice(0, 3);
-      console.log("getAllEventMasternonselected",res, resnew);
+
+      let resnew = res.slice(0, 3);
+      console.log("getAllEventMasternonselected", res, resnew);
       //res.filter(x=>x.Category?.Category==str)
       arr = resnew;
     })
@@ -132,7 +132,7 @@ export const uploadFileToLibrary = async (file, sp, docLib) => {
 
 export const uploadFile = async (file, sp, docLib, siteUrl) => {
   let arr = {};
-  
+
   const uploadResult = await sp.web.lists.getByTitle(docLib).rootFolder.files.addChunked(file.name, file, data => {
     console.log(`progress`, data);
   }, true);
@@ -195,7 +195,7 @@ const handleFileChange = async (event) => {
   const file = event.target.files[0];
   if (file) {
     try {
-      const folderUrl = `/sites/intranet/${docLib}`; // Replace with your folder URL
+      const folderUrl = `/sites/AlRostmaniSpfx2/${docLib}`; // Replace with your folder URL
       const fileName = file.name;
 
       const fileBlob = new Blob([file], { type: file.type });
@@ -269,21 +269,21 @@ export const DeleteEntityMasterAPI = async (_sp, id) => {
   return resultArr;
 }
 export const getEventByID = async (_sp, id) => {
-  
+
   let arr = []
   let arrs = []
   let bannerimg = []
   await _sp.web.lists.getByTitle("ARGEventMaster").items.getById(id).select("*,Entity/Id,Entity/Entity").expand("Entity")()
     .then((res) => {
       console.log(res, ' let arrs=[]');
-      const bannerimgobject = res.image != "{}"&& res.image !=null && JSON.parse(res.image)
+      const bannerimgobject = res.image != "{}" && res.image != null && JSON.parse(res.image)
       console.log(bannerimgobject[0], 'bannerimgobject');
       if (bannerimgobject != null) {
 
         bannerimg.push(bannerimgobject);
 
       }
-      
+
       const parsedValues = {
         EventName: res.EventName,
         ID: res.ID,
@@ -317,17 +317,18 @@ export const getARGEventMasterDetailsById = async (_sp, idNum) => {
   let arr1 = []
 
   await _sp.web.lists.getByTitle("ARGEventMaster").items.getById(idNum).select("*,Attendees/Id,Attendees/Title").expand("Attendees")()
-    .then(async(res) => {
+    .then(async (res) => {
       // for (var i = 0; i < res.length; i++) {
-      for (var j = 0; j < res.Attendees.length; j++) {
-        var user = await _sp.web.getUserById(res.Attendees[j].Id)();
-        var profile = await _sp.profiles.getPropertiesFor(`i:0#.f|membership|${user.Email}`);
-        res.Attendees[j].EMail = user.Email;
+      if (res.Attendees && res.Attendees?.length > 0) {
+        for (var j = 0; j < res.Attendees?.length; j++) {
+          var user = await _sp.web.getUserById(res.Attendees[j].Id)();
+          var profile = await _sp.profiles.getPropertiesFor(`i:0#.f|membership|${user.Email}`);
+          res.Attendees[j].EMail = user.Email;
 
-        res.Attendees[j].SPSPicturePlaceholderState = profile.UserProfileProperties?profile.UserProfileProperties[profile.UserProfileProperties.findIndex(obj=>obj.Key === "SPS-PicturePlaceholderState")].Value:"1";
+          res.Attendees[j].SPSPicturePlaceholderState = profile.UserProfileProperties ? profile.UserProfileProperties[profile.UserProfileProperties.findIndex(obj => obj.Key === "SPS-PicturePlaceholderState")].Value : "1";
 
+        }
       }
-    // }
       // arr=res;
       console.log(res, 'resresres');
 
@@ -340,7 +341,7 @@ export const getARGEventMasterDetailsById = async (_sp, idNum) => {
 }
 export const uploadFileBanner = async (file, sp, docLib, siteUrl) => {
   let arr = {};
-  
+
   const uploadResult = await sp.web.lists.getByTitle(docLib).rootFolder.files.addChunked(file.name, file, data => {
     console.log(`progress`, data);
   }, true);

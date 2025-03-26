@@ -41,7 +41,7 @@ interface Reply {
   UserName: string;
 
   UserEmail: string;
-  SPSPicturePlaceholderState:string;
+  SPSPicturePlaceholderState: string;
 
   Comments: string;
   Created: string;
@@ -73,7 +73,7 @@ const BlogDetailsContext = ({ props }: any) => {
   const siteUrl = props.siteUrl;
   const elementRef = React.useRef<HTMLDivElement>(null);
   const [CurrentUser, setCurrentUser]: any[] = useState([]);
-   const [SPSPicturePlaceholderState, setSPSPicturePlaceholderState]= useState(null);
+  const [SPSPicturePlaceholderState, setSPSPicturePlaceholderState] = useState(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -100,6 +100,7 @@ const BlogDetailsContext = ({ props }: any) => {
     //   setComments(JSON.parse(savedComments));
     // }
     let page = getUrlParameterValue('page');
+    console.log("pppppage",page)
     setpage(page);
     ApiLocalStorageData();
     // getApiData()
@@ -230,7 +231,7 @@ const BlogDetailsContext = ({ props }: any) => {
                 UserName: initialComments[i].UserName,
                 AuthorId: initialComments[i].AuthorId,
                 AuthorEmail: initialComments[i].Author.EMail,
-                SPSPicturePlaceholderState : initialComments[i].Author.SPSPicturePlaceholderState,
+                SPSPicturePlaceholderState: initialComments[i].Author.SPSPicturePlaceholderState,
                 Comments: initialComments[i].Comments,
                 Created: initialComments[i].Created,  // Formatting the created date
                 UserLikesJSON: result1.length > 0 ? likeArray : []
@@ -258,7 +259,7 @@ const BlogDetailsContext = ({ props }: any) => {
     setCurrentUserProfile(await getCurrentUserProfile(sp, siteUrl));
 
     const profileemail = await getCurrentUserProfileEmail(sp);
-    setSPSPicturePlaceholderState( await getuserprofilepic(sp,profileemail));
+    setSPSPicturePlaceholderState(await getuserprofilepic(sp, profileemail));
   };
 
   const copyToClipboard = (Id: number) => {
@@ -480,8 +481,8 @@ const BlogDetailsContext = ({ props }: any) => {
             AuthorId: ress.data.AuthorId,
             UserName: ress.data.UserName, // Replace with actual username
 
-            UserEmail :CurrentUser.Email,
-            SPSPicturePlaceholderState : SPSPicturePlaceholderState,
+            UserEmail: CurrentUser.Email,
+            SPSPicturePlaceholderState: SPSPicturePlaceholderState,
 
 
             Comments: ress.data.Comments,
@@ -553,8 +554,8 @@ const BlogDetailsContext = ({ props }: any) => {
     //const office365MailLink = `https://outlook.office.com/mail/deeplink/compose?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     const subject = "Thought You’d Find This Interesting!";
     const body = 'Hi,' +
-        'I came across something that might interest you: ' +
-        `<a href="${siteUrl}/SitePages/BlogDetails.aspx?${item.Id}"></a>`
+      'I came across something that might interest you: ' +
+      `<a href="${siteUrl}/SitePages/BlogDetails.aspx?${item.Id}"></a>`
     const office365MailLink = `https://outlook.office.com/mail/deeplink/compose?subject=${subject}&body=${body}`;
 
     window.open(office365MailLink, '_blank');
@@ -805,9 +806,9 @@ const BlogDetailsContext = ({ props }: any) => {
                         onLike={() => handleLikeToggle(index)} // Pass like handler
                         loadingReply={loadingReply}
                         mainArray={ArrDetails}
-                        CurrentUserEmail = {CurrentUser.Email}
-                        CurrSPSPicturePlaceholderState ={SPSPicturePlaceholderState}
-                        siteUrl = {siteUrl}
+                        CurrentUserEmail={CurrentUser.Email}
+                        CurrSPSPicturePlaceholderState={SPSPicturePlaceholderState}
+                        siteUrl={siteUrl}
                       />
                     </div>
                   ))}
@@ -815,7 +816,7 @@ const BlogDetailsContext = ({ props }: any) => {
 
 
               </div>
-             
+
               <div className="col-lg-4 widthnew">
                 <div style={{ position: 'sticky', top: '90px' }} className="card  postion8">
                   <div className="card-body">
@@ -842,8 +843,8 @@ const BlogDetailsContext = ({ props }: any) => {
 
 
               </div>
-
-              {pageValue !== "" &&
+              {console.log(pageValue, "testt pagevalue")}
+              {pageValue != "" && pageValue != null &&
                 <div className="col-lg-4">
                   <div className="text-left butncss">
                     <button type="button" className="btn cancel-btn waves-effect waves-light m-1" style={{ fontSize: '0.875rem' }} onClick={handleCancel}>
@@ -906,8 +907,9 @@ const BlogDetailsContext = ({ props }: any) => {
              } */}
 
               {/* ******* changes */}
-              {
-                //let forrework=ApprovalRequestItem && ApprovalRequestItem.IsRework=='Yes'&& ApprovalRequestItem.LevelSequence!=0;
+              {console.log(pageValue, "testt", ApprovalRequestItem, (ApprovalRequestItem && ApprovalRequestItem.IsRework == 'Yes' && ApprovalRequestItem.LevelSequence != 0))}
+
+              { //let forrework=ApprovalRequestItem && ApprovalRequestItem.IsRework=='Yes'&& ApprovalRequestItem.LevelSequence!=0;
                 (ApprovalRequestItem) || (ApprovalRequestItem && ApprovalRequestItem.IsRework == 'Yes' && ApprovalRequestItem.LevelSequence != 0) ? (
                   <WorkflowAction currentItem={ApprovalRequestItem} ctx={props.context}
                     DisableApproval={ApprovalRequestItem && ApprovalRequestItem.IsRework == 'Yes' && ApprovalRequestItem.LevelSequence != 0}

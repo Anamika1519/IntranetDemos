@@ -366,7 +366,7 @@ const HelloWorldContext = ({ props }: any) => {
                           className="image-popup" style={{}}
                           title={`Screenshot of ${item.Title || "Untitled"}`}
                         >
-                          {arrjson != null && arrjson[0].fileType.startsWith('video/') ?
+                          {arrjson.length > 0 && arrjson[0].fileType.startsWith('video/') ?
                             <video muted={true} id='Backendvideo' ref={getvideo} style={{ maxWidth: "100%", height: "100%", width: "100%", borderRadius: "13px", objectFit: "fill" }} className="img-fluid" controls={true}>
                               <source src={(videositeurl + arrjson[0].fileUrl) + "#t=5"} type="video/mp4"></source>
                             </video> :
@@ -437,7 +437,7 @@ const HelloWorldContext = ({ props }: any) => {
                 className="d-block w-100"
                 src={mediaData[0]?.fileUrl ? mediaData[0]?.fileUrl : require("../../../Assets/ExtraImage/NoDataFound.png")}
                 //alt={`Slide ${index}`}
-                style={{ height: 'auto', objectFit: 'contain' }}
+                style={{ height: '100%', objectFit: 'cover' }}
               />
             }
 

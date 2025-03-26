@@ -314,7 +314,8 @@ const deleteLocalFile = (index, filArray, name) => {
             const userIds = rows[i].approvedUserListupdate.map((user) => user.id);
      
             let arrPost = {
-              LevelSequence: i + 1,
+               //LevelSequence: i + 1,
+        LevelSequence: rows[i].LevelId,
               ContentId: contentId,
      
               ContentName: "ARGBlogs",

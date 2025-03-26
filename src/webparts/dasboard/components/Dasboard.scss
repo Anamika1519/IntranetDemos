@@ -79,6 +79,9 @@
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
+.footer{
+    bottom: 144px !important;
+}
 .inner-sty
 {
     border: 1px solid;
@@ -597,17 +600,18 @@ font-size: 42px; font-weight: 400;color: #fff;  margin-top: 10px;
 .logo img{
     position: absolute;
     left: 32px;
-    top: 52px;
+    top: 23px;
+    // top: 60px;
 }
 #s4-workspace{overflow-y:hidden !important;}
 footer{background: transparent !important;}
 #myHeader svg,.dropcssUser,#myHeader a{color: #fff !important;}
 .newmyr a:hover{ color: #095470 !important;}
-.newbar{margin-top: 70px; clear: both; float: left; text-transform: initial;}
+.newbar{margin-top: 50px; clear: both; float: left; text-transform: initial;}
 
 .progressbarnew{width: 291px; border-radius: 30px; background: #fff; height: 31px; border: 1px solid #ccc; padding: 2px;}
 .bluback{background: #1fb0e5; border-radius: 30px; width: 225px;height: 25px;}
-#wrapper{background: url(../assets/bg-landing.png); min-height: 100vh; background-repeat: no-repeat; background-size: cover;}
+#wrapper{background: url(../assets/bg-landing.png); min-height: 100vh; left:-3px; background-repeat: no-repeat; background-size: cover; top:-7px; position: relative; }
 @media(max-width:1920px){
     .tile ul li{height: 175px; padding-top: 40px;}
 }

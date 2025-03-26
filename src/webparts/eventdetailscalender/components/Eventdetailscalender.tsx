@@ -197,25 +197,28 @@ const EventdetailscalenderContext = ({ props }: any) => {
             .then((result1: any) => {
               console.log(result1, "ARGEventsUserLikes");
               likeArray = []
-              for (var j = 0; j < result1.length; j++) {
-                arrLike = {
-                  "ID": result1[j].Id,
-                  "AuthorId": result1[j].AuthorId,
-                  "AuthorEmail": result1[j]?.Author?.EMail,
-                  "SPSPicturePlaceholderState":result1[j].Author.SPSPicturePlaceholderState,
-                  "UserName": result1[j].UserName,
-                  "Like": result1[j].Like,
-                  "Created": result1[j].Created
+              if(result1.length > 0){
+                for (var j = 0; j < result1.length; j++) {
+                  arrLike = {
+                    "ID": result1[j].Id,
+                    "AuthorId": result1[j].AuthorId,
+                    "AuthorEmail": result1[j]?.Author?.EMail,
+                    "SPSPicturePlaceholderState":result1[j].Author?.SPSPicturePlaceholderState,
+                    "UserName": result1[j].UserName,
+                    "Like": result1[j].Like,
+                    "Created": result1[j].Created
+                  }
+                  likeArray.push(arrLike)
                 }
-                likeArray.push(arrLike)
               }
+              
 
               let arr = {
                 Id: initialComments[i].Id,
                 UserName: initialComments[i].UserName,
                 AuthorId: initialComments[i].AuthorId,
                 AuthorEmail: initialComments[i]?.Author?.EMail,
-                SPSPicturePlaceholderState : initialComments[i].Author.SPSPicturePlaceholderState,
+                SPSPicturePlaceholderState : initialComments[i].Author?.SPSPicturePlaceholderState,
                 Comments: initialComments[i].Comments,
                 Created: initialComments[i].Created, // Formatting the created date
                 UserLikesJSON: result1.length > 0 ? likeArray : []
@@ -235,7 +238,7 @@ const EventdetailscalenderContext = ({ props }: any) => {
 
         }
 
-        setComments(initialArray)
+        setComments(initialArray.sort((a, b) => new Date(b.Created).getTime() - new Date(a.Created).getTime()))
         // setComments(
         //   initialComments.map((res) => ({
         //     Id: res.Id,
@@ -271,7 +274,11 @@ const EventdetailscalenderContext = ({ props }: any) => {
       });
   }
   const ApICallData = async () => {
-
+    debugger
+    const siteUrl = props.siteUrl;
+    let listTitle = 'UtilitySettings'
+    let CurrentsiteID = props.context.pageContext.site.id;
+    
     setCurrentUser(await getCurrentUser(sp, siteUrl));
     setCurrentUserProfile(await getCurrentUserProfile(sp, siteUrl));
     const profileemail = await getCurrentUserProfileEmail(sp);
@@ -327,7 +334,16 @@ const EventdetailscalenderContext = ({ props }: any) => {
           userHasLiked: false, // Initialize as false
           UserProfile: ress.data.UserProfile,
         };
-        setComments((prevComments) => [...prevComments, newCommentData1]);
+        //setComments((prevComments) => [...prevComments, newCommentData1]);
+        setComments((prevComments) => {
+          // Add the new comment first
+          const updatedComments = [...prevComments, newCommentData1];
+        
+          // Sort the comments in descending order based on the 'created' date
+          updatedComments.sort((a, b) => new Date(b.Created).getTime() - new Date(a.Created).getTime());
+        
+          return updatedComments;
+        });
         let notifiedArr = {
           ContentId: ArrDetails[0].Id,
           NotifiedUserId: ArrDetails[0].AuthorId,
@@ -767,7 +783,7 @@ const EventdetailscalenderContext = ({ props }: any) => {
                                       {item?.Attendees?.length > 3 && <Modal.Title>Attendees</Modal.Title>}
                                     </Modal.Header>
                                     <Modal.Body style={{ overflowY: 'auto', maxHeight: '600px' }}>
-                                      <p>{item?.Attendees?.length} Memebers Attending</p>
+                                      <p>{item?.Attendees?.length > 0 ? item?.Attendees?.length:0} Memebers Attending</p>
                                       {item?.Attendees?.length > 3 &&
                                         (
                                           <>

@@ -188,8 +188,8 @@ export const getRequestListsData = async (_sp, status) => {
                     // RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
                     ID: resData[j].ID,
                     RequestID: resData[j].Title,
-                    // ApprovalTitle: res[i].RequestTitle,
-                    ApprovalTitle: resData[i]?.RequestTitle!= ""? resData[i]?.RequestTitle:"",
+                    // ApprovalTitle: res[i].RequestTitle,RequestTitle
+                    ApprovalTitle: resData[j]?.RequestTitle!= ""? resData[j]?.RequestTitle:"",
                     Author: resData[j].Requestor_x0020_Name,
                     ProcessName: res[i].ProcessName,
                     Created: new Date(resData[j].Created),

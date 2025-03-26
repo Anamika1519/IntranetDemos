@@ -13,6 +13,7 @@ import { GroupType } from '@pnp/graph/groups';
 import { Dropdown, IDropdownOption } from "@fluentui/react/lib/Dropdown";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { DetailsList, IColumn } from "@fluentui/react/lib/DetailsList";
+import "./AdToSpGroupSync.module.scss";
 
 export default class AdToSpGroupSync extends React.Component<IAdToSpGroupSyncProps,IAdToSpGroupSyncState> {
   _graph:GraphFI;
@@ -248,26 +249,38 @@ export default class AdToSpGroupSync extends React.Component<IAdToSpGroupSyncPro
     const { adGroups, spGroups, adGroupUsers, status } = this.state;
 
     return (
-      <div >
-                <span style={{ marginTop: '106px' }}>Total number of AD groups retreived:{adGroups.length}</span>
-
+      <div style={{width:'90%', margin:'3%'}} className='mt-4 card card-body'>
+               
+       <div style={{width:'32%', float:'left',marginRight:'10px'}}>
+       <h3 >Total number of AD groups retreived:{adGroups.length}</h3>
         <Dropdown
           placeholder="Select Azure AD Group"
           options={adGroups}
           onChange={(e, option) => this.setState({ selectedADGroup: option?.key as string })}
         />
+        </div>
+        <div style={{width:'44%', float:'left', marginTop:'3px'}}>
         <span>Total number of SP groups retreived:{spGroups.length}</span>
         <Dropdown
           placeholder="Select SharePoint Group"
           options={spGroups}
           onChange={(e, option) => this.setState({ selectedSPGroup: option?.key as string })}
         />
-        <PrimaryButton
+        </div>
+        
+        <PrimaryButton 
           text="Load AD Group Users"
           onClick={this.fetchADGroupUsers}
-          style={{ marginTop: "10px" }}
+          style={{ marginTop: "21px", float:'left' }}
         />
-        <DetailsList
+      
+        <PrimaryButton
+          text="Sync"
+          onClick={this.syncGroups}
+          style={{ marginTop: "21px" }}
+        />
+        <div style={{clear:'both'}}></div>
+          <DetailsList  
           items={adGroupUsers}
           columns={[
             { 
@@ -276,13 +289,8 @@ export default class AdToSpGroupSync extends React.Component<IAdToSpGroupSyncPro
             },
             { key: "displayName", name: "Name", fieldName: "displayName", minWidth: 100 },
             { key: "email", name: "Email", fieldName: "email", minWidth: 150 },
-          ]}
+          ]} 
           // style={{ marginTop: "20px" }}
-        />
-        <PrimaryButton
-          text="Sync"
-          onClick={this.syncGroups}
-          style={{ marginTop: "20px" }}
         />
         {status && <p style={{ color: "blue", marginTop: "20px" }}>{status}</p>}
       </div>

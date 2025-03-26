@@ -101,7 +101,7 @@ export const MastersettingContext = ({ props }: any) => {
 
     const specialGroups = ['Super Admin Group', 'Content Contributor Group', 'Intranet Member Group'];
     //const specialGroups = ['IntranetAdmin', 'IntranetContentContributor', 'IntranetMembers'];
-    return specialGroups.some(group => linkUrl.includes(group));
+    return specialGroups.some(group => linkUrl?.includes(group));
   };
   // const { useHide }: any = React.useContext(UserContext);
   // const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -135,7 +135,7 @@ export const MastersettingContext = ({ props }: any) => {
     let sidebarnavitems = await sp.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title").expand("Audience").orderBy("Order0", true).getAll();
 
     let securednavitems = sidebarnavitems.filter((nav: any) => {
-      return (nav.EnableAudienceTargeting && nav.Audience && nav.Audience.some((nv1: any) => { return grptitle.includes(nv1.Title.toLowerCase()); }))
+      return (nav.EnableAudienceTargeting && nav.Audience && nav.Audience.some((nv1: any) => { return grptitle?.includes(nv1.Title.toLowerCase()); }))
     }
     )
     console.log("sidebarnavitems", sidebarnavitems, securednavitems)
@@ -281,7 +281,7 @@ checkUrlForMembershipGroupId();
       <div className="content-page">
         <HorizontalNavbar _context={sp} siteUrl={SiteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}` }}>
-          <div style={{paddingTop:'12px'}} className="container-fluid  paddb">
+          <div  className="container-fluid  paddb">
             <div className="row pt-0" style={{ paddingLeft: '0.5rem' }}>
               <div className="col-lg-3">
                 <CustomBreadcrumb Breadcrumb={Breadcrumb} />

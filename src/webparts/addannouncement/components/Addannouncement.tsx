@@ -261,7 +261,7 @@ const AddannouncementContext = ({ props }: any) => {
       console.log(setBannerById, 'setBannerById');
       setEditID(Number(setBannerById[0].ID))
       if (setBannerById.length > 0) {
-        debugger
+        
         setEditForm(true)
         setCategoryData(await getCategory(sp, Number(setBannerById[0]?.TypeMaster))) // Category
 
@@ -473,7 +473,7 @@ const AddannouncementContext = ({ props }: any) => {
           if (result.isConfirmed) {
             setLoading(true);
             //console.log("Form Submitted:", formValues, bannerImages, galleryImages, documents);
-            // debugger
+            // 
             let bannerImageArray: any = {};
             let galleryIds: any[] = [];
             let documentIds: any[] = [];
@@ -496,7 +496,7 @@ const AddannouncementContext = ({ props }: any) => {
               bannerImageArray = null
             }
 
-            // debugger
+            // 
             if (bannerImageArray != null) {
               // Create Post
               const postPayload = {
@@ -515,7 +515,7 @@ const AddannouncementContext = ({ props }: any) => {
 
               const postResult = await updateItem(postPayload, sp, editID);
               const postId = postResult?.data?.ID;
-              // debugger
+              // 
               // if (!postId) {
               //   console.error("Post creation failed.");
               //   return;
@@ -631,7 +631,7 @@ const AddannouncementContext = ({ props }: any) => {
 
               const postResult = await updateItem(postPayload, sp, editID);
               const postId = postResult?.data?.ID;
-              debugger
+              
               // if (!postId) {
               //   console.error("Post creation failed.");
               //   return;
@@ -802,7 +802,7 @@ const AddannouncementContext = ({ props }: any) => {
                 bannerImageArray = await uploadFile(file, sp, "Documents", tenantUrl);
               }
             }
-            debugger
+            
             // Create Post
             const postPayload = {
               Title: formData.title,
@@ -821,7 +821,7 @@ const AddannouncementContext = ({ props }: any) => {
 
             const postResult = await addItem(postPayload, sp);
             const postId = postResult?.data?.ID;
-            debugger
+            
             if (!postId) {
               console.error("Post creation failed.");
               return;
@@ -974,7 +974,7 @@ const closeModal = () => {
             else {
               bannerImageArray = null
             }
-            debugger
+            
             if (bannerImageArray != null) {
               // Create Post
               const postPayload = {
@@ -994,7 +994,7 @@ const closeModal = () => {
 
               const postResult = await updateItem(postPayload, sp, editID);
               const postId = postResult?.data?.ID;
-              debugger
+              
               // if (!postId) {
               //   console.error("Post creation failed.");
               //   return;
@@ -1108,7 +1108,7 @@ const closeModal = () => {
 
               const postResult = await updateItem(postPayload, sp, editID);
               const postId = postResult?.data?.ID;
-              debugger
+              
               // if (!postId) {
               //   console.error("Post creation failed.");
               //   return;
@@ -1243,7 +1243,7 @@ const closeModal = () => {
                 bannerImageArray = await uploadFile(file, sp, "Documents", tenantUrl);
               }
             }
-            debugger
+            
             // Create Post
             const postPayload = {
               Title: formData.title,
@@ -1262,7 +1262,7 @@ const closeModal = () => {
 
             const postResult = await addItem(postPayload, sp);
             const postId = postResult?.data?.ID;
-            debugger
+            
             if (!postId) {
               console.error("Post creation failed.");
               return;
@@ -1354,7 +1354,7 @@ const closeModal = () => {
       newfileupload = true
       //alert(`banner img `)
     }
-    debugger;
+    ;
     event.preventDefault();
     let uloadDocsFiles: any[] = [];
     let uloadDocsFiles1: any[] = [];
@@ -1513,7 +1513,7 @@ const closeModal = () => {
   //#endregion
 
   const handleCancel = () => {
-    debugger
+    
     if(pageValue == "MyRequest"){
       window.location.href = `${siteUrl}/SitePages/MyRequests.aspx`;
     }else if(pageValue == "MyApproval"){
@@ -1551,7 +1551,7 @@ const closeModal = () => {
 
   //#region onCancel
   const onCancel = (val: any) => {
-    debugger
+    
     console.log(val, 'valll')
     Swal.fire({
       title: "Do you want to cancel this request?",
@@ -1598,7 +1598,7 @@ const closeModal = () => {
 
   //#region deleteLocalFile
   const deleteLocalFile = (index: number, filArray: any[], name: string) => {
-    debugger
+    
     console.log(filArray, 'filArrayhj');
 
     // Remove the file at the specified index
@@ -1703,12 +1703,14 @@ const closeModal = () => {
     setRows((prevRows: any) => prevRows.filter((row: any) => row.id !== rowId));
   };
   const handleClick = async (contentId: number, contentName: any, EntityId: number) => {
+    debugger
     console.log("Creating approval hierarchy with data:", rows);
     let boolval = false
     for (let i = 0; i < rows.length; i++) {
       const userIds = rows[i].approvedUserListupdate.map((user: any) => user.id);
       let arrPost = {
-        LevelSequence: i + 1,
+        //LevelSequence: i + 1,
+        LevelSequence: rows[i].LevelId,
         ContentId: contentId,
         ContentName: "ARGAnnouncementAndNews",
         EntityMasterId: EntityId,

@@ -76,23 +76,689 @@ export const fetchAutomationCategory = async (_sp) => {
     });
   return arr;
 }
-export const fetchARGAutomationdata = async (_sp) => {
-  let arr = []
 
-  await _sp.web.lists.getByTitle("ARGBusinessApps").items.select("*,Category/Id,Category/CategoryName")
-    .expand("Category")
+// const getUserGroups = async (context) => {
+//   try {
+//     if (!context) {
+//       console.error("SPFx context is undefined!");
+//       return [];
+//     }
+//     console.log("Context initialized successfully.");
+
+//     // Initialize MSGraphClientV3
+//     const graphClient = await context.msGraphClientFactory.getClient('3');
+//     console.log("Graph client initialized successfully.");
+
+//     // Fetch groups using memberOf (Azure AD Groups)
+//     const response = await graphClient.api("/me/memberOf").get();
+//     console.log("User Groups:", response.value);
+
+//     // Extract Azure AD Group IDs
+//     const userGroupIds = response.value.map(group => group.id);
+//     console.log("User Group Azure AD IDs:", userGroupIds);
+
+//     return userGroupIds;
+//   } catch (error) {
+//     console.error("Error fetching user groups:", error);
+//     return [];
+//   }
+// };
+const getUserGroups = async (_sp , context) => {
+  try {
+    if (!context) {
+      console.error("SPFx context is undefined!");
+      return { adGroupIds: [], spGroupTitles: [] };
+    }
+    console.log("Context initialized successfully.");
+
+    // Initialize MSGraphClientV3
+    const graphClient = await context.msGraphClientFactory.getClient('3');
+    console.log("Graph client initialized successfully.");
+
+    // Fetch Azure AD Groups using Microsoft Graph API
+    const response = await graphClient.api("/me/memberOf").get();
+    console.log("User Azure AD Groups:", response.value);
+
+    // Extract Azure AD Group IDs
+    const userAdGroupIds = response.value.map(group => group.id);
+    console.log("User Azure AD Group IDs:", userAdGroupIds);
+
+    // Fetch SharePoint Groups using REST API
+      // Fetch SharePoint Groups using PnP JS
+      const spGroupsResponse = await _sp.web.currentUser.groups();
+      console.log("User SharePoint Groups:", spGroupsResponse);
+  
+      // Extract SharePoint Group Titles
+      const userSpGroupTitles = spGroupsResponse.map(group => group.Title);
+      console.log("User SharePoint Group Titles:", userSpGroupTitles);
+  
+      return { adGroupIds: userAdGroupIds, spGroupTitles: userSpGroupTitles };
+  } catch (error) {
+    console.error("Error fetching user groups:", error);
+    return { adGroupIds: [], spGroupTitles: [] };
+  }
+};
+
+const normalizeGroupName = (groupName) => {
+  return groupName.replace(/\s*Members\s*$/i, "").trim();
+};
+
+const getAzureADGroupIds = async (groupNames, graphClient) => {
+  try {
+    if (!groupNames.length) return {};
+
+    console.log("Group Names to Fetch from Azure AD:", groupNames);
+
+    // Normalize group names
+    const normalizedGroupNames = groupNames.map(name => normalizeGroupName(name));
+    console.log("Normalized Group Names:", normalizedGroupNames);
+
+    // Construct Graph API filter query for multiple group names
+    const filterQuery = normalizedGroupNames.map(name => `displayName eq '${name}'`).join(" or ");
+    console.log("Filter Query for Azure AD:", filterQuery);
+
+    const response = await graphClient.api(`/groups?$filter=${filterQuery}`).get();
+
+    console.log("Azure AD Group Response:", response.value);
+
+    // Map Display Names to Azure AD Group IDs
+    const groupIdMapping = response.value.reduce((acc, group) => {
+      acc[group.displayName] = group.id;
+      return acc;
+    }, {});
+
+    console.log("Mapped Azure AD Group IDs:", groupIdMapping);
+    return groupIdMapping;
+  } catch (error) {
+    console.error("Error fetching Azure AD Group IDs:", error);
+    return {};
+  }
+};
+
+export const fetchARGAutomationdata = async (_sp, context) => {
+  let arr = [];
+
+  if (!context) {
+    console.error("SPFx context is undefined!");
+    return [];
+  }
+
+  // Get user groups from Azure AD
+  // const userGroupIds = await getUserGroups(context);
+  // Get user groups from Azure AD & SharePoint
+const { adGroupIds: userGroupIds, spGroupTitles: userSpGroupTitles } = await getUserGroups(_sp, context);
+
+
+  // Get Graph Client
+  const graphClient = await context.msGraphClientFactory.getClient('3');
+
+  // Fetch ARGBusinessApps list items from SharePoint
+  const res = await _sp.web.lists.getByTitle("ARGBusinessApps").items
+    .select("*,Category/Id,Category/CategoryName,EnableAudienceTargeting,Audience/Id,Audience/Title")
+    .expand("Category,Audience")
+    .filter("IsActive eq 1")
     .orderBy("Order0", true)
-    .getAll().then((res) => {
-      console.log("response-->>>", res);
-
-      //res.filter(x=>x.Category?.Category==str)
-      arr = res;
-    })
-    .catch((error) => {
+    .getAll()
+    .catch(error => {
       console.log("Error fetching data: ", error);
+      return [];
     });
+
+  if (res.length > 0) {
+    // Extract valid Audience Entries
+  // Extract valid Audience Entries (since Audience allows only ONE selection)
+const audienceGroupNames = [...new Set(
+  res.map(item => {
+    console.log("Audience Data:", item.Audience);
+    console.log("Audience Data Type:", typeof item.Audience);
+
+    if (!item.Audience) return null; // Skip if null/undefined
+
+    return item.Audience.Title; // Directly extract the group title (single selection)
+  }).filter(title => title) // Remove null values
+)];
+
+
+    console.log("Audience Office 365 & SP Group Names:", audienceGroupNames);
+
+    // Get corresponding Azure AD Group IDs
+    const azureADGroupMapping = await getAzureADGroupIds(audienceGroupNames, graphClient);
+
+    console.log("Mapped Azure AD Group Name to IDs:", azureADGroupMapping);
+ // Print Type of Each Group
+ audienceGroupNames.forEach(groupName => {
+  if (azureADGroupMapping[groupName]) {
+    console.log(`Group "${groupName}" is an Office 365 / Security Group (Azure AD)`);
+  } else {
+    console.log(`Group "${groupName}" is a SharePoint Group or a User`);
+  }
+});
+    // Filter based on user group membership
+    arr = res.filter(item => {
+      if (!item.EnableAudienceTargeting) return true; // Include if targeting is disabled
+
+      // Extract Audience Group Titles
+      if (!item.Audience) return false;
+      const audienceGroupNames = item.Audience ? [item.Audience.Title] : [];
+
+
+      console.log("Checking Item:", item.SubTitle);
+      console.log("User Group IDs:", userGroupIds);
+      console.log("Audience Group Names:", audienceGroupNames);
+
+      // Normalize Audience Group Names
+      const normalizedAudienceGroupNames = audienceGroupNames.map(name => normalizeGroupName(name));
+
+      // Convert Audience Titles to Azure AD Group IDs (if they exist)
+      const audienceGroupIds = normalizedAudienceGroupNames
+        .map(name => azureADGroupMapping[name]) // Map to AD IDs
+        .filter(id => id); // Remove undefined values
+
+      console.log("Mapped Audience Group IDs:", audienceGroupIds);
+
+      // Check if the user is a member of any mapped Azure AD group
+      const isMemberOfAzureADGroup = audienceGroupIds.some(groupId => userGroupIds.includes(groupId));
+
+      // If not an Azure AD Group, assume it's a SharePoint Group (fallback mechanism)
+      const isMemberOfSharePointGroup = normalizedAudienceGroupNames.some(name =>
+        userGroupIds.includes(name) // Assuming SharePoint groups are stored in userGroupIds
+      );
+
+      // return isMemberOfAzureADGroup || isMemberOfSharePointGroup;
+      return isMemberOfAzureADGroup 
+  || isMemberOfSharePointGroup 
+  || userSpGroupTitles.includes(item.Audience.Title); // Check if user is in SharePoint Group
+
+    });
+  }
+
+  console.log("Filtered response-->>>", arr);
   return arr;
-}
+};
+
+//////////// latest updated code for office 365 ggroups and security group
+// const getUserGroups = async (context) => {
+//   try {
+//     if (!context) {
+//       console.error("SPFx context is undefined!");
+//       return [];
+//     }
+//     console.log("Context initialized successfully.");
+
+//     // Initialize MSGraphClientV3
+//     const graphClient = await context.msGraphClientFactory.getClient('3');
+//     console.log("Graph client initialized successfully.");
+
+//     // Fetch groups using memberOf
+//     const response = await graphClient.api("/me/memberOf").get();
+//     console.log("User Groups:", response.value);
+
+//     // Extract Azure AD Group IDs (not SharePoint group names)
+//     const userGroupIds = response.value.map(group => group.id);
+//     console.log("User Group Azure AD IDs:", userGroupIds);
+
+//     return userGroupIds; // Returns an array of Azure AD Group IDs
+//   } catch (error) {
+//     console.error("Error fetching user groups:", error);
+//     return [];
+//   }
+// };
+
+// const normalizeGroupName = (groupName) => {
+//   return groupName.replace(/\s*Members\s*$/i, "").trim();
+// };
+
+
+// const getAzureADGroupIds = async (groupNames, graphClient) => {
+//   try {
+//     if (!groupNames.length) return [];
+    
+//     console.log("Group Names to Fetch from Azure AD:", groupNames);
+
+//     // Normalize group names
+//     const normalizedGroupNames = groupNames.map(name => normalizeGroupName(name));
+//     console.log("Normalized Group Names:", normalizedGroupNames);
+
+//     // Construct Graph API filter query for multiple group names
+//     const filterQuery = normalizedGroupNames.map(name => `displayName eq '${name}'`).join(" or ");
+//     console.log("Filter Query for Azure AD:", filterQuery);
+
+//     const response = await graphClient.api(`/groups?$filter=${filterQuery}`).get();
+
+//     console.log("Azure AD Group Response:", response.value);
+
+//     // Map Display Names to IDs
+//     const groupIdMapping = response.value.reduce((acc, group) => {
+//       acc[group.displayName] = group.id;
+//       return acc;
+//     }, {});
+
+//     console.log("Mapped Azure AD Group IDs:", groupIdMapping);
+//     return groupIdMapping; // Returns an object { "Group Name": "Azure AD Group ID" }
+//   } catch (error) {
+//     console.error("Error fetching Azure AD Group IDs:", error);
+//     return {};
+//   }
+// };
+
+// export const fetchARGAutomationdata = async (_sp, context) => {
+//   let arr = [];
+
+//   if (!context) {
+//     console.error("SPFx context is undefined!");
+//     return [];
+//   }
+
+//   // Get user groups from Azure AD
+//   const userGroupIds = await getUserGroups(context);
+  
+//   // Get Graph Client
+//   const graphClient = await context.msGraphClientFactory.getClient('3');
+
+//   // Fetch ARGBusinessApps list items from SharePoint
+//   const res = await _sp.web.lists.getByTitle("ARGBusinessApps").items
+//     .select("*,Category/Id,Category/CategoryName,EnableAudienceTargeting,Audience/Id,Audience/Title")
+//     .expand("Category,Audience")
+//     .filter("IsActive eq 1")
+//     .orderBy("Order0", true)
+//     .getAll()
+//     .catch(error => {
+//       console.log("Error fetching data: ", error);
+//       return [];
+//     });
+
+//   if (res.length > 0) {
+//     // Extract Office 365 Group Names from Audience column
+
+//     // const audienceGroupNames = [...new Set(res.flatMap(item =>
+//     //   item.Audience?.map(group => group.Title) || [])
+    
+//     // )];
+//     const audienceGroupNames = [...new Set(res.flatMap(item => {
+//       console.log("Audience Data:", item.Audience);
+//       console.log("Audience Data type:", typeof item.Audience);
+      
+//       return Array.isArray(item.Audience) ? item.Audience.map(group => group.Title) : [];
+//   }))];
+  
+
+//     console.log("Audience Office 365 Group Names:", audienceGroupNames);
+
+//     // Get corresponding Azure AD Group IDs
+//     const azureADGroupMapping = await getAzureADGroupIds(audienceGroupNames, graphClient);
+
+//     console.log("Mapped Azure AD Group Name to IDs:", azureADGroupMapping);
+
+//     // Filter based on user group membership
+//     arr = res.filter(item => {
+//       if (!item.EnableAudienceTargeting) return true; // Include if targeting is disabled
+
+//       // Extract Audience Group Titles
+//       const audienceGroupNames = item.Audience?.map(group => group.Title) || [];
+
+//       console.log("Checking Item:", item.SubTitle);
+//       console.log("User Group IDs:", userGroupIds);
+//       console.log("Audience Group Names:", audienceGroupNames);
+
+//       // Normalize Audience Group Names
+//       const normalizedAudienceGroupNames = audienceGroupNames.map(name => normalizeGroupName(name));
+
+//       // Convert Audience Titles to Azure AD Group IDs
+//       const audienceGroupIds = normalizedAudienceGroupNames.map(name => azureADGroupMapping[name]).filter(id => id);
+
+//       console.log("Mapped Audience Group IDs:", audienceGroupIds);
+
+//       // Check if the user is a member of any mapped Azure AD group
+//       return audienceGroupIds.some(groupId => userGroupIds.includes(groupId));
+//     });
+//   }
+
+//   console.log("Filtered response-->>>", arr);
+//   return arr;
+// };
+
+
+/////////
+
+
+
+
+/////////// working code for office 365 ggroups 
+// const getUserGroups = async (context) => {
+//   try {
+//     if (!context) {
+//       console.error("SPFx context is undefined!");
+//       return [];
+//     }
+//     console.log("Context initialized successfully.");
+
+//     // Initialize MSGraphClientV3
+//     const graphClient = await context.msGraphClientFactory.getClient('3');
+//     console.log("Graph client initialized successfully.");
+
+//     // Fetch groups using memberOf
+//     const response = await graphClient.api("/me/memberOf").get();
+//     console.log("User Groups:", response.value);
+
+//     // Extract Azure AD Group IDs (not SharePoint group names)
+//     const userGroupIds = response.value.map(group => group.id);
+//     console.log("User Group Azure AD IDs:", userGroupIds);
+
+//     return userGroupIds; // Returns an array of Azure AD Group IDs
+//   } catch (error) {
+//     console.error("Error fetching user groups:", error);
+//     return [];
+//   }
+// };
+
+// const getAzureADGroupIds = async (groupNames, graphClient) => {
+//   try {
+//     if (!groupNames.length) return [];
+    
+//     console.log("Group Names to Fetch from Azure AD:", groupNames);
+
+//     // Construct Graph API filter query for multiple group names
+//     const filterQuery = groupNames.map(name => `displayName eq '${name}'`).join(" or ");
+//     console.log("Filter Query for Azure AD:", filterQuery);
+
+//     const response = await graphClient.api(`/groups?$filter=${filterQuery}`).get();
+
+//     console.log("Azure AD Group Response:", response.value);
+
+//     // Map Display Names to IDs
+//     const groupIdMapping = response.value.reduce((acc, group) => {
+//       acc[group.displayName] = group.id;
+//       return acc;
+//     }, {});
+
+//     console.log("Mapped Azure AD Group IDs:", groupIdMapping);
+//     return groupIdMapping; // Returns an object { "Group Name": "Azure AD Group ID" }
+//   } catch (error) {
+//     console.error("Error fetching Azure AD Group IDs:", error);
+//     return {};
+//   }
+// };
+
+// export const fetchARGAutomationdata = async (_sp, context) => {
+//   let arr = [];
+
+//   if (!context) {
+//     console.error("SPFx context is undefined!");
+//     return [];
+//   }
+
+//   // Get user groups from Azure AD
+//   const userGroupIds = await getUserGroups(context);
+  
+//   // Get Graph Client
+//   const graphClient = await context.msGraphClientFactory.getClient('3');
+
+//   // Fetch ARGBusinessApps list items from SharePoint
+//   const res = await _sp.web.lists.getByTitle("ARGBusinessApps").items
+//     .select("*,Category/Id,Category/CategoryName,EnableAudienceTargeting,Audience/Id,Audience/Title")
+//     .expand("Category,Audience")
+//     .filter("IsActive eq 1")
+//     .orderBy("Order0", true)
+//     .getAll()
+//     .catch(error => {
+//       console.log("Error fetching data: ", error);
+//       return [];
+//     });
+
+//   if (res.length > 0) {
+//     // Extract Office 365 Group Names from Audience column
+//     const audienceGroupNames = [...new Set(res.flatMap(item => item.Audience?.map(group => group.Title) || []))];
+
+//     console.log("Audience Office 365 Group Names:", audienceGroupNames);
+
+//     // Get corresponding Azure AD Group IDs
+//     const azureADGroupMapping = await getAzureADGroupIds(audienceGroupNames, graphClient);
+
+//     console.log("Mapped Azure AD Group Name to IDs:", azureADGroupMapping);
+
+//     // Filter based on user group membership
+//     arr = res.filter(item => {
+//       if (!item.EnableAudienceTargeting) return true; // Include if targeting is disabled
+
+//       // Extract Audience Group Titles
+//       const audienceGroupNames = item.Audience?.map(group => group.Title) || [];
+
+//       console.log("Checking Item:", item.SubTitle);
+//       console.log("User Group IDs:", userGroupIds);
+//       console.log("Audience Group Names:", audienceGroupNames);
+
+//       // Convert Audience Titles to Azure AD Group IDs
+//       const audienceGroupIds = audienceGroupNames.map(name => azureADGroupMapping[name]).filter(id => id);
+
+//       console.log("Mapped Audience Group IDs:", audienceGroupIds);
+
+//       // Check if the user is a member of any mapped Azure AD group
+//       return audienceGroupIds.some(groupId => userGroupIds.includes(groupId));
+//     });
+//   }
+
+//   console.log("Filtered response-->>>", arr);
+//   return arr;
+// };
+///////////
+///////
+// const getUserGroups = async (context) => {
+//   try {
+//     if (!context) {
+//       console.error("SPFx context is undefined!");
+//       return [];
+//     }
+//     console.log("Context initialized successfully.");
+
+//     // Initialize MSGraphClientV3
+//     // const graphClient: MSGraphClientV3 = await context.msGraphClientFactory.getClient('3');
+//     const graphClient = await context.msGraphClientFactory.getClient('3');
+//     console.log("Graph client initialized successfully.");
+
+//     // Fetch groups using memberOf
+//     const response = await graphClient.api("/me/memberOf").get();
+//     console.log("User Groups:", response.value);
+
+//     // Extract Group IDs
+//     const userGroupIds = response.value.map(group => group.id);
+//     console.log("User Group IDs:", userGroupIds);
+
+//     return userGroupIds; // Returns an array of group IDs
+//   } catch (error) {
+//     console.error("Error fetching user groups:", error);
+//     return [];
+//   }
+// };
+// const getAzureADGroupIds = async (groupNames, graphClient) => {
+//   try {
+//     if (!groupNames.length) return [];
+//       console.log("Group Names:", groupNames);
+//     // Construct Graph API filter query for multiple group names
+//     const filterQuery = groupNames.map(name => `displayName eq '${name}'`).join(" or ");
+//     console.log("Filter Query:", filterQuery);
+//     const response = await graphClient.api(`/groups?$filter=${filterQuery}`).get();
+
+//     console.log("Azure AD Group Response:", response.value);
+
+//     // Extract Azure AD Group IDs
+//     return response.value.map(group => group.id);
+//   } catch (error) {
+//     console.error("Error fetching Azure AD Group IDs:", error);
+//     return [];
+//   }
+// };
+
+// export const fetchARGAutomationdata = async (_sp, context) => {
+//   let arr = [];
+
+//   if (!context) {
+//     console.error("SPFx context is undefined!");
+//     return [];
+//   }
+
+//   // Get user groups from Azure AD
+//   const userGroupIds = await getUserGroups(context);
+  
+//   // Get Graph Client
+//   const graphClient = await context.msGraphClientFactory.getClient('3');
+
+//   // Fetch ARGBusinessApps list items from SharePoint
+//   const res = await _sp.web.lists.getByTitle("ARGBusinessApps").items
+//     .select("*,Category/Id,Category/CategoryName,EnableAudienceTargeting,Audience/Id,Audience/Title")
+//     .expand("Category,Audience")
+//     .filter("IsActive eq 1")
+//     .orderBy("Order0", true)
+//     .getAll()
+//     .catch(error => {
+//       console.log("Error fetching data: ", error);
+//       return [];
+//     });
+
+//   if (res.length > 0) {
+//     // Extract Office 365 Group Names from Audience column
+//     const audienceGroupNames = [...new Set(res.flatMap(item => item.Audience?.map(group => group.Title) || []))];
+
+//     console.log("Audience Office 365 Group Names:", audienceGroupNames);
+
+//     // Get corresponding Azure AD Group IDs
+//     const azureADGroupIds = await getAzureADGroupIds(audienceGroupNames, graphClient);
+
+//     console.log("Mapped Azure AD Group IDs:", azureADGroupIds);
+
+//     // Filter based on user group membership
+//     arr = res.filter(item => {
+//       if (!item.EnableAudienceTargeting) return true; // Include if targeting is disabled
+
+//       // Extract Audience Group IDs
+//       const audienceGroupIds = item.Audience?.map(group => group.Title) || [];
+
+//       console.log("Checking Item:", item.SubTitle);
+//       console.log("User Group IDs:", userGroupIds);
+//       console.log("Audience Group Names:", audienceGroupIds);
+
+//       // Check if the user is a member of any mapped Azure AD group
+//       return audienceGroupIds.some(groupName => {
+//         const groupId = azureADGroupIds.find(id => groupName === id);
+//         return userGroupIds.includes(groupId);
+//       });
+//     });
+//   }
+
+//   console.log("Filtered response-->>>", arr);
+//   return arr;
+// };
+
+/////
+
+// export const fetchARGAutomationdata = async (_sp, context) => {
+//   let arr = [];
+
+//   // Fetch user group memberships (Office 365 Groups the user is part of)
+//   const userGroupIds = await getUserGroups(context);
+
+//   // Fetch ARGBusinessApps list items
+//   const res = await _sp.web.lists.getByTitle("ARGBusinessApps").items
+//     .select("*,Category/Id,Category/CategoryName,EnableAudienceTargeting,Audience/Id,Audience/Title")
+//     .expand("Category,Audience")
+//     .filter("IsActive eq 1")
+//     .orderBy("Order0", true)
+//     .getAll()
+//     .catch((error) => {
+//       console.error("Error fetching data: ", error);
+//       return [];
+//     });
+//      console.log("res-->>>", res);
+//   if (res.length > 0) {
+//     arr = res.filter(item => {
+//       // If EnableAudienceTargeting is disabled, include the item
+//       if (!item.EnableAudienceTargeting) return true;
+
+//       // Extract Audience Group IDs from the Audience column
+//       // const audienceGroupIds = item.Audience?.map(group => String(group.Id ) , console.log(group.Id , "group.Id of Audiance") )|| [];
+//       const audienceGroupIds = item.Audience?.map(group => {
+//         console.log(group.Id, "group.Id of Audience");
+//         return String(group.Id);
+//       }) || [];
+//       // Debugging logs
+//       console.log("Checking Item:", item.SubTitle);
+//       console.log("User Group IDs:", userGroupIds);
+//       console.log("Audience Group IDs:", audienceGroupIds);
+
+//       // Include the item only if the user belongs to at least one of the Audience groups
+//       return audienceGroupIds.some(groupId => userGroupIds.includes(groupId));
+//     });
+//   }
+
+//   console.log("Filtered response-->>>", arr);
+//   return arr;
+// };
+
+// export const fetchARGAutomationdata = async (_sp, context) => {
+//   let arr = [];
+//   const userGroupIds = await getUserGroups(context); // Fetch user groups
+
+//   // Fetch ARGBusinessApps list items
+//   const res = await _sp.web.lists.getByTitle("ARGBusinessApps").items
+//     .select("*,Category/Id,Category/CategoryName,EnableAudienceTargeting,Audience/Id,Audience/Title")
+//     .expand("Category,Audience")
+//     .filter("IsActive eq 1")
+//     .orderBy("Order0", true)
+//     .getAll()
+//     .catch((error) => {
+//       console.log("Error fetching data: ", error);
+//       return [];
+//     });
+
+//   // if (res.length > 0) {
+//   //   arr = res.filter(item => {
+//   //     if (!item.EnableAudienceTargeting) return true; // Include if targeting is disabled
+//   //     console.log("User Group IDs:", userGroupIds, item.EnableAudienceTargeting , item.SubTitle);
+
+//   //     // Extract Audience Group IDs (Office 365 Groups)
+//   //     const audienceGroupIds = item.Audience?.map(group => group.Id) || [];
+//   //     console.log("audienceGroupIds IDs:", audienceGroupIds, item.EnableAudienceTargeting , item.SubTitle);
+
+//   //     // Check if the user is a member of any audience group
+//   //     return audienceGroupIds.some(groupId => userGroupIds.includes(groupId));
+//   //   });
+//   // }
+//   if (res.length > 0) {
+//     arr = res.filter(item => {
+//       if (!item.EnableAudienceTargeting) return true; // Include if targeting is disabled
+  
+//       // Extract Audience Group IDs
+//       const audienceGroupIds = item.Audience?.map(group => String(group.Id)) || [];
+  
+//       // Debugging logs
+//       console.log("Checking Item:", item.SubTitle);
+//       console.log("User Group IDs:", userGroupIds);
+//       console.log("Audience Group IDs:", audienceGroupIds);
+  
+//       // Return true if user belongs to any of the Audience groups
+//       return audienceGroupIds.some(groupId => userGroupIds.includes(groupId));
+//     });
+//   }
+  
+//   console.log("Filtered response-->>>", arr);
+//   return arr;
+// };
+// export const fetchARGAutomationdata = async (_sp, context) => {
+//   let arr = []
+
+//   await _sp.web.lists.getByTitle("ARGBusinessApps").items.select("*,Category/Id,Category/CategoryName")
+//     .expand("Category")
+//     .orderBy("Order0", true)
+//     .getAll().then((res) => {
+//       console.log("response-->>>", res);
+
+//       //res.filter(x=>x.Category?.Category==str)
+//       arr = res;
+//     })
+//     .catch((error) => {
+//       console.log("Error fetching data: ", error);
+//     });
+//   return arr;
+// }
 
 // export const getMyApprovalsdata = async (_sp,listName,status) => {
 //   let arr = []
@@ -136,6 +802,71 @@ export const fetchARGAutomationdata = async (_sp) => {
 
 
 // Function to fetch data from a single SharePoint site collection
+
+// export const fetchARGAutomationdata = async (_sp) => {
+//   let arr = []
+
+//   await _sp.web.lists.getByTitle("ARGBusinessApps").items.select("*,Category/Id,Category/CategoryName")
+//     .expand("Category")
+//     .orderBy("Order0", true)
+//     .getAll().then((res) => {
+//       console.log("response-->>>", res);
+
+//       //res.filter(x=>x.Category?.Category==str)
+//       arr = res;
+//     })
+//     .catch((error) => {
+//       console.log("Error fetching data: ", error);
+//     });
+//   return arr;
+// }
+
+// export const getMyApprovalsdata = async (_sp,listName,status) => {
+//   let arr = []
+//   let currentUser;
+//   await _sp.web.currentUser()
+//     .then(user => {
+//       console.log("user",user);
+//       currentUser = user.Email; 
+//       // Get the current user's Email
+//     })
+//     .catch(error => {
+//       console.error("Error fetching current user: ", error);
+//       return [];
+//     });
+
+//   if (!currentUser) return arr; 
+//   // Return empty array if user fetch failed
+
+//   await _sp.web.lists.getByTitle(listName).items
+//     .select("*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail").expand("Author,AssignedTo")
+//     .filter(`AssignedTo/EMail eq '${currentUser}' and Status eq '${status}'`)      
+//     .orderBy("Created", false).getAll()
+//     .then((res) => {
+//       console.log(`--MyApproval${listName}`, res);
+//       arr = res
+//       // arr = res.filter(item => 
+//       //     // Include public groups or private groups where the current user is in the InviteMembers array
+//       //     item.GroupType === "Public" || 
+//       //     (item.GroupType === "Private" && item.InviteMemebers && item.InviteMemebers.some(member => member.Id === currentUser))
+//       //   );
+//     })
+//     .catch((error) => {
+//       console.log("Error fetching data: ", error);
+//     });
+//   return arr;
+// }
+//Add Business Apps
+
+
+// Initialize PnPjs with the current site collection
+
+
+// Function to fetch data from a single SharePoint site collection
+
+
+
+
 export const getListDataFromSiteCollection = async (_sp, listName, status, Actingfor, portal, SiteBaseURL) => {
   // Setup PnPJs for a specific site collection URL
   let arr = [];
@@ -500,10 +1231,11 @@ export const getApprovalListsData = async (_sp, status, Actingfor) => {
                     AllApprovalArr.push({
                       ID: resData[j].ID,
                       RequestID: resData[j].Title,
-                      ApprovalTitle: "",
+                      // ApprovalTitle: "",
+                      ApprovalTitle:resData[i]?.RequestTitle!= ""? resData[i]?.RequestTitle:"",
                       Author: resData[j].Requestor_x0020_Name,
                       ProcessName: res[i].ProcessName,
-                      Created: resData[j].Created,
+                      Created: new Date(resData[j].Created),
                       Status: resData[j].TaskStatus,
                       TaskID: resData[j].ID,
                       AppID: res[i].AppId,
@@ -542,7 +1274,7 @@ export const getApprovalListsData = async (_sp, status, Actingfor) => {
                     ApprovalTitle: resData[j].ApprovalTitle,
                     Author: resData[j].Author,
                     ProcessName: resData[j].ProcessName,
-                    Created: resData[j].Created,
+                    Created: new Date(resData[j].Created),
                     Status: resData[j].Status,
                     TaskID: "",
                     AppID: "",

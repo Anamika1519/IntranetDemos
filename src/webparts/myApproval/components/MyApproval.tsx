@@ -284,7 +284,7 @@ const MyApprovalContext = ({ props }: any) => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
   };
 
@@ -333,9 +333,8 @@ const MyApprovalContext = ({ props }: any) => {
       // console.log(items2, "DMSFileApprovalTaskList");
 
 
-
       let arr = [];
-      let approvalData:any[]=[];
+      let approvalData: any[] = [];
       if (!actingfor) {
         const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select(
           "Log", "CurrentUser", "Remark"
@@ -371,8 +370,9 @@ const MyApprovalContext = ({ props }: any) => {
           const requestedbyuserTitle = await getUserTitleByEmail(item?.FileUID?.RequestedBy);
           return { ...item, RequestedByTitle: requestedbyuserTitle };
         }));
-        approvalData=updatedItems
+        approvalData = updatedItems
         setMylistdata(updatedItems);
+        return arr = updatedItems
       }
       if (actingfor !== "" && actingfor !== undefined) {
         const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select(
@@ -409,8 +409,9 @@ const MyApprovalContext = ({ props }: any) => {
           const requestedbyuserTitle = await getUserTitleByEmail(item?.FileUID?.RequestedBy);
           return { ...item, RequestedByTitle: requestedbyuserTitle };
         }));
-        approvalData=updatedItems;
+        approvalData = updatedItems;
         setMylistdata(updatedItems);
+        return arr = updatedItems
       }
 
       // const updatedItems2 = await Promise.all(items2.map(async (item) => {
@@ -418,131 +419,131 @@ const MyApprovalContext = ({ props }: any) => {
       //   return { ...item, RequestedByTitle: requestedbyuserTitle };
       // }));
       if (!actingfor) {
-      const Item2 :any = await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
-        "*",
-        "Folderdetail"	            
-        ,"Folderdetail/SiteTitle"	       
-        ,"Folderdetail/DocumentLibraryName"	
-        ,"Folderdetail/CurrentUser"
-        ,"Folderdetail/FolderPath"
-        ,"Folderdetail/FolderName"
-        ,"Folderdetail/ParentFolderId"
-        ,"Folderdetail/Department"	
-        ,"Folderdetail/Devision"	
-        ,"Folderdetail/RequestNo"	
-        ,"FolderMeta"	
-        ,"FolderMeta/SiteName"	
-        ,"FolderMeta/DocumentLibraryName"	
-        ,"FolderMeta/ColumnName",
-        "Folderdetail/Processname",
-        "Folderdetail/Status",
-        "Approver"
-      ).expand("Folderdetail" ,"FolderMeta")
-      .filter(`Approver eq '${currentUserEmailRef.current}' and Folderdetail/Status eq '${value}'`)();
-      console.log("Item2 get from dmsfolderdeligationapprovaltasklist",Item2)
-      const normalizeItem2 = async(item:any) => ({
-        Log: item?.Log || '', // Replace with appropriate mappings
-        CurrentUser: item?.Folderdetail?.CurrentUser || '',
-        Remark: item?.Remark || '',
-        LogHistory: item?.LogHistory || '',
-        // ProcessName:  item?.Folderdetail?.Processname,
-        RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
-        FileUID: {
-          FileUID: item?.FolderMeta?.FileUID || item?.Folderdetail?.RequestNo,
-          SiteName: item?.FolderMeta?.SiteName || '',
-          DocumentLibraryName: item?.FolderMeta?.DocumentLibraryName || '',
-          // FileName: item?.FolderMeta?.FolderName || '',
-          FileName:item?.Folderdetail?.FolderName === null ? item?.Folderdetail?.DocumentLibraryName :item?.Folderdetail?.FolderName,
-          RequestNo: item?.Folderdetail?.RequestNo || '',
-          Status: item?.Folderdetail?.Status || '',
-          FolderPath: item?.Folderdetail?.FolderPath || '',
-          // RequestedBy: item?.RequestedBy || item?.Folderdetail?.CurrentUser || '',
-          // RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
-          Created: item?.Created || '',
-          ApproveAction: item?.ApproveAction || '',
-          Processname:  item?.Folderdetail?.Processname
-        },
-        MasterApproval: {
-          ApprovalType: item?.ApprovalType || '',
-          Level: item?.Level || '',
-          DocumentLibraryName: item?.DocumentLibraryName || ''
-        }
-      });
-      // const normalizeItem3 = Item2.map(normalizeItem2);
-      const normalizeItem3 = await Promise.all(Item2.map(normalizeItem2));
-      console.log("normalizeItem3",normalizeItem3);
-      console.log(approvalData, "approvalData 666");
-       const CombinedItems  = [...approvalData, ...normalizeItem3];
-       console.log(CombinedItems , "CombinedItems")
-      setMylistdata(CombinedItems);
-      // setMylistdata(updatedItems);
+        const Item2: any = await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
+          "*",
+          "Folderdetail"
+          , "Folderdetail/SiteTitle"
+          , "Folderdetail/DocumentLibraryName"
+          , "Folderdetail/CurrentUser"
+          , "Folderdetail/FolderPath"
+          , "Folderdetail/FolderName"
+          , "Folderdetail/ParentFolderId"
+          , "Folderdetail/Department"
+          , "Folderdetail/Devision"
+          , "Folderdetail/RequestNo"
+          , "FolderMeta"
+          , "FolderMeta/SiteName"
+          , "FolderMeta/DocumentLibraryName"
+          , "FolderMeta/ColumnName",
+          "Folderdetail/Processname",
+          "Folderdetail/Status",
+          "Approver"
+        ).expand("Folderdetail", "FolderMeta")
+          .filter(`Approver eq '${currentUserEmailRef.current}' and Folderdetail/Status eq '${value}'`)();
+        console.log("Item2 get from dmsfolderdeligationapprovaltasklist", Item2)
+        const normalizeItem2 = async (item: any) => ({
+          Log: item?.Log || '', // Replace with appropriate mappings
+          CurrentUser: item?.Folderdetail?.CurrentUser || '',
+          Remark: item?.Remark || '',
+          LogHistory: item?.LogHistory || '',
+          // ProcessName:  item?.Folderdetail?.Processname,
+          RequestedByTitle: await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
+          FileUID: {
+            FileUID: item?.FolderMeta?.FileUID || item?.Folderdetail?.RequestNo,
+            SiteName: item?.FolderMeta?.SiteName || '',
+            DocumentLibraryName: item?.FolderMeta?.DocumentLibraryName || '',
+            // FileName: item?.FolderMeta?.FolderName || '',
+            FileName: item?.Folderdetail?.FolderName === null ? item?.Folderdetail?.DocumentLibraryName : item?.Folderdetail?.FolderName,
+            RequestNo: item?.Folderdetail?.RequestNo || '',
+            Status: item?.Folderdetail?.Status || '',
+            FolderPath: item?.Folderdetail?.FolderPath || '',
+            // RequestedBy: item?.RequestedBy || item?.Folderdetail?.CurrentUser || '',
+            // RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
+            Created: item?.Created || '',
+            ApproveAction: item?.ApproveAction || '',
+            Processname: item?.Folderdetail?.Processname
+          },
+          MasterApproval: {
+            ApprovalType: item?.ApprovalType || '',
+            Level: item?.Level || '',
+            DocumentLibraryName: item?.DocumentLibraryName || ''
+          }
+        });
+        // const normalizeItem3 = Item2.map(normalizeItem2);
+        const normalizeItem3 = await Promise.all(Item2.map(normalizeItem2));
+        console.log("normalizeItem3", normalizeItem3);
+        console.log(approvalData, "approvalData 666");
+        const CombinedItems = [...approvalData, ...normalizeItem3];
+        console.log(CombinedItems, "CombinedItems")
+        setMylistdata(CombinedItems);
+        // setMylistdata(updatedItems);
 
 
-      // return arr = CombinedItems
-    }
-    if (actingfor !== "" && actingfor !== undefined) {
-      const Item2 :any = await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
-        "*",
-        "Folderdetail"	            
-        ,"Folderdetail/SiteTitle"	       
-        ,"Folderdetail/DocumentLibraryName"	
-        ,"Folderdetail/CurrentUser"
-        ,"Folderdetail/FolderPath"
-        ,"Folderdetail/FolderName"
-        ,"Folderdetail/ParentFolderId"
-        ,"Folderdetail/Department"	
-        ,"Folderdetail/Devision"	
-        ,"Folderdetail/RequestNo"	
-        ,"FolderMeta"	
-        ,"FolderMeta/SiteName"	
-        ,"FolderMeta/DocumentLibraryName"	
-        ,"FolderMeta/ColumnName",
-        "Folderdetail/Processname",
-        "Folderdetail/Status",
-        "Approver"
-      ).expand("Folderdetail" ,"FolderMeta")
-      .filter(`Approver eq '${actingfor}' and Folderdetail/Status eq '${value}'`)();
-      console.log("Item2 get from dmsfolderdeligationapprovaltasklist",Item2)
-      const normalizeItem2 = async(item:any) => ({
-        Log: item?.Log || '', // Replace with appropriate mappings
-        CurrentUser: item?.Folderdetail?.CurrentUser || '',
-        Remark: item?.Remark || '',
-        LogHistory: item?.LogHistory || '',
-        // ProcessName:  item?.Folderdetail?.Processname,
-        RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
-        FileUID: {
-          FileUID: item?.FolderMeta?.FileUID || item?.Folderdetail?.RequestNo,
-          SiteName: item?.FolderMeta?.SiteName || '',
-          DocumentLibraryName: item?.FolderMeta?.DocumentLibraryName || '',
-          // FileName: item?.FolderMeta?.FolderName || '',
-          FileName:item?.Folderdetail?.FolderName === null ? item?.Folderdetail?.DocumentLibraryName :item?.Folderdetail?.FolderName,
-          RequestNo: item?.Folderdetail?.RequestNo || '',
-          Status: item?.Folderdetail?.Status || '',
-          FolderPath: item?.Folderdetail?.FolderPath || '',
-          // RequestedBy: item?.RequestedBy || item?.Folderdetail?.CurrentUser || '',
-          // RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
-          Created: item?.Created || '',
-          ApproveAction: item?.ApproveAction || '',
-          Processname:  item?.Folderdetail?.Processname
-        },
-        MasterApproval: {
-          ApprovalType: item?.ApprovalType || '',
-          Level: item?.Level || '',
-          DocumentLibraryName: item?.DocumentLibraryName || ''
-        }
-      });
-      // const normalizeItem3 = Item2.map(normalizeItem2);
-      const normalizeItem3 = await Promise.all(Item2.map(normalizeItem2));
-      console.log("normalizeItem3",normalizeItem3);
-      console.log(approvalData, "approvalData 666");
-       const CombinedItems  = [...approvalData, ...normalizeItem3];
-       console.log(CombinedItems , "CombinedItems")
-      setMylistdata(CombinedItems);
-      // setMylistdata(updatedItems);
+        return arr = CombinedItems
+      }
+      if (actingfor !== "" && actingfor !== undefined) {
+        const Item2: any = await sp.web.lists.getByTitle('DMSFolderDeligationApprovalTask').items.select(
+          "*",
+          "Folderdetail"
+          , "Folderdetail/SiteTitle"
+          , "Folderdetail/DocumentLibraryName"
+          , "Folderdetail/CurrentUser"
+          , "Folderdetail/FolderPath"
+          , "Folderdetail/FolderName"
+          , "Folderdetail/ParentFolderId"
+          , "Folderdetail/Department"
+          , "Folderdetail/Devision"
+          , "Folderdetail/RequestNo"
+          , "FolderMeta"
+          , "FolderMeta/SiteName"
+          , "FolderMeta/DocumentLibraryName"
+          , "FolderMeta/ColumnName",
+          "Folderdetail/Processname",
+          "Folderdetail/Status",
+          "Approver"
+        ).expand("Folderdetail", "FolderMeta")
+          .filter(`Approver eq '${actingfor}' and Folderdetail/Status eq '${value}'`)();
+        console.log("Item2 get from dmsfolderdeligationapprovaltasklist", Item2)
+        const normalizeItem2 = async (item: any) => ({
+          Log: item?.Log || '', // Replace with appropriate mappings
+          CurrentUser: item?.Folderdetail?.CurrentUser || '',
+          Remark: item?.Remark || '',
+          LogHistory: item?.LogHistory || '',
+          // ProcessName:  item?.Folderdetail?.Processname,
+          RequestedByTitle: await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
+          FileUID: {
+            FileUID: item?.FolderMeta?.FileUID || item?.Folderdetail?.RequestNo,
+            SiteName: item?.FolderMeta?.SiteName || '',
+            DocumentLibraryName: item?.FolderMeta?.DocumentLibraryName || '',
+            // FileName: item?.FolderMeta?.FolderName || '',
+            FileName: item?.Folderdetail?.FolderName === null ? item?.Folderdetail?.DocumentLibraryName : item?.Folderdetail?.FolderName,
+            RequestNo: item?.Folderdetail?.RequestNo || '',
+            Status: item?.Folderdetail?.Status || '',
+            FolderPath: item?.Folderdetail?.FolderPath || '',
+            // RequestedBy: item?.RequestedBy || item?.Folderdetail?.CurrentUser || '',
+            // RequestedByTitle:await getUserTitleByEmail(item?.Folderdetail?.CurrentUser),
+            Created: item?.Created || '',
+            ApproveAction: item?.ApproveAction || '',
+            Processname: item?.Folderdetail?.Processname
+          },
+          MasterApproval: {
+            ApprovalType: item?.ApprovalType || '',
+            Level: item?.Level || '',
+            DocumentLibraryName: item?.DocumentLibraryName || ''
+          }
+        });
+        // const normalizeItem3 = Item2.map(normalizeItem2);
+        const normalizeItem3 = await Promise.all(Item2.map(normalizeItem2));
+        console.log("normalizeItem3", normalizeItem3);
+        console.log(approvalData, "approvalData 666");
+        const CombinedItems = [...approvalData, ...normalizeItem3];
+        console.log(CombinedItems, "CombinedItems")
+        setMylistdata(CombinedItems);
+        // setMylistdata(updatedItems);
 
 
-      // return arr = CombinedItems
-    }
+        return arr = CombinedItems
+      }
     } catch (error) {
       console.error("Error fetching list items:", error);
     }
@@ -568,7 +569,7 @@ const MyApprovalContext = ({ props }: any) => {
     }
   };
 
-  const getTaskItemsbyID = async (e: any, itemid: any,ProcessName:string) => {
+  const getTaskItemsbyID = async (e: any, itemid: any, ProcessName: string) => {
     // currentItemID = itemid
     currentItemID = itemid;
     setActiveComponent("Approval Action");
@@ -649,7 +650,7 @@ const MyApprovalContext = ({ props }: any) => {
   const [CategoryData, setCategoryData] = React.useState([]);
 
   const [showModal, setShowModal] = React.useState(false);
-
+  const [StatusChange, setStatusChange] = React.useState(false);
   const [showDocTable, setShowDocTable] = React.useState(false);
 
   const [showImgModal, setShowImgTable] = React.useState(false);
@@ -665,7 +666,7 @@ const MyApprovalContext = ({ props }: any) => {
   }>({});
 
   //const [activeTab, setActiveTab] = useState("home1");
-  const [activeTab, setActiveTab] = useState("Intranet");
+  const [activeTab, setActiveTab] = useState("Automation");
   const handleTabClick = async (tab: React.SetStateAction<string>) => {
     setActiveTab(tab);
     setLoading(true);
@@ -686,7 +687,9 @@ const MyApprovalContext = ({ props }: any) => {
       setMyApprovalsData(myApprovalsDataAutomation);
       //setMyApprovalsDataAutomation(myApprovalsDataAutomation);
     }
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);;
+    }, 10000);
   };
 
   React.useEffect(() => {
@@ -701,15 +704,22 @@ const MyApprovalContext = ({ props }: any) => {
     let MyApprovaldata = await getMyApproval(sp, status);
     let Automationdata1 = await getApprovalListsData(sp, status);
     let typedata = await getType(sp);
-    setMyApprovalsData(MyApprovaldata);
+    //setMyApprovalsData(MyApprovaldata);
     setMyApprovalsDataAll(MyApprovaldata);
     //}
     //else if(activeTab == "Automation"){
+    // let Automationdata = Automationdata1.sort((a, b) => {
+    //   return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
+    // });
     let Automationdata = Automationdata1.sort((a, b) => {
-      return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
+      return b.Created - a.Created;
     });
+    setMyApprovalsData(Automationdata);
     setMyApprovalsDataAutomation(Automationdata);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);;
+    }, 15000);
+
     console.log("Automationdata", Automationdata);
     // }
   };
@@ -720,7 +730,7 @@ const MyApprovalContext = ({ props }: any) => {
 
   // };
   const handleStatusChange = async (name: string, value: string, actingfor: any) => {
-    setLoading(true);
+
     actingforuseremail = actingfor
     // alert(`Status value is ${value} is acting for ${actingfor}`)
     if (actingforuseremail === undefined || actingforuseremail === null || actingforuseremail === "") {
@@ -731,6 +741,8 @@ const MyApprovalContext = ({ props }: any) => {
       // Show all records if no type is selected
       console.log("No status selected");
     } else {
+      setLoading(true);
+      setStatusChange(true);
       // Filter records based on the selected type
       let MyApprovaldata = await getMyApproval(sp, value, actingfor);
       let Automationdata = await getApprovalListsData(sp, value, actingfor);
@@ -745,9 +757,15 @@ const MyApprovalContext = ({ props }: any) => {
         // alert(value)
         setMyApprovalsData(MyDMSAPPROVALDATA);
       } else if (activeTab == "Automation") {
-        setMyApprovalsData(Automationdata);
+        setMyApprovalsData(Automationdata.sort((a, b) => b.Created - a.Created));
         console.log("Automationdata", Automationdata);
       }
+      setTimeout(() => {
+        setStatusChange(false)
+      }, 5000);
+      setTimeout(() => {
+        setLoading(false);
+      }, 7000);
       // else if (activeTab == "Automation") {
       //   setMyApprovalsData(null);
       //   setMyApprovalsData(MyDMSAPPROVALDATA);
@@ -755,7 +773,7 @@ const MyApprovalContext = ({ props }: any) => {
       //   console.log("Automationdata", Automationdata);
       // }
     }
-    setLoading(false);
+
   };
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -1245,8 +1263,22 @@ const MyApprovalContext = ({ props }: any) => {
                         className="nav nav-pills navtab-bg float-end justify-content-center"
                         role="tablist"
                       >
-                        <li className="nav-item" role="presentation">
+                        <li className="nav-item myapprovalcomingsoon" role="presentation">
                           <a
+                            // onClick={() => handleTabClick("Intranet")}
+                            className={`nav-link ${activeTab === "Intranet" ? "active" : ""
+                              }`}
+                            aria-selected={activeTab === "Intranet"}
+                            role="tab"
+                          >
+                            <span className="lenbg1">Intranet</span>{" "}
+                            <span className="lenbg comingsoone">
+                              {" "}
+                              {/* {myApprovalsDataAll.length} */}
+                              coming soon
+                            </span>
+                          </a>
+                          {/* <a
                             onClick={() => handleTabClick("Intranet")}
                             className={`nav-link ${activeTab === "Intranet" ? "active" : ""
                               }`}
@@ -1258,7 +1290,7 @@ const MyApprovalContext = ({ props }: any) => {
                               {" "}
                               {myApprovalsDataAll.length}
                             </span>
-                          </a>
+                          </a> */}
                         </li>
 
                         <li className="nav-item" role="presentation">
@@ -1523,8 +1555,8 @@ const MyApprovalContext = ({ props }: any) => {
 
                                       <th
                                         style={{
-                                          minWidth: "80px",
-                                          maxWidth: "80px",
+                                          minWidth: "130px",
+                                          maxWidth: "130px",
                                         }}
                                       >
                                         <div className="d-flex flex-column bd-highlight ">
@@ -1636,27 +1668,29 @@ const MyApprovalContext = ({ props }: any) => {
                                     isActivedata
                                   )}
                                   <tbody>
-                                    {loading && currentData?.length == 0 && (
-                                      <div className="loadernewadd">
-                                        <div>
-                                          <img
-                                            src={require("../../../CustomAsset/birdloader.gif")}
-                                            className="alignrightl"
-                                            alt="Loading..."
-                                          />
-                                        </div>
-                                        <div className="loadnewarg">
-                                          <span>Loading </span>{" "}
-                                          <span>
+                                    {((loading && currentData?.length == 0)
+                                      ||
+                                      (StatusChange)) && (
+                                        <div className="loadernewadd">
+                                          <div>
                                             <img
-                                              src={require("../../corporateDirectory/assets/argloader.gif")}
-                                              className="alignrightbird"
+                                              src={require("../../../CustomAsset/birdloader.gif")}
+                                              className="alignrightl"
                                               alt="Loading..."
                                             />
-                                          </span>
+                                          </div>
+                                          <div className="loadnewarg">
+                                            <span>Loading </span>{" "}
+                                            <span>
+                                              <img
+                                                src={require("../../corporateDirectory/assets/argloader.gif")}
+                                                className="alignrightbird"
+                                                alt="Loading..."
+                                              />
+                                            </span>
+                                          </div>
                                         </div>
-                                      </div>
-                                    )}
+                                      )}
                                     {!loading && currentData?.length === 0 ? (
                                       <div
 
@@ -1680,7 +1714,7 @@ const MyApprovalContext = ({ props }: any) => {
 
                                       </div>
                                     ) : (
-                                      !loading && currentData?.map(
+                                      !StatusChange && currentData?.map(
                                         (item: any, index: number) => (
                                           <tr
                                             key={index}
@@ -1751,15 +1785,24 @@ const MyApprovalContext = ({ props }: any) => {
 
                                             <td
                                               style={{
-                                                minWidth: "80px",
-                                                maxWidth: "80px",
+                                                minWidth: "130px",
+                                                maxWidth: "130px",
                                                 textAlign: 'center'
                                               }}
                                             >
                                               <div className="btn btn-light1">
-                                                {new Date(
+                                                {/* {new Date(
                                                   item?.Created
-                                                ).toLocaleDateString()}
+                                                ).toLocaleDateString()} */}
+                                                {new Date(item?.Created).toLocaleString('en-US', {
+                                                  month: '2-digit',
+                                                  day: '2-digit',
+                                                  year: 'numeric',
+                                                  hour: '2-digit',
+                                                  minute: '2-digit',
+                                                  //second: '2-digit',
+                                                  hour12: true
+                                                })}
                                               </div>
                                             </td>
 
@@ -1783,8 +1826,8 @@ const MyApprovalContext = ({ props }: any) => {
                                               }}
                                               className="fe-eye font-18"
                                             >
-                                              {item?.Status.toLowerCase() == "approved" || item?.Status.toLowerCase() == "rejected" 
-                                              || item?.Status.toLowerCase() == "completed" ?
+                                              {item?.Status.toLowerCase() == "approved" || item?.Status.toLowerCase() == "rejected"
+                                                || item?.Status.toLowerCase() == "completed" ?
 
 
                                                 <Eye onClick={(e) =>
@@ -2180,8 +2223,8 @@ const MyApprovalContext = ({ props }: any) => {
 
                                           <th
                                             style={{
-                                              minWidth: "80px",
-                                              maxWidth: "80px",
+                                              minWidth: "130px",
+                                              maxWidth: "130px",
                                             }}
                                           >
                                             <div className="d-flex flex-column bd-highlight ">
@@ -2308,7 +2351,29 @@ const MyApprovalContext = ({ props }: any) => {
                                         isActivedata
                                       )}
                                       <tbody>
-                                        {currentData?.length === 0 ? (
+                                        {((loading && currentData?.length == 0) ||
+                                          (StatusChange)) && (
+                                            <div className="loadernewadd">
+                                              <div>
+                                                <img
+                                                  src={require("../../../CustomAsset/birdloader.gif")}
+                                                  className="alignrightl"
+                                                  alt="Loading..."
+                                                />
+                                              </div>
+                                              <div className="loadnewarg">
+                                                <span>Loading </span>{" "}
+                                                <span>
+                                                  <img
+                                                    src={require("../../corporateDirectory/assets/argloader.gif")}
+                                                    className="alignrightbird"
+                                                    alt="Loading..."
+                                                  />
+                                                </span>
+                                              </div>
+                                            </div>
+                                          )}
+                                        {!loading && currentData?.length === 0 ? (
                                           <div
 
                                             className="no-results card card-body align-items-center  annusvg text-center "
@@ -2331,7 +2396,7 @@ const MyApprovalContext = ({ props }: any) => {
 
                                           </div>
                                         ) : (
-                                          currentData?.map(
+                                          !StatusChange && currentData?.map(
                                             (item: any, index: number) => (
                                               <tr
                                                 key={index}
@@ -2402,7 +2467,7 @@ const MyApprovalContext = ({ props }: any) => {
 
                                                 <td
                                                   style={{
-                                                    minWidth: "80px", maxWidth: "80px",
+                                                    minWidth: "130px", maxWidth: "130px",
                                                     // maxWidth: "100px",
                                                     textAlign: 'center'
                                                   }}
@@ -2414,10 +2479,10 @@ const MyApprovalContext = ({ props }: any) => {
                                                       month: '2-digit',
                                                       day: '2-digit',
                                                       year: 'numeric',
-                                                      // hour: '2-digit',
-                                                      // minute: '2-digit',
-                                                      // second: '2-digit',
-                                                      // hour12: true 
+                                                      hour: '2-digit',
+                                                      minute: '2-digit',
+                                                      //second: '2-digit',
+                                                      hour12: true
                                                     })}
                                                   </div>
                                                 </td>
@@ -2565,9 +2630,9 @@ const MyApprovalContext = ({ props }: any) => {
                                   <div>
                                     {folderActionOrFileAction === "New File Request" && (
                                       <>
-                                      <DMSMyApprovalAction props={{currentItemID , actingforuseremail}} />
-                                    <div className="col-sm-12 text-center">
-                                      {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
+                                        <DMSMyApprovalAction props={{ currentItemID, actingforuseremail }} />
+                                        <div className="col-sm-12 text-center">
+                                          {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
 
                                           <button type="button" className="btn cancel-btn newp waves-effect waves-light m-3" style={{ fontSize: '0.875rem' }} onClick={() => setShowNestedDMSTable(false)}>
                                             <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }}
@@ -2579,9 +2644,9 @@ const MyApprovalContext = ({ props }: any) => {
                                     )}
                                     {folderActionOrFileAction === "New Folder Request" && (
                                       <>
-                                      <DMSMyFolderApprovalAction props={{currentItemID , actingforuseremail}} />
-                                    <div className="col-sm-12 text-center">
-                                      {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
+                                        <DMSMyFolderApprovalAction props={{ currentItemID, actingforuseremail }} />
+                                        <div className="col-sm-12 text-center">
+                                          {/* <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => setShowNestedDMSTable(false)}> Back </button> */}
 
                                           <button type="button" className="btn cancel-btn newp waves-effect waves-light m-3" style={{ fontSize: '0.875rem' }} onClick={() => setShowNestedDMSTable(false)}>
                                             <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }}

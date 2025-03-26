@@ -218,7 +218,7 @@ const MyRequestContext = ({ props }: any) => {
   });
 
   const [approveData, setApproveData] = useState([]);
-
+  const [StatusChange, setStatusChange] = React.useState(false);
   const [myRequestDataAll, setmyRequestDataAll] = useState([]);
 
   const [myRequestDataAllDMS, setMyRequestDataAllDMS] = useState<any[]>([]);
@@ -230,7 +230,7 @@ const MyRequestContext = ({ props }: any) => {
   const [DiscussionData, setDiscussion] = useState([]);
 
   const [CategoryData, setCategoryData] = React.useState([]);
-
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = React.useState(false);
   const [showModal2, setShowModal2] = React.useState(false);
 
@@ -250,14 +250,17 @@ const MyRequestContext = ({ props }: any) => {
 
   }>({});
 
-  const [activeTab, setActiveTab] = useState("Intranet");
+  const [activeTab, setActiveTab] = useState("Automation");
   const [StatusTypeData, setStatusTypeData] = useState([
     { id: "Pending", name: "Pending" },
     { id: "Approved", name: "Approved" },
     { id: "Rejected", name: "Rejected" },
     { id: "Auto Approved", name: "Auto Approved" },
+    { id: "Rework", name: "Rework" },
+    { id: "Recall", name: "Recall" }
   ]);
   const handleTabClick = async (tab: React.SetStateAction<string>) => {
+    setLoading(true);
     setShowNestedDMSTable("");
     setActiveTab(tab);
     setCurrentPage(1);
@@ -277,7 +280,9 @@ const MyRequestContext = ({ props }: any) => {
       setMyApprovalsData(AutomationData);
 
     }
-
+    setTimeout(() => {
+      setLoading(false);;
+    }, 10000);
   };
 
 
@@ -306,24 +311,28 @@ const MyRequestContext = ({ props }: any) => {
 
 
   const ApiCall = async (status: String) => {
-
+    setLoading(true);
     let myrequestdata = await getMyRequest(sp, status);
-    let Automationdata = await getRequestListsData(sp, status);
-    //let Automationdata = Automationdata1.sort((a, b) => b.Created - a.Created);
+    let Automationdata1 = await getRequestListsData(sp, status);
+    let Automationdata = Automationdata1.sort((a, b) => {
+      return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
+    });
+    Automationdata1.sort((a, b) => b.Created - a.Created)
     // let Automationdata = Automationdata1.sort((a, b) => {
-    //   return a.Created === new Date(b.Created) ? 0 : new Date(a.Created) ? -1 : 1;
+    //   return b.Created - a.Created;
     // });
-    // let datsis = Automationdata1.sort((a, b) => new Date(b.Created).getTime() - new Date(a.Created).getTime());
-    setAutomationData(Automationdata);
-    console.log(myrequestdata, "myrequestdata",Automationdata);
+    setAutomationData( Automationdata1.sort((a, b) => b.Created - a.Created));
+    console.log(myrequestdata, "myrequestdata", Automationdata);
     let myrequestdatadms: any = await gteDMSApproval(sp, status)
     console.log(myrequestdatadms, "myrequestdatadms");
-    setMyApprovalsData(await getMyRequest(sp, status));
-
+    //setMyApprovalsData(await getMyRequest(sp, status));
+    setMyApprovalsData( Automationdata1.sort((a, b) => b.Created - a.Created));
     setmyRequestDataAll(myrequestdata);
     setMyRequestDataAllDMS(myrequestdatadms);
 
-
+    setTimeout(() => {
+      setLoading(false);;
+    }, 15000);
 
     console.log("AutomationdataAutomationdata", Automationdata, myrequestdata);
 
@@ -521,12 +530,17 @@ const MyRequestContext = ({ props }: any) => {
   const filteredMyApprovalData = applyFiltersAndSorting(myApprovalsData);
 
   const filteredNewsData = applyFiltersAndSorting(newsData);
-
   const [currentPage, setCurrentPage] = React.useState(1);
-
+  const [currentGroup, setCurrentGroup] = React.useState(1);
   const itemsPerPage = 10;
-
+  const pagesPerGroup = 10;
   const totalPages = Math.ceil(filteredMyApprovalData?.length / itemsPerPage);
+  const totalGroups = Math.ceil(totalPages / pagesPerGroup);
+  // const [currentPage, setCurrentPage] = React.useState(1);
+
+  // const itemsPerPage = 10;
+
+  // const totalPages = Math.ceil(filteredMyApprovalData?.length / itemsPerPage);
 
 
 
@@ -537,25 +551,41 @@ const MyRequestContext = ({ props }: any) => {
 
 
 
+  const handleGroupChange = (direction: "next" | "prev") => {
+    const newGroup = currentGroup + (direction === "next" ? 1 : -1);
+    if (newGroup > 0 && newGroup <= totalGroups) {
+      setCurrentGroup(newGroup);
+      setCurrentPage((newGroup - 1) * pagesPerGroup + 1); // Go to the first page of the new group
+    }
+  };
 
 
+  // const handlePageChange = (pageNumber: any) => {
 
+  //   if (pageNumber > 0 && pageNumber <= totalPages) {
+
+  //     setCurrentPage(pageNumber);
+
+  //   }
+
+  // };
   const handlePageChange = (pageNumber: any) => {
 
     if (pageNumber > 0 && pageNumber <= totalPages) {
 
       setCurrentPage(pageNumber);
-
+      const newGroup = Math.ceil(pageNumber / pagesPerGroup);
+      setCurrentGroup(newGroup);
     }
 
   };
-
   const startIndex = (currentPage - 1) * itemsPerPage;
 
   const endIndex = startIndex + itemsPerPage;
 
   const currentData = filteredMyApprovalData?.slice(startIndex, endIndex);
-
+  const startPage = (currentGroup - 1) * pagesPerGroup + 1;
+  const endPage = Math.min(currentGroup * pagesPerGroup, totalPages);
   const newsCurrentData = filteredNewsData?.slice(startIndex, endIndex);
 
   const [editID, setEditID] = React.useState(null);
@@ -734,6 +764,8 @@ const MyRequestContext = ({ props }: any) => {
       // Show all records if no type is selected
       console.log("No status selected");
     } else {
+      setLoading(true);
+      setStatusChange(true);
       console.log("name,value", value, name);
       // Filter records based on the selected type
       let Myrequestdata = await getMyRequest(sp, value);
@@ -741,26 +773,30 @@ const MyRequestContext = ({ props }: any) => {
       let mydmsData = await gteDMSApproval(sp, value);
       //let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
       setmyRequestDataAll(await getMyRequest(sp, value));
-      setAutomationData(await getRequestListsData(sp, value));
+      setAutomationData(Automationdata.sort((a, b) => b.Created - a.Created));
+      setMyRequestDataAllDMS(await gteDMSApproval(sp, value));
       if (activeTab == "Intranet") {
 
         setMyApprovalsData(await getMyRequest(sp, value));
         console.log(myApprovalsData, "myApprovalsData");
       } else if (activeTab == "DMS") {
 
-        setMyApprovalsData(mydmsData);
+        setMyApprovalsData(await gteDMSApproval(sp, value));
 
         console.log(myRequestDataAllDMS, "myRequestDataAllDMS");
       } else if (activeTab == "Automation") {
 
-        let Automationdata1 = await getRequestListsData(sp, value);
-        let Automationdata = [...Automationdata1].sort((a, b) => {
-          return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
-        });
-        setMyApprovalsData(Automationdata);
+        // let Automationdata1 = await getRequestListsData(sp, value);
+        // let Automationdata = [...Automationdata1].sort((a, b) => {
+        //   return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
+        // });
+        setMyApprovalsData(Automationdata.sort((a, b) => b.Created - a.Created));
 
       }
-
+      setTimeout(() => {
+        setStatusChange(false)
+      }, 10000);
+      
       // else if (activeTab == "Automation") {
       //   setMyApprovalsData(null);
       //   //setMyApprovalsData(MyDMSAPPROVALDATA);
@@ -886,7 +922,7 @@ const MyRequestContext = ({ props }: any) => {
 
       <div className="content-page">
 
-      <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
+        <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
 
         <div
 
@@ -955,9 +991,31 @@ const MyRequestContext = ({ props }: any) => {
 
                       >
 
-                        <li className="nav-item" role="presentation">
-
+                        <li className="nav-item newintranet" role="presentation">
                           <a
+                            aria-disabled
+
+                            // onClick={() => handleTabClick("Intranet")}
+
+                            className={`nav-link myapprovalcomingsoon ${activeTab === "Intranet" ? "active" : ""
+
+                              }`}
+
+                            aria-selected={activeTab === "Intranet"}
+
+                            role="tab"
+
+                          >
+
+                            <span className="lenbg1">Intranet</span>
+                            <span className="lenbg comingsoone">
+                              {/* {myRequestDataAll.length} */}
+                              coming soon
+                            </span>
+
+                          </a>
+
+                          {/* <a
 
 
                             onClick={() => handleTabClick("Intranet")}
@@ -977,7 +1035,7 @@ const MyRequestContext = ({ props }: any) => {
                               {myRequestDataAll.length}
                             </span>
 
-                          </a>
+                          </a> */}
 
                         </li>
 
@@ -1177,63 +1235,63 @@ const MyRequestContext = ({ props }: any) => {
                                   </div>
 
                                 </th>
-                               
-                                  <th style={{ minWidth: "80px", maxWidth: "80px" }}>
 
-                                    <div className="d-flex flex-column bd-highlight ">
+                                <th style={{ minWidth: "80px", maxWidth: "80px" }}>
 
-                                      <div
+                                  <div className="d-flex flex-column bd-highlight ">
 
-                                        className="d-flex pb-2"
+                                    <div
 
-                                        style={{ justifyContent: "space-evenly" }}
+                                      className="d-flex pb-2"
+
+                                      style={{ justifyContent: "space-evenly" }}
+
+                                    >
+
+                                      <span>Title</span>
+
+                                      <span
+
+                                        onClick={() => handleSortChange("Title")}
 
                                       >
 
-                                        <span>Title</span>
+                                        <FontAwesomeIcon icon={faSort} />
 
-                                        <span
-
-                                          onClick={() => handleSortChange("Title")}
-
-                                        >
-
-                                          <FontAwesomeIcon icon={faSort} />
-
-                                        </span>
-
-                                      </div>
-
-                                      <div className=" bd-highlight">
-
-                                        <input
-
-                                          type="text"
-
-                                          placeholder="Filter by Title"
-
-                                          onChange={(e) =>
-
-                                            handleFilterChange(e, "Title")
-
-                                          }
-                                          onKeyDown={(e) => {
-                                            if (e.key === 'Enter' && !e.shiftKey) {
-                                              e.preventDefault(); // Prevents the new line in textarea
-                                            }
-                                          }}
-                                          className="inputcss"
-
-                                          style={{ width: "100%" }}
-
-                                        />
-
-                                      </div>
+                                      </span>
 
                                     </div>
 
-                                  </th>
-                                
+                                    <div className=" bd-highlight">
+
+                                      <input
+
+                                        type="text"
+
+                                        placeholder="Filter by Title"
+
+                                        onChange={(e) =>
+
+                                          handleFilterChange(e, "Title")
+
+                                        }
+                                        onKeyDown={(e) => {
+                                          if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault(); // Prevents the new line in textarea
+                                          }
+                                        }}
+                                        className="inputcss"
+
+                                        style={{ width: "100%" }}
+
+                                      />
+
+                                    </div>
+
+                                  </div>
+
+                                </th>
+
                                 <th style={{ minWidth: "120px", maxWidth: "120px" }}>
 
                                   <div className="d-flex flex-column bd-highlight ">
@@ -1295,7 +1353,7 @@ const MyRequestContext = ({ props }: any) => {
                                 </th>
 
 
-                                <th style={{ minWidth: "70px", maxWidth: "70px", verticalAlign: "Top" }}>
+                                <th style={{ minWidth: "95px", maxWidth: "95px", verticalAlign: "Top" }}>
 
                                   <div className="d-flex flex-column bd-highlight ">
 
@@ -1456,8 +1514,31 @@ const MyRequestContext = ({ props }: any) => {
 
                             <tbody>
 
-                              {currentData?.length === 0 ? (
-
+                              {console.log("loaddddd", loading)}
+                              {((loading && currentData?.length == 0)
+                                ||
+                                (StatusChange)) && (
+                                  <div className="loadernewadd">
+                                    <div>
+                                      <img
+                                        src={require("../../../CustomAsset/birdloader.gif")}
+                                        className="alignrightl"
+                                        alt="Loading..."
+                                      />
+                                    </div>
+                                    <div className="loadnewarg">
+                                      <span>Loading </span>{" "}
+                                      <span>
+                                        <img
+                                          src={require("../../corporateDirectory/assets/argloader.gif")}
+                                          className="alignrightbird"
+                                          alt="Loading..."
+                                        />
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                              {!loading && currentData?.length === 0 ? (
                                 <div
 
                                   className="no-results card card-body align-items-center  annusvg text-center "
@@ -1479,10 +1560,8 @@ const MyRequestContext = ({ props }: any) => {
                                   <p className="font-14 text-muted text-center">No Request found </p>
 
                                 </div>
-
                               ) : (
-
-                                currentData?.map((item: any, index: number) => (
+                                !StatusChange && currentData?.map((item: any, index: number) => (
 
                                   <tr
 
@@ -1527,26 +1606,26 @@ const MyRequestContext = ({ props }: any) => {
                                       {activeTab == "Automation" ? item?.RequestID : item?.SourceName + "_" + item?.ContentID}
 
                                     </td>
-                                  
-                                      <td
 
-                                        style={{
+                                    <td
 
-                                          minWidth: "80px",
+                                      style={{
 
-                                          maxWidth: "80px",
+                                        minWidth: "80px",
 
-                                          textTransform: "capitalize",
+                                        maxWidth: "80px",
 
-                                        }}
-                                        title=   {activeTab == "Intranet" ? item.Title : item.ApprovalTitle}
-                                      >
+                                        textTransform: "capitalize",
 
-                                        {/* {item.RequestID} */}
-                                        {activeTab == "Intranet" ? item.Title : item.ApprovalTitle}
+                                      }}
+                                      title={activeTab == "Intranet" ? item.Title : item.ApprovalTitle}
+                                    >
 
-                                      </td>
-                                    
+                                      {/* {item.RequestID} */}
+                                      {activeTab == "Intranet" ? item.Title : item.ApprovalTitle}
+
+                                    </td>
+
                                     <td
 
                                       style={{ minWidth: "120px", maxWidth: "120px", textAlign: 'center' }}
@@ -1572,11 +1651,22 @@ const MyRequestContext = ({ props }: any) => {
 
                                     <td
 
-                                      style={{ minWidth: "70px", maxWidth: "70px", textAlign: 'center' }}
+                                      style={{ minWidth: "95px", maxWidth: "95px", textAlign: 'center' }}
 
                                     >
 
-                                      <div style={{ cursor: 'auto' }} className="btn btn-light1"> {new Date(item?.Created).toLocaleDateString()} </div>
+                                      <div style={{ cursor: 'auto' }} className="btn btn-light1">
+                                        {/* {new Date(item?.Created).toLocaleString()}  */}
+                                        {new Date(item?.Created).toLocaleString('en-US', {
+                                          month: '2-digit',
+                                          day: '2-digit',
+                                          year: 'numeric',
+                                          hour: '2-digit',
+                                          minute: '2-digit',
+                                          //second: '2-digit',
+                                          hour12: true
+                                        })}
+                                      </div>
 
                                     </td>
                                     <td
@@ -1634,7 +1724,7 @@ const MyRequestContext = ({ props }: any) => {
 
                               <ul className="pagination">
 
-                                <li style={{ margin: '0px' }}
+                                {/* <li style={{ margin: '0px' }}
 
                                   className={`page-item ${currentPage === 1 ? "disabled" : ""
 
@@ -1656,51 +1746,82 @@ const MyRequestContext = ({ props }: any) => {
 
                                   </a>
 
-                                </li>
+                                </li> */}
+                                <li
 
-                                {Array.from({ length: totalPages }, (_, num) => (
+                                  className={`prevPage page-item ${currentGroup === 1 ? "disabled" : ""
+                                    }`}
+                                  onClick={() => handleGroupChange("prev")}
+                                >
 
-                                  <li
-
-                                    key={num}
-
-                                    className={`page-item ${currentPage === num + 1 ? "active" : ""
-
-                                      }`}
-
+                                  <a
+                                    className="page-link"
+                                    // onClick={() =>
+                                    //   handlePageChange(currentPage - 1)
+                                    // }
+                                    aria-label="Previous"
                                   >
+                                    «
+                                  </a>
+                                </li>
+                                {Array.from(
 
-                                    <a
+                                  { length: endPage - startPage + 1 },
 
-                                      className="page-link"
+                                  (_, num) => {
+                                    const pageNum = startPage + num;
+                                    return (
 
-                                      onClick={() => handlePageChange(num + 1)}
+                                      <li
 
-                                    >
+                                        key={pageNum}
 
-                                      {num + 1}
+                                        className={`page-item ${currentPage === pageNum ? "active" : ""
 
-                                    </a>
+                                          }`}
 
-                                  </li>
+                                      >
 
-                                ))}
+                                        <a
 
+                                          className="page-link"
 
+                                          onClick={() =>
 
-                                <li style={{ margin: '0px' }}
+                                            handlePageChange(pageNum)
 
-                                  className={`page-item ${currentPage === totalPages ? "disabled" : ""
+                                          }
+
+                                        >
+
+                                          {pageNum}
+
+                                        </a>
+
+                                      </li>
+
+                                    )
+                                  }
+
+                                )}
+
+                                <li
+
+                                  className={`nextPage page-item ${currentGroup === totalGroups ? "disabled" : ""
 
                                     }`}
-
+                                  onClick={() => handleGroupChange("next")}
                                 >
 
                                   <a
 
                                     className="page-link"
 
-                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    onClick={() =>
+
+                                      handlePageChange(currentPage + 1)
+
+                                    }
 
                                     aria-label="Next"
 
@@ -1950,7 +2071,7 @@ const MyRequestContext = ({ props }: any) => {
 
                                     </th>
 
-                                    <th style={{ minWidth: "70px", maxWidth: "70px" }}>
+                                    <th style={{ minWidth: "95px", maxWidth: "95px" }}>
 
                                       <div className="d-flex flex-column bd-highlight ">
 
@@ -2100,9 +2221,31 @@ const MyRequestContext = ({ props }: any) => {
                                 </thead>
 
                                 <tbody>
-
-                                  {currentData?.length === 0 ? (
-
+                                  {console.log("loaddddd", loading)}
+                                  {((loading && currentData?.length == 0)
+                                    ||
+                                    (StatusChange)) && (
+                                      <div className="loadernewadd">
+                                        <div>
+                                          <img
+                                            src={require("../../../CustomAsset/birdloader.gif")}
+                                            className="alignrightl"
+                                            alt="Loading..."
+                                          />
+                                        </div>
+                                        <div className="loadnewarg">
+                                          <span>Loading </span>{" "}
+                                          <span>
+                                            <img
+                                              src={require("../../corporateDirectory/assets/argloader.gif")}
+                                              className="alignrightbird"
+                                              alt="Loading..."
+                                            />
+                                          </span>
+                                        </div>
+                                      </div>
+                                    )}
+                                  {!loading && currentData?.length === 0 ? (
                                     <div
 
                                       className="no-results card card-body align-items-center  annusvg text-center "
@@ -2126,30 +2269,20 @@ const MyRequestContext = ({ props }: any) => {
                                     </div>
                                   ) : (
 
-                                    currentData?.map((item: any, index: number) => (
+                                    !StatusChange && currentData?.map((item: any, index: number) => (
 
                                       <tr
 
                                         onClick={() =>
 
                                           handleRedirect(item.RedirectionLink)
-
                                         }
-
                                         key={index}
-
-
-
                                       >
-
                                         <td
-
                                           style={{ minWidth: "40px", maxWidth: "40px" }}
-
                                         >
-
                                           <div style={{ marginLeft: '13px' }} className="indexdesign">     {startIndex + index + 1} </div>
-
                                         </td>
 
                                         <td
@@ -2204,7 +2337,7 @@ const MyRequestContext = ({ props }: any) => {
 
                                         <td
 
-                                          style={{ minWidth: "70px", maxWidth: "70px", textAlign: 'center' }}
+                                          style={{ minWidth: "95px", maxWidth: "95px", textAlign: 'center' }}
 
                                         >
 
@@ -2213,11 +2346,12 @@ const MyRequestContext = ({ props }: any) => {
                                             month: '2-digit',
                                             day: '2-digit',
                                             year: 'numeric',
-                                            // hour: '2-digit',
-                                            // minute: '2-digit',
-                                            // second: '2-digit',
-                                            // hour12: true 
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            //second: '2-digit',
+                                            hour12: true
                                           })}
+
                                           </div>
 
                                         </td>

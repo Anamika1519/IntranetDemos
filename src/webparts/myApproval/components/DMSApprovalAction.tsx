@@ -1424,13 +1424,22 @@ const DMSMyApprovalAction = ({ props }: any) => {
         // Swal.fire('Success', 'File Approved Successfully', 'success');
       }catch{
           console.log("Error Approving file");
-          Swal.fire('Error', 'Error Approving file', 'error');
+          Swal.fire('Error', 'Error Approving file', 'error').then((result)=>{
+            if(result.isConfirmed){
+              window.location.reload();
+            }
+          });
+          
       } 
       setToggleLog((prevData)=>!prevData);
       getApprovalmasterTasklist();
       getCurrrentuser()
-      Swal.fire('Success', 'File Approved Successfully', 'success');
-  
+      Swal.fire('Success', 'File Approved Successfully', 'success').then((result)=>{
+        if(result.isConfirmed){
+          window.location.reload();
+        }
+      });
+      
     }
 
     // here is reject case
@@ -1505,7 +1514,11 @@ const DMSMyApprovalAction = ({ props }: any) => {
   
 
     } catch (error) {
-      Swal.fire(`'Error', 'Error Rejecting file 1', ${error}`);
+      Swal.fire(`'Error', 'Error Rejecting file 1', ${error}`).then((result)=>{
+        if(result.isConfirmed){
+          window.location.reload();
+        }
+      });
     }
    
    debugger
@@ -1537,16 +1550,31 @@ const DMSMyApprovalAction = ({ props }: any) => {
     setToggleLog((prevData)=>!prevData);
     getApprovalmasterTasklist();
 
-    Swal.fire('Success', 'File Rejected Successfully', 'success');
+    Swal.fire('Success', 'File Rejected Successfully', 'success').then((result)=>{
+      if(result.isConfirmed){
+        window.location.reload();
+      }
+    });;
+    
 
       }catch{
         console.log("Error Rejecting file");
-        Swal.fire('Error', 'Error Rejecting file', 'error');
+        Swal.fire('Error', 'Error Rejecting file', 'error').then((result)=>{
+          if(result.isConfirmed){
+            window.location.reload();
+          }
+        });
+        
       }
       setToggleLog((prevData)=>!prevData);
       getApprovalmasterTasklist();
       getCurrrentuser()
-      Swal.fire('Success', 'File Rejected Successfully', 'success');
+      Swal.fire('Success', 'File Rejected Successfully', 'success').then((result)=>{
+        if(result.isConfirmed){
+          window.location.reload();
+        }
+      });
+      
 
     }
     else if(buttonText === "Rework"){
@@ -1575,10 +1603,19 @@ const DMSMyApprovalAction = ({ props }: any) => {
         }
         setToggleLog((prevData)=>!prevData);
         getApprovalmasterTasklist();
-        Swal.fire('Success', 'File Rework Successfully', 'success');
+        Swal.fire('Success', 'File Rework Successfully', 'success').then((result)=>{
+          if(result.isConfirmed){
+            window.location.reload();
+          }
+        });
       } catch (error) {
         console.log("Error Reworking file");
-        Swal.fire('Error', 'Error Reworking file', 'error');
+        Swal.fire('Error', 'Error Reworking file', 'error').then((result)=>{
+          if(result.isConfirmed){
+            window.location.reload();
+          }
+        });
+
       }
   
       

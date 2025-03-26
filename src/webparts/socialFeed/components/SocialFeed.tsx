@@ -81,7 +81,7 @@ const SocialFeedContext = ({ props }: any) => {
   const [CurrentDataAll, setCurrentDataAll] = useState<any>([]);
   const [CurrentuserPicturePlaceholderState, setCurrentuserPicturePlaceholderState] = useState(null);
   const [CurrenuserProfilepic, SetCurrenuserProfilepic] = useState(null);
-  
+
   const menuRef = useRef(null);
   useEffect(() => {
     // Load posts from localStorage when the component mounts
@@ -107,7 +107,7 @@ const SocialFeedContext = ({ props }: any) => {
   const getAllAPI = async () => {
     setCurrentEmail(await getCurrentUserProfileEmail(sp));
     var emailCurr = await getCurrentUserProfileEmail(sp);
-   
+
     setCurrentUser(await getCurrentUser(sp))
 
     // const currentData = filteredEmployeeData.slice(0, 10);
@@ -117,12 +117,12 @@ const SocialFeedContext = ({ props }: any) => {
       //SetCurrenuserProfilepic(await getUserProfilePicture(cuurentID,sp));
       //setCurrentuserPicturePlaceholderState(await getUserSPSPicturePlaceholderState(cuurentID,sp))
       setIsCall(false)
-    }debugger
+    } debugger
     const cuurentID2 = await getCurrentUserNameId(sp);
-      
-      SetCurrenuserProfilepic(await getUserProfilePicture(cuurentID2,sp));
-      setCurrentuserPicturePlaceholderState(await getuserprofilepic(sp,emailCurr));
-      // setCurrentuserPicturePlaceholderState(await getUserSPSPicturePlaceholderState(cuunrentID2,sp))
+
+    SetCurrenuserProfilepic(await getUserProfilePicture(cuurentID2, sp));
+    setCurrentuserPicturePlaceholderState(await getuserprofilepic(sp, emailCurr));
+    // setCurrentuserPicturePlaceholderState(await getUserSPSPicturePlaceholderState(cuunrentID2,sp))
 
     setCurrentUserName(await getCurrentUserName(sp))
     //setblogdata(await fetchBlogdatatop(sp))
@@ -592,7 +592,7 @@ const SocialFeedContext = ({ props }: any) => {
                   item.map((ele: any) => {
 
                     let newPosts = {
-                      SPSPicturePlaceholderState : ele.Author.SPSPicturePlaceholderState,
+                      SPSPicturePlaceholderState: ele.Author.SPSPicturePlaceholderState,
                       Contentpost: ele.Contentpost,
 
                       SocialFeedImagesJson: ele.SocialFeedImagesJson,
@@ -600,7 +600,7 @@ const SocialFeedContext = ({ props }: any) => {
                       Created: ele.Created,
                       AutherId: ele.Author?.Id,
                       userName: ele.Author?.Title,
-                      AuthorEmail : ele.Author?.EMail,
+                      AuthorEmail: ele.Author?.EMail,
                       userAvatar: ele.userAvatar,
 
                       likecount: 0,
@@ -665,7 +665,7 @@ const SocialFeedContext = ({ props }: any) => {
                   let newPosts = {
 
 
-                    SPSPicturePlaceholderState : ele.Author.SPSPicturePlaceholderState,
+                    SPSPicturePlaceholderState: ele.Author.SPSPicturePlaceholderState,
 
                     Contentpost: ele.Contentpost,
 
@@ -673,7 +673,7 @@ const SocialFeedContext = ({ props }: any) => {
 
                     Created: ele.Created,
                     AutherId: ele.Author?.Id,
-                    AuthorEmail :ele.Author?.EMail,
+                    AuthorEmail: ele.Author?.EMail,
                     userName: ele.Author?.Title,
 
                     userAvatar: ele.userAvatar,
@@ -740,7 +740,7 @@ const SocialFeedContext = ({ props }: any) => {
       const followers = await sp.web.lists.getByTitle("ARGFollows").items
         .filter(`FollowedId eq ${cuurentID}`)
         .expand("Follower")
-        .select("Follower/Title", "Follower/EMail", "Follower/Department", "Follower/ID","Follower/SPSPicturePlaceholderState")();
+        .select("Follower/Title", "Follower/EMail", "Follower/Department", "Follower/ID", "Follower/SPSPicturePlaceholderState")();
       console.log(followers, 'followers');
 
       followers.forEach(element => {
@@ -767,7 +767,7 @@ const SocialFeedContext = ({ props }: any) => {
                 if (item.length > 0) {
                   item.map((ele: any) => {
                     let newPosts = {
-                      SPSPicturePlaceholderState : ele.Author.SPSPicturePlaceholderState,
+                      SPSPicturePlaceholderState: ele.Author.SPSPicturePlaceholderState,
                       Contentpost: ele.Contentpost,
                       SocialFeedImagesJson: ele.SocialFeedImagesJson,
                       Created: ele.Created,
@@ -819,12 +819,12 @@ const SocialFeedContext = ({ props }: any) => {
               if (item.length > 0) {
                 item.map((ele: any) => {
                   let newPosts = {
-                    SPSPicturePlaceholderState : ele.Author.SPSPicturePlaceholderState,
+                    SPSPicturePlaceholderState: ele.Author.SPSPicturePlaceholderState,
                     Contentpost: ele.Contentpost,
                     SocialFeedImagesJson: ele.SocialFeedImagesJson,
                     Created: ele.Created,
                     AutherId: ele.Author?.Id,
-                    AuthorEmail :ele.Author?.EMail,
+                    AuthorEmail: ele.Author?.EMail,
                     userName: ele.Author?.Title,
                     userAvatar: ele.userAvatar,
                     likecount: 0,
@@ -1135,9 +1135,9 @@ const SocialFeedContext = ({ props }: any) => {
                   <div className="row">
 
                     <div style={{ display: 'flex', gap: '0.1rem' }}>
-                      {console.log(currentEmail,"hjhjhj")}
-                    {console.log("CurrenuserProfilepicnmsocialfeed",CurrenuserProfilepic,CurrentuserPicturePlaceholderState,currentEmail)}
-                      
+                      {console.log(currentEmail, "hjhjhj")}
+                      {console.log("CurrenuserProfilepicnmsocialfeed", CurrenuserProfilepic, CurrentuserPicturePlaceholderState, currentEmail)}
+
                       {CurrentuserPicturePlaceholderState != null && currentEmail != "" && CurrenuserProfilepic != null && CurrenuserProfilepic != undefined && CurrentuserPicturePlaceholderState != null && Number(CurrentuserPicturePlaceholderState) == 0 ?
                         <img src={`${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${currentEmail}`}
 
@@ -1484,8 +1484,8 @@ const SocialFeedContext = ({ props }: any) => {
                                   comments: post?.comments != null ? post.comments : [],
                                   postId: post.Id,
                                   AutherId: post.AutherId,
-                                  AuthorEmail :post.AuthorEmail,
-                                  SPSPicturePlaceholderState : post.SPSPicturePlaceholderState,
+                                  AuthorEmail: post.AuthorEmail,
+                                  SPSPicturePlaceholderState: post.SPSPicturePlaceholderState,
                                   SocialFeedUserLikesJson: post.SocialFeedUserLikesJson,
                                 }}
                               />
@@ -1558,28 +1558,8 @@ const SocialFeedContext = ({ props }: any) => {
 
                               <a style={{ position: "relative" }}>
 
-                                <img
 
-                                  src={require("../assets/calling.png")}
-
-                                  className="alignright"
-
-                                  onClick={() =>
-
-                                    window.open(
-
-                                      "https://teams.microsoft.com",
-
-                                      "_blank"
-
-                                    )
-
-                                  }
-
-                                  alt="Call"
-
-                                />
-                                { item.SPSPicturePlaceholderState == 0 ?
+                                {item.SPSPicturePlaceholderState == 0 ?
                                   <img
                                     src={
                                       `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${item.EMail}`
@@ -1590,15 +1570,35 @@ const SocialFeedContext = ({ props }: any) => {
                                     style={{ cursor: "auto", borderRadius: '1000px', width: "6rem", height: '6rem' }}
                                   />
                                   :
-                                 ( item.EMail !== null || item.EMail !== "") &&
-                                  <Avatar sx={{ bgcolor: 'primary.main' }} className="rounded-circlecss img-thumbnail
+                                  (item.EMail !== null || item.EMail !== "") &&
+                                  <Avatar sx={{ bgcolor: 'primary.main' }} className="rounded-circlecssnew img-thumbnail
                                   avatar-xl">
                                     {`${item.EMail?.split('.')[0]?.charAt(0)}${item.EMail?.split('.')[1]?.charAt(0)}`.toUpperCase()}
                                   </Avatar>
                                 }
 
                               </a>
+                              <img
 
+                                src={require("../assets/calling.png")}
+
+                                className="alignright"
+
+                                onClick={() =>
+
+                                  window.open(
+
+                                    "https://teams.microsoft.com",
+
+                                    "_blank"
+
+                                  )
+
+                                }
+
+                                alt="Call"
+
+                              />
                               <h4 className="mt-2 mb-1">
 
                                 <span
@@ -1762,28 +1762,8 @@ const SocialFeedContext = ({ props }: any) => {
 
                               <a style={{ position: "relative" }}>
 
-                                <img
 
-                                  src={require("../assets/calling.png")}
-
-                                  className="alignright"
-
-                                  onClick={() =>
-
-                                    window.open(
-
-                                      "https://teams.microsoft.com",
-
-                                      "_blank"
-
-                                    )
-
-                                  }
-
-                                  alt="Call"
-
-                                />
-                                { item.SPSPicturePlaceholderState == 0 ?
+                                {item.SPSPicturePlaceholderState == 0 ?
                                   <img
                                     src={
                                       `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${item.EMail}`
@@ -1794,7 +1774,7 @@ const SocialFeedContext = ({ props }: any) => {
                                   />
                                   :
                                   (item.EMail !== null || item.EMail != "") &&
-                                  <Avatar sx={{ bgcolor: 'primary.main' }} className="rounded-circlecss img-thumbnail
+                                  <Avatar sx={{ bgcolor: 'primary.main' }} className="rounded-circlecssnew img-thumbnail
                                   avatar-xl">
                                     {`${item.EMail?.split('.')[0]?.charAt(0)}${item.EMail?.split('.')[1]?.charAt(0)}`.toUpperCase()}
                                   </Avatar>
@@ -1802,6 +1782,27 @@ const SocialFeedContext = ({ props }: any) => {
 
 
                               </a>
+                              <img
+
+                                src={require("../assets/calling.png")}
+
+                                className="alignright"
+
+                                onClick={() =>
+
+                                  window.open(
+
+                                    "https://teams.microsoft.com",
+
+                                    "_blank"
+
+                                  )
+
+                                }
+
+                                alt="Call"
+
+                              />
 
                               <h4 className="mt-2 mb-1">
 

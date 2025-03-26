@@ -188,10 +188,11 @@ export const getRequestListsData = async (_sp, status) => {
                     // RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
                     ID: resData[j].ID,
                     RequestID: resData[j].Title,
-                    ApprovalTitle: res[i].RequestTitle,
+                    // ApprovalTitle: res[i].RequestTitle,
+                    ApprovalTitle: resData[i]?.RequestTitle!= ""? resData[i]?.RequestTitle:"",
                     Author: resData[j].Requestor_x0020_Name,
                     ProcessName: res[i].ProcessName,
-                    Created: resData[j].Created,
+                    Created: new Date(resData[j].Created),
                     Status: resData[j].WFStatus,
                     AppID: res[i].AppId,
                     RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].ID}`
@@ -199,7 +200,7 @@ export const getRequestListsData = async (_sp, status) => {
                 }
               }
               // Handle the combined data here
-              console.log("Final combined data:", data);
+              //console.log("Final combined data:", data);
             })
             .catch((error) => {
               console.error("Error fetching data:", error);
@@ -214,7 +215,7 @@ export const getRequestListsData = async (_sp, status) => {
                   ApprovalTitle: resData[j].ApprovalTitle,
                   Author: resData[j].Author,
                   ProcessName: resData[j].ProcessName,
-                  Created: resData[j].Created,
+                  Created: new Date(resData[j].Created),
                   Status: resData[j].Status,
                   TaskID: "",
                   AppID: "",
@@ -226,9 +227,7 @@ export const getRequestListsData = async (_sp, status) => {
           })
         }
       }
-      AllRequestArr = AllRequestArr.sort((a, b) => {
-        return a.Created === new Date(b.Created) ? 0 : new Date(a.Created) ? -1 : 1;
-      });
+     
       console.log("AllRequestArr", AllRequestArr);
       arr = AllRequestArr;
     })

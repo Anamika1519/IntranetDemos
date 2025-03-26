@@ -33,9 +33,9 @@ const VerticalContext = ({ _context }: any) => {
   const sp: SPFI = getSP();
   console.log(sp, 'sp');
   // const imgLogo = require("../assets/logoImgsm.png");
-  const imgBigLogo = require("../assets/logodarkBig.png")
+  const imgBigLogo = require("../assets/logoImgsm.png")
   // const imgLogo = require("../../../Assets/ExtraImage/logosm.png");
-  const imgSMLogo = require("../assets/smallleftlogo.png");
+  const imgSMLogo = require("../assets/logoImgsm.png");
   // const useimg = require("../assets/useimg.png");
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
   const [isDarkMode, setIsDarkMode] = React.useState(false);

@@ -36,8 +36,6 @@ import Avatar from "@mui/material/Avatar";
 const HelloWorldContext = ({ props }: any) => {
   const sp: SPFI = getSP();
   console.log(sp, "sp");
-  // const { useHide }: any = React.useContext(UserContext);
-  // const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const { useHide }: any = React.useContext(UserContext);
   console.log("This function is called only once", useHide);
   const elementRef = React.useRef<HTMLDivElement>(null);
@@ -323,7 +321,7 @@ const HelloWorldContext = ({ props }: any) => {
         return (
           <>
             {truncatedString}
-            <button
+            <button type="button"
               className="view-more-button text-muted fw-bold"
               onClick={() => GotoNextPageProject(project)}
               style={{ marginLeft: "0px", paddingLeft: "0px", border: "none", background: "none", cursor: "pointer" }}
@@ -406,13 +404,78 @@ const HelloWorldContext = ({ props }: any) => {
             </span>
           </div> :
             <div className="container-fluid pb-0  paddbnew">
-              <div className="row">
+              <div>
+                <div className="nav">
+                  <div className="logo">
+                    <img src={require("../assets/Logo.png")} />
+                  </div>
+
+
+
+                </div>
+                <div className="heading-main">
+                  <h5>Welcome To</h5>
+                  <h3>ONE ARG PORTAL</h3>
+
+                  <div className="tile">
+                    <ul>
+                      <li>
+                        {/* <a href=" https://officeindia.sharepoint.com/sites/intranet/sitePages/dmsm.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/intranet/SitePages/DMSMAIN.aspx
+">
+
+                          <img src={require("../assets/dms.png")} />
+
+                          <p className="mt-1">DMS</p> </a></li>
+                      <li style={{ backgroundColor: ' #1faee3' }} className="newmyr">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/intranet/SitePages/BusinessApps.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/intranet/SitePages/BusinessApps.aspx">
+
+                          <img src={require("../assets/business-app.png")} />
+                          {/* <img src="business-app.png"/> */}
+                          <p className="mt-1">Business Apps</p> </a> </li>
+                      <li style={{ backgroundColor: ' #333333' }} >
+                        {/* <a href="https://officeindia.sharepoint.com/sites/intranet/SitePages/MyRequests.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/intranet/SitePages/myrequests.aspx">
+
+                          <img src={require("../assets/my-request.png")} />
+                          {/* <img src="my-request.png"/> */}
+                          <p className="mt-1">My Requests</p> </a> </li>
+                      <li style={{ backgroundColor: ' #008551' }}>
+                        {/* <a href="https://officeindia.sharepoint.com/sites/intranet/SitePages/MyApprovals.aspx">  */}
+
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/intranet/SitePages/MyApprovals.aspx">
+
+                          <img src={require("../assets/my-approval.png")} />
+                          {/* <img src="my-approval.png"/>  */}
+                          <p className="mt-1">My Approvals</p></a> </li>
+                      <li style={{ backgroundColor: ' #007aa7' }}>
+                        {/* <a href="https://officeindia.sharepoint.com/sites/intranet/SitePages/KnowledgeCenter.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/intranet/SitePages/KnowledgeCenter.aspx">
+
+                          <img src={require("../assets/knowledge-center.png")} />
+                          {/* <img src="knowledge-center.png"/> */}
+                          <p className="mt-1">Knowledge Center</p> </a> </li>
+                    </ul>
+                  </div>
+
+                  <div className="newbar">
+
+                    <p style={{fontSize:'24px'}} className="text-muted">More Service are <span className="fw-bold text-dark">Coming soon.</span></p>
+                    <div className="progressbarnew">
+                      <div className="bluback"> </div>
+</div>
+
+                    </div>
+
+                </div>
+              </div>
+              {/* <div className="row">
                 <div
-                  //  className=" col-md-10"
                   className="col-xl-9 col-lg-9 tabview1"
                 >
                   <div className="row">
-                    {/* Carousel Section */}
+                  
                     <div className="col-xl-8 col-lg-8 order-lg-2 order-xl-1">
                       <div className="carousel1">
                         <div
@@ -495,7 +558,7 @@ const HelloWorldContext = ({ props }: any) => {
                       </div>
                     </div>
 
-                    {/* Announcement Section */}
+                  
                     <div className="col-xl-4 col-lg-4 order-lg-1 order-xl-1">
                       <div
                         className="card announcementner"
@@ -545,11 +608,9 @@ const HelloWorldContext = ({ props }: any) => {
                                     {announcement.Title}
                                   </h4>
                                   <p
-                                    // style={{ marginTop: "5px", lineHeight: "18px" }}
                                     style={{
                                       marginTop: "5px",
                                       lineHeight: "18px",
-                                      //   height: "54px",  18px line height * 2 lines
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       display: "-webkit-box",
@@ -600,7 +661,7 @@ const HelloWorldContext = ({ props }: any) => {
 
 
                   <div className="row mt-0">
-                    {/* Corporate Directory */}
+                 
                     <div className="col-xl-5 col-lg-5">
                       <div className="card" style={{ borderRadius: "1rem" }}>
                         <div className="card-body pb-0 gheightnew">
@@ -621,10 +682,7 @@ const HelloWorldContext = ({ props }: any) => {
                               <div className="align-items-center newiconsvg  text-center mt-22"
                               >
 
-                                {/* <img style={{ cursor: "pointer", marginTop: '50px', width: '32px' }} src={require("../assets/noun-pin-7368310.png")} className="mb-3"
-                                alt="pin"
-
-                              /> */}
+                               
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
 
                                 <p className="font-14 text-muted text-center">Pin users from Corporate Directory </p>
@@ -638,13 +696,7 @@ const HelloWorldContext = ({ props }: any) => {
                                 >
                                   <div className="col-sm-2">
                                     <a>
-                                      {/* <img
-                                        // src={user.Picture != null ? `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${user.EMail}` : require("../assets/users.jpg")}
-                                        src={`${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${user.Pinned.EMail}`}
-                                        className="rounded-circle"
-                                        width="50"
-                                        alt={user.Pinned.Title}
-                                      /> */}
+                                     
                                       { user.Pinned.SPSPicturePlaceholderState == 0 ?
                                         <img
                                           src={
@@ -687,7 +739,7 @@ const HelloWorldContext = ({ props }: any) => {
                                       className="font-12"
                                     >
                                       {user.Pinned.MobilePhone}
-                                      {/* Mob: {user.mobile} */}
+                                   
                                     </p>
                                   </div>
                                   <div className="col-sm-2">
@@ -718,7 +770,7 @@ const HelloWorldContext = ({ props }: any) => {
                       </div>
                     </div>
                     <div className="col-xl-7 col-lg-7">
-                      {/* Upcoming Events */}
+                    
                       <div className="card" style={{ borderRadius: "1rem" }}>
                         <div className="card-body gheightnew pb-0">
                           <h4
@@ -733,7 +785,6 @@ const HelloWorldContext = ({ props }: any) => {
 
                               style={{ float: "right", cursor: "pointer" }}
                               className="font-11 fw-normal btn  rounded-pill waves-effect waves-light view-all"
-                              // href="SitePages/Mediadetails.aspx"
                               onClick={(e) => GotoNextPage(e)}
                             >
                               View All
@@ -752,7 +803,6 @@ const HelloWorldContext = ({ props }: any) => {
                             :
                             <div className="mt-0">
                               {dataofevent.map((event, index) => {
-                                // Parse the EventDate to get the day, month, and year
                                 const eventDate = new Date(event.EventDate);
                                 const formattedDate = eventDate.toLocaleDateString(
                                   "default",
@@ -782,7 +832,7 @@ const HelloWorldContext = ({ props }: any) => {
                                           className="ng-binding"
                                           style={{ color: "#1fb0e5" }}
                                         >
-                                          {eventDate.getDate()} {/* Display the day */}
+                                          {eventDate.getDate()}
                                         </h4>
                                         <p
                                           className="ng-binding"
@@ -795,7 +845,7 @@ const HelloWorldContext = ({ props }: any) => {
                                             month: "short",
                                             year: "numeric",
                                           })}{" "}
-                                          {/* Display the abbreviated month and year */}
+                                      
                                         </p>
                                       </div>
                                     </div>
@@ -814,12 +864,12 @@ const HelloWorldContext = ({ props }: any) => {
                                           }}
                                           onClick={(e) => NavigatetoEvent(e, event.ID)}
                                         >
-                                          {event.EventName} {/* Event title */}
+                                          {event.EventName} 
                                         </h4>
                                         <p className=" font-12">
                                           <i className="fe-calendar me-1"></i>
                                           {moment(formattedDate).format("DD-MMM-YYYY")}
-                                          {/* Display the full formatted date (22 Jul 2024) */}
+                                     
                                         </p>
                                       </div>
                                     </div>
@@ -831,7 +881,7 @@ const HelloWorldContext = ({ props }: any) => {
                       </div>
                     </div>
 
-                    {/* gallery  */}
+               
                     <div className="col-xl-12 col-lg-12">
                       <div
                         style={{ float: "left", width: "100%" }}
@@ -862,7 +912,7 @@ const HelloWorldContext = ({ props }: any) => {
 
                               <div className="tab-pane show active" id="profile1">
                                 <div className="tabv">
-                                  {/* Dynamically generate the tab buttons */}
+                                
                                   {gallerydata.map((item) => {
                                     const ImageUrl2 =
                                       item.Image == undefined || item.Image == null
@@ -883,13 +933,7 @@ const HelloWorldContext = ({ props }: any) => {
                                             }
                                             alt="Gallery"
                                           />
-                                          {/* <div className="lspe1">
-                                    <img
-                                      style={{ width: "21px" }}
-                                      src={item.videoIcon}
-                                      alt="video icon"
-                                    />
-                                  </div> */}
+                                         
                                         </span>
 
                                         <span className="tabvtext">
@@ -904,7 +948,7 @@ const HelloWorldContext = ({ props }: any) => {
                                   })}
                                 </div>
 
-                                {/* Dynamically generate the tab content */}
+                              
                                 {gallerydata.map((item) => {
                                   const ImageUrl2 =
                                     item.Image == undefined || item.Image == null
@@ -928,9 +972,7 @@ const HelloWorldContext = ({ props }: any) => {
                                         width="100%"
                                         alt="Gallery"
                                       />
-                                      {/* <div className="lspe">
-                                <img src={item.videoIcon} alt="video icon" />
-                              </div> */}
+                                     
                                       <div className="cptext">
                                         <p>
                                           <i className="fa fa-clock-o"></i>&nbsp;
@@ -953,7 +995,7 @@ const HelloWorldContext = ({ props }: any) => {
                 </div>
 
                 <div className="col-xl-3 col-lg-6 tabview2">
-                  {/* Profile Info */}
+           
                   <div className="card" style={{ borderRadius: "1rem " }}>
                     <div className="card-body news-feed">
                       <h5
@@ -982,7 +1024,6 @@ const HelloWorldContext = ({ props }: any) => {
 
                         </div>
                         :
-                        // dataofnews.map((user, index) => (
 
                         <div
                           style={{
@@ -999,13 +1040,7 @@ const HelloWorldContext = ({ props }: any) => {
                                 ? ""
                                 : JSON.parse(news.AnnouncementandNewsBannerImage);
 
-                            // const submittedDate = new Date(news.Modified);
-                            // const formattedSubmittedDate =
-                            //   submittedDate.toLocaleDateString("default", {
-                            //     day: "2-digit", // 2-digit day format (e.g., 01, 15)
-                            //     month: "short", // Abbreviated month name (e.g., Jan, Feb)
-                            //     year: "numeric", // Full year (e.g., 2024)
-                            //   });
+                          
                             const eventDate = new Date(news.Modified);
                             const formattedDate = eventDate.toLocaleDateString(
                               "default",
@@ -1031,11 +1066,7 @@ const HelloWorldContext = ({ props }: any) => {
                                     width="100%"
                                     alt={news.title}
                                   />
-                                  {/* <img
-                                    src={require("../../../Assets/ExtraImage/NodataFound.png")}
-                                    width="100%"
-                                    alt={news.title}
-                                  /> */}
+                               
                                 </div>
                                 <h4
                                   style={{
@@ -1068,7 +1099,7 @@ const HelloWorldContext = ({ props }: any) => {
                     </div>
                   </div>
 
-                  {/* Leaderboard  */}
+            
                   <div>
                     <div className="card" style={{ borderRadius: "1rem" }}>
                       <div className="card-body pb-3 gheightl">
@@ -1101,14 +1132,7 @@ const HelloWorldContext = ({ props }: any) => {
 
                                 >
                                   <div style={{ paddingLeft: "0px" }} className="col-sm-2">
-                                    {/* <img
-                                      className="rounded-circle"
-                                      src={
-                                        `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${user.AuthorEMail}`
-                                      }
-                                      width="50"
-                                      alt={user.AuthorTitle}
-                                    /> */}
+                                   
                                     {user.SPSPicturePlaceholderState == 0 ?
                                       <img
                                         src={
@@ -1117,9 +1141,7 @@ const HelloWorldContext = ({ props }: any) => {
 
                                         }
                                         className="rounded-circle"
-                                        //alt="profile-image"
                                         alt={user.AuthorTitle}
-                                        //style={{ cursor: "auto" }}
                                         width="50"
                                       />
                                       :
@@ -1223,7 +1245,7 @@ const HelloWorldContext = ({ props }: any) => {
                 </div>
               </div>
               <div className="row">
-                {/* Project  */}
+               
                 <div
                   className="col-xl-12 col-lg-12"
                   style={{
@@ -1301,9 +1323,7 @@ const HelloWorldContext = ({ props }: any) => {
                                     style={{ color: "#98a6ad", height: "40px", }}
                                   >
                                     {truncateString(project.ProjectOverview, project)}
-                                    {/* <a   className="fw-bold text-muted">
-                                    view more
-                                  </a> */}
+                                  
                                   </p>
 
                                   <p style={{ display: 'flex', color: '#6e767e', gap: '10px' }} className="mb-1 mt-2 font-12">
@@ -1312,18 +1332,13 @@ const HelloWorldContext = ({ props }: any) => {
                                       className="pe-2 text-nowrap"
                                     >
                                       <img className="newimg1" src={require("../assets/docunew.png")} />
-                                      {/* {project?.ProjectsDocsId?.length} */}
+                                    
                                       {project?.FileCount || 0}
                                       &nbsp;Documents
                                     </span>
                                     <span>
                                       <img className="newimg2" src={require("../assets/commnew.png")} />
-                                      {/* Display fetched comment count */}
-                                      {/* {commentsData[project.ID] !== undefined ? (
-                                    `${commentsData[project.ID]} Comments`
-                                  ) : (
-                                    'Loading comments...'
-                                  )} */}
+                                     
                                       {project.CommentsCount || 0}  Comments
                                     </span>
 
@@ -1363,17 +1378,7 @@ const HelloWorldContext = ({ props }: any) => {
                                                     </Avatar>
                                                   }
 
-                                                  {/* <img
-                                                    style={{
-                                                      margin:
-                                                        index == 0
-                                                          ? "0 0 0 0"
-                                                          : "0 0 0px -12px",
-                                                    }}
-                                                    src={`${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${id?.EMail}`}
-                                                    className="rounded-circlecss newminus img-thumbnail avatar-xl "
-                                                    alt="profile-image"
-                                                  /> */}
+                                                
                                                   <span className="gfg_text">
                                                     {id?.Title}
                                                   </span>
@@ -1460,7 +1465,7 @@ const HelloWorldContext = ({ props }: any) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           }
         </div>

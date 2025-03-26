@@ -622,8 +622,15 @@ input[type=text][disabled]{
 }
 .logo_item{
   width: 210px; margin-top: 0rem;
+  text-align: center;
 }
-
+.logo_item img{
+  //width: 36% !important;
+}
+.logo_itemfull{
+  object-fit: cover;
+  width: 100% !important;
+}
 .navbar img {
   border-radius: 50%;
   height: 100%;
@@ -2084,7 +2091,7 @@ label{color: #6c757d !important;font-size: .875rem !important;}
     .fontl{font-size: 14px !important; line-height: 30px !important;}
  .project-box .gfg_tooltip{width: 2rem !important ;}
  .MuiAvatar-root{cursor: auto !important;background-color: #1fb0e5 !important;font-weight: 600;}
- .project-box .gfg_tooltip .MuiAvatar-root{cursor: auto !important;background-color: #1fb0e5 !important; font-size: 12px !important; border: 0px !important; border: 2px solid #efefef !important;}
+ .project-box .gfg_tooltip .MuiAvatar-root{cursor: auto !important;background-color: #1fb0e5 !important; font-size: 12px !important; border: 0px !important; border: 0px solid #efefef !important;}
 .modal .modal-content input:focus,.modal .modal-content select:focus,.modal .modal-content textarea:focus{border: 1px solid #ccc !important; box-shadow: none !important}
 .modal .modal-content .multiSelectContainer input{padding: 9px 10px !important;border: 1px solid #ccc !important;}   
 .newlight{padding: 6px .5rem !important; border-radius: 30px !important;}

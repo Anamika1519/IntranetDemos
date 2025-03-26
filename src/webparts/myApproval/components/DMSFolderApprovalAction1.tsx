@@ -70,18 +70,20 @@ const DMSFolderApproval = ({props}:any) => {
             console.log("items",items);
             itemIdOfDMSFolderDeligationMaster=items[0].ID;
             folderPath=items[0].FolderPath;
+
+            const getDataOFDMSFolderMaster=await sp.web.lists.getByTitle('DMSFolderMaster').items.select("*").filter(`FolderPath eq '${folderPath}'`)();
             if(items[0].IsPrivate){
               let items1:any[]=[]
               if(items[0].IsLibrary === true){
                 try {
-                  items1 = await sp.web.lists.getByTitle('DMSFolderPrivacy').items.select("*").filter(`SiteName eq '${items[0].SiteTitle}' and DocumentLibraryName eq '${items[0].DocumentLibraryName}' and FolderName eq ${null}`)();
+                  items1 = await sp.web.lists.getByTitle('DMSFolderPrivacy').items.select("*").filter(`SiteName eq '${items[0].SiteTitle}' and DocumentLibraryName eq '${items[0].DocumentLibraryName}' and FolderName eq ${null} and FolderID eq ${getDataOFDMSFolderMaster[0].ID}`)();
                   console.log("items1",items1);
                 } catch (error) {
                   console.log("Error in getting data from DMSFolderPrivacy ",error);
                 }             
 
               }else if(items[0].IsFolder === true){
-                items1 = await sp.web.lists.getByTitle('DMSFolderPrivacy').items.select("*").filter(`SiteName eq '${items[0].SiteTitle}' and DocumentLibraryName eq '${items[0].DocumentLibraryName}' and FolderName eq '${items[0].FolderName}'`)();
+                items1 = await sp.web.lists.getByTitle('DMSFolderPrivacy').items.select("*").filter(`SiteName eq '${items[0].SiteTitle}' and DocumentLibraryName eq '${items[0].DocumentLibraryName}' and FolderName eq '${items[0].FolderName}' and FolderID eq ${getDataOFDMSFolderMaster[0].ID}`)();
               }                
             // Initialize array to store the default users  
             const arrayToStoreDefaultUser = items1.map((user) => ({
@@ -400,11 +402,19 @@ const DMSFolderApproval = ({props}:any) => {
                   console.log("Not all Log values are Approved.");
                 }
               if(allApproved){
-                Swal.fire('Approved','Folder approved successfully','success')
+                Swal.fire('Approved','Folder approved successfully','success').then((result)=>{
+                  if(result.isConfirmed){
+                    window.location.reload();
+                  }
+                });
                 setRefresh(!refresh)
                 setToggleLog((prevData)=>!prevData);
               }else{
-                Swal.fire('Approved','Folder approved successfully','success')
+                Swal.fire('Approved','Folder approved successfully','success').then((result)=>{
+                  if(result.isConfirmed){
+                    window.location.reload();
+                  }
+                });
                 setRefresh(!refresh)
                 setToggleLog((prevData)=>!prevData);
               }
@@ -535,7 +545,11 @@ const DMSFolderApproval = ({props}:any) => {
                 } catch (error) {
                   console.log("Error in deleting the folders details and folders",error);
                 }
-                Swal.fire('Rejected','Folder Rejected successfully','success')
+                Swal.fire('Rejected','Folder Rejected successfully','success').then((result)=>{
+                  if(result.isConfirmed){
+                    window.location.reload();
+                  }
+                });
                 setRefresh(!refresh)
                 setToggleLog((prevData)=>!prevData);
           } catch (error) {

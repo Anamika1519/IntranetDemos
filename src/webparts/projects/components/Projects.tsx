@@ -294,7 +294,7 @@ const HelloWorldContext = ({ props }: any) => {
   const handleCancel = () => {
     debugger;
     window.location.href =
-      "https://OfficeIndia.sharepoint.com/sites/IntranetUAT/SitePages/Project.aspx";
+      "https://alrostamanigroupae.sharepoint.com/sites/intranet/SitePages/Project.aspx";
   };
 
   const saveProjectData = async (formData: {
@@ -357,7 +357,7 @@ const HelloWorldContext = ({ props }: any) => {
         // // Budget: formData.Budget,
         ProjectOverview: formData.ProjectOverview,
         TeamMembersId: selectedIds,
-        ProjectFileManager: `/sites/IntranetUAT/ARGProjectsFiles/${formData.ProjectName}`,
+        ProjectFileManager: `/sites/intranet/ARGProjectsFiles/${formData.ProjectName}`,
         ProjectStatus: "Ongoing",
         ProjectFolderName: formData.ProjectName,
         FolderInProgress: 'In Progress'
@@ -1599,7 +1599,7 @@ const HelloWorldContext = ({ props }: any) => {
                                         {
                                           project?.TeamMembers?.length > 3 &&
                                           <div>
-                                            <div className="moreuser text-muted" >
+                                            <div className="moreuser mt-3 text-muted" >
                                               +{project?.TeamMembers?.length - 3} more
                                             </div>
                                           </div>
@@ -1808,7 +1808,7 @@ const HelloWorldContext = ({ props }: any) => {
                                             }
                                           }
                                         )}
-                                        {
+                                        {/* {
                                           project?.TeamMembers?.length > 3 &&
 
                                           <div
@@ -1837,12 +1837,12 @@ const HelloWorldContext = ({ props }: any) => {
                                               +
                                             </div>
                                           </div>
-                                        }
+                                        } */}
                                       </div>
                                       {
                                         project?.TeamMembers?.length > 3 &&
                                         <div>
-                                          <div className="moreuser text-muted" >
+                                          <div className="moreuser mt-3 text-muted" >
                                             +{project?.TeamMembers?.length - 3} more
                                           </div>
                                         </div>
@@ -2044,7 +2044,7 @@ const HelloWorldContext = ({ props }: any) => {
                                         {
                                           project?.TeamMembers?.length > 3 &&
                                           <div>
-                                            <div className="moreuser text-muted" >
+                                            <div className="moreuser mt-3 text-muted" >
                                               +{project?.TeamMembers?.length - 3} more
                                             </div>
                                           </div>
@@ -2341,7 +2341,7 @@ const HelloWorldContext = ({ props }: any) => {
                                           <div
                                             className=""
                                           >
-                                            <div className="moreuser text-muted">
+                                            <div className="moreuser mt-3 text-muted">
                                               +{project?.TeamMembers?.length - 3} more
                                             </div>
                                           </div>
@@ -2648,7 +2648,7 @@ const HelloWorldContext = ({ props }: any) => {
                                         {
                                           project?.TeamMembers?.length > 3 &&
 
-                                          <div className="moreuser text-muted"
+                                          <div className="moreuser  text-muted"
                                           >
                                             <div
                                             >
@@ -2960,7 +2960,7 @@ const HelloWorldContext = ({ props }: any) => {
                                           {
                                             project?.TeamMembers?.length > 3 &&
 
-                                            <div className="moreuser text-muted"
+                                            <div className="moreuser  text-muted"
                                             ><div
                                             >
                                                 +{project?.TeamMembers?.length - 3} more
@@ -3481,7 +3481,7 @@ const HelloWorldContext = ({ props }: any) => {
                                       {
                                         project?.TeamMembers?.length > 3 &&
 
-                                        <div className="moreuser text-muted"
+                                        <div className="moreuser  text-muted"
                                         ><div
                                         >
                                             +{project?.TeamMembers?.length - 3} more

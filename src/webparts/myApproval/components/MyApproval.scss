@@ -11,6 +11,7 @@
     border-radius: 30px; width: 100px;
     color: #3c3c3c; cursor: auto;
     font-size: 13px;
+    width:155px;
   }.table-responsive{overflow-x: hidden !important;}
   .svg-inline--fa {
     height: 17px;
@@ -314,3 +315,15 @@ color: #fff !important;
 {
   .pagination-container{margin-bottom: 15px !important;}
 }
+
+.lenbg.comingsoone {
+  width: 90px;
+  pointer-events: none !important;
+
+}
+.nav-item.myapprovalcomingsoon {
+ 
+  pointer-events: none !important;
+
+}
+.myapprovalcomingsoon a{background: #ededed !important;}

@@ -420,38 +420,38 @@ const HelloWorldContext = ({ props }: any) => {
                   <div className="tile">
                     <ul>
                       <li>
-                        {/* <a href=" https://officeindia.sharepoint.com/sites/AlRostmaniSpfx2/sitePages/dmsm.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/DMSMAIN.aspx
+                        {/* <a href=" https://officeindia.sharepoint.com/sites/IntranetUAT/sitePages/dmsm.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/IntranetUAT/SitePages/DMSM.aspx
 ">
 
                           <img src={require("../assets/dms.png")} />
 
                           <p className="mt-1">DMS</p> </a></li>
                       <li style={{ backgroundColor: ' #1faee3' }} className="newmyr">
-                        {/* <a href="https://officeindia.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/BusinessApps.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/BusinessApps.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/IntranetUAT/SitePages/BusinessApps.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/IntranetUAT/SitePages/BusinessApps.aspx">
 
                           <img src={require("../assets/business-app.png")} />
                           {/* <img src="business-app.png"/> */}
                           <p className="mt-1">Business Apps</p> </a> </li>
                       <li style={{ backgroundColor: ' #333333' }} >
-                        {/* <a href="https://officeindia.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/MyRequests.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/myrequests.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/IntranetUAT/SitePages/MyRequests.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/IntranetUAT/SitePages/myrequests.aspx">
 
                           <img src={require("../assets/my-request.png")} />
                           {/* <img src="my-request.png"/> */}
                           <p className="mt-1">My Requests</p> </a> </li>
                       <li style={{ backgroundColor: ' #008551' }}>
-                        {/* <a href="https://officeindia.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/MyApprovals.aspx">  */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/IntranetUAT/SitePages/MyApprovals.aspx">  */}
 
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/MyApprovals.aspx">
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/IntranetUAT/SitePages/MyApprovals.aspx">
 
                           <img src={require("../assets/my-approval.png")} />
                           {/* <img src="my-approval.png"/>  */}
                           <p className="mt-1">My Approvals</p></a> </li>
                       <li style={{ backgroundColor: ' #007aa7' }}>
-                        {/* <a href="https://officeindia.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/KnowledgeCenter.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/AlRostmaniSpfx2/SitePages/KnowledgeCenter.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/IntranetUAT/SitePages/KnowledgeCenter.aspx"> */}
+                        <a href="https://alrostamanigroupae.sharepoint.com/sites/IntranetUAT/SitePages/KnowledgeCenter.aspx">
 
                           <img src={require("../assets/knowledge-center.png")} />
                           {/* <img src="knowledge-center.png"/> */}

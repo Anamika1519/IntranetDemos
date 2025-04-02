@@ -307,6 +307,35 @@ const MyRequestContext = ({ props }: any) => {
   // }, []);
 
 
+  // const ApiCall = async (status: String) => {
+  //   setLoading(true);
+  //   let myrequestdata = await getMyRequest(sp, status);
+  //   let Automationdata1 = await getRequestListsData(sp, status);
+  //   let Automationdata = Automationdata1.sort((a, b) => {
+  //     return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
+  //   });
+  //   Automationdata1.sort((a, b) => b.Created - a.Created)
+  //   // let Automationdata = Automationdata1.sort((a, b) => {
+  //   //   return b.Created - a.Created;
+  //   // });
+  //   // let datsis = Automationdata1.sort((a, b) => new Date(b.Created).getTime() - new Date(a.Created).getTime());
+  //   setAutomationData(Automationdata);
+  //   console.log(myrequestdata, "myrequestdata",Automationdata);
+  //   let myrequestdatadms: any = await gteDMSApproval(sp, status)
+  //   console.log(myrequestdatadms, "myrequestdatadms");
+  //   setMyApprovalsData(await getMyRequest(sp, status));
+
+  //   setmyRequestDataAll(myrequestdata);
+  //   setMyRequestDataAllDMS(myrequestdatadms);
+
+  //   setTimeout(() => {
+  //     setLoading(false);;
+  //   }, 15000);
+
+  //   console.log("AutomationdataAutomationdata", Automationdata, myrequestdata);
+
+  // };
+
   const ApiCall = async (status: String) => {
     setLoading(true);
     let myrequestdata = await getMyRequest(sp, status);
@@ -314,27 +343,35 @@ const MyRequestContext = ({ props }: any) => {
     let Automationdata = Automationdata1.sort((a, b) => {
       return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
     });
-    Automationdata1.sort((a, b) => b.Created - a.Created)
+    if (Automationdata1.length > 0){
+      Automationdata1.sort((a, b) => b.Created - a.Created);
+      setAutomationData(Automationdata1.sort((a, b) => b.Created - a.Created));
+      setLoading(false)
+    }else {
+      setAutomationData([]);
+      setLoading(false)
+    }
+    
     // let Automationdata = Automationdata1.sort((a, b) => {
     //   return b.Created - a.Created;
     // });
-    // let datsis = Automationdata1.sort((a, b) => new Date(b.Created).getTime() - new Date(a.Created).getTime());
-    setAutomationData(Automationdata);
-    console.log(myrequestdata, "myrequestdata",Automationdata);
+    
+    console.log(myrequestdata, "myrequestdata", Automationdata);
     let myrequestdatadms: any = await gteDMSApproval(sp, status)
     console.log(myrequestdatadms, "myrequestdatadms");
-    setMyApprovalsData(await getMyRequest(sp, status));
-
+    //setMyApprovalsData(await getMyRequest(sp, status));
+    setMyApprovalsData( Automationdata1.sort((a, b) => b.Created - a.Created));
     setmyRequestDataAll(myrequestdata);
     setMyRequestDataAllDMS(myrequestdatadms);
 
-    setTimeout(() => {
-      setLoading(false);;
-    }, 15000);
+    // setTimeout(() => {
+    //   setLoading(false);
+    // }, 15000);
 
     console.log("AutomationdataAutomationdata", Automationdata, myrequestdata);
 
   };
+
   const getcurrentuserwithfileUID = async (fileUid: any) => {
     let currentuser = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items
       .select("*", "FileUID/FileUID", "fileUid/ID").expand("FileUID").filter(`FileUID/FileUID eq '${fileUid}' and Log eq null`).getAll().then((res) => {

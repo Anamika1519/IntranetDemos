@@ -13,7 +13,7 @@ import "../components/Managemaster.scss";
 import CustomBreadcrumb from '../../../CustomJSComponents/CustomBreadcrumb/CustomBreadcrumb';
 import "../../horizontalNavBar/components/horizontalNavbar.scss";
 import "../../../Assets/Figtree/Figtree-VariableFont_wght.ttf";
-import { getSettingAPI, getSettingAPImanagemaster } from "../../../APISearvice/settingsService";
+import { getSettingAPI, getSettingAPImanagemaster, getSettingAPIPpowerappsmaster } from "../../../APISearvice/settingsService";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import HorizontalNavbar from '../../horizontalNavBar/components/HorizontalNavBar';
@@ -22,17 +22,17 @@ import { IMasterManageProps } from './IMasterManageProps';
 import { useEffect, useState } from 'react';
 import { BusinessAppsComponent } from './BusinessAppsComponent';
 const endsWith = (str: string, ending: string) => {
-  console.log("strrrr",str,ending)
+  console.log("strrrr", str, ending)
   return str.slice(-ending.length) === ending;
 }
 let siteID: any;
-  let response: any; 
+let response: any;
 export const MastersettingContext = ({ props }: any) => {
   const sp: SPFI = getSP();
   console.log(sp, 'sp');
   const [showIframe, setShowIframe] = useState(false);
   const [iframeUrl, setIframeUrl] = useState('');
-  const handleCardClick = (url:any) => {
+  const handleCardClick = (url: any) => {
     if (url.Title === "Business Apps") {
       setSelectedItem(url); // Set item to render BusinessAppsComponent
       setShowIframe(true);
@@ -53,7 +53,7 @@ export const MastersettingContext = ({ props }: any) => {
           const sideNavBox = iframeDocument.getElementById('sideNavBox');
           const s4TitleRow = iframeDocument.getElementById('s4-titlerow');
           const mainribbon = iframeDocument.getElementById('suiteBarDelta');
-          
+
           if (sideNavBox) {
             // sideNavBox.style.display = 'none';
             sideNavBox.remove()
@@ -90,9 +90,9 @@ export const MastersettingContext = ({ props }: any) => {
       const sideNavBox = iframeDocument.getElementById('sideNavBox');
       const s4TitleRow = iframeDocument.getElementById('s4-titlerow');
       const s4TitleRow2 = iframeDocument.getElementById('s4-ribbonrow');
-      
+
       if (sideNavBox) {
-         sideNavBox.remove()
+        sideNavBox.remove()
         // sideNavBox.style.display = 'none';
       }
       if (s4TitleRow) {
@@ -105,7 +105,7 @@ export const MastersettingContext = ({ props }: any) => {
       }
     });
   }
-  const isSpecialGroup = (linkUrl:any) => {
+  const isSpecialGroup = (linkUrl: any) => {
 
     const specialGroups = ['Super Admin Group', 'Content Contributor Group', 'Intranet Member Group'];
     //const specialGroups = ['IntranetAdmin', 'IntranetContentContributor', 'IntranetMembers'];
@@ -147,7 +147,7 @@ export const MastersettingContext = ({ props }: any) => {
     }
     )
     console.log("sidebarnavitems", sidebarnavitems, securednavitems)
-    let access = securednavitems.some((navitm:any)=> (navitm.Url)?endsWith(navitm.Url.toLowerCase(),location.pathname.toLowerCase()):false);
+    let access = securednavitems.some((navitm: any) => (navitm.Url) ? endsWith(navitm.Url.toLowerCase(), location.pathname.toLowerCase()) : false);
     console.log("acess", access);
     //return securednavitems.some((navitm:any)=> (navitm.Url)?endsWith(navitm.Url.toLowerCase(),location.pathname.toLowerCase()):false)
     return securednavitems.length > 0;
@@ -157,7 +157,7 @@ export const MastersettingContext = ({ props }: any) => {
     console.log('This function is called only once', useHide);
     IsUserAllowedAccess().then(bAllowed => {
 
-        console.log("%c Access allowed","color:green,font-size:14px",bAllowed);
+      console.log("%c Access allowed", "color:green,font-size:14px", bAllowed);
       setIsUserAlllowed(bAllowed);
 
     })
@@ -204,12 +204,14 @@ export const MastersettingContext = ({ props }: any) => {
   };
 
   const ApiCall = async () => {
+    let path1= window.location.href;
+    let pathsplit = path1.split('/');
     let listTitle = 'Settings'
     let CurrentsiteID = props.context.pageContext.site.id;
     siteID = CurrentsiteID;
     response = await sp.web.lists.getByTitle(listTitle).select('Id')();
-    console.log("resp",response);
-    const settingsData = setsettingArray(await getSettingAPImanagemaster(sp))
+    console.log("resp", response);
+    const settingsData = setsettingArray(pathsplit.indexOf("ManageMaster") > -1 ? await getSettingAPImanagemaster(sp) :await getSettingAPIPpowerappsmaster(sp))
     console.log(settingsData, 'settingsData');
   }
 
@@ -266,30 +268,30 @@ export const MastersettingContext = ({ props }: any) => {
   };
 
   // Function to check the URL and show an alert
-function checkUrlForMembershipGroupId() {
-  const currentUrl = window.location.href;
-  const pattern = /_layouts\/15\/people\.aspx\?MembershipGroupId=32/;
+  function checkUrlForMembershipGroupId() {
+    const currentUrl = window.location.href;
+    const pattern = /_layouts\/15\/people\.aspx\?MembershipGroupId=32/;
 
-  if (pattern.test(currentUrl)) {
-    //alert("Match found: MembershipGroupId=32");
+    if (pattern.test(currentUrl)) {
+      //alert("Match found: MembershipGroupId=32");
+    }
   }
-}
 
-// Call the function
-checkUrlForMembershipGroupId();
-const [selectedItem, setSelectedItem] = useState(null);
+  // Call the function
+  checkUrlForMembershipGroupId();
+  const [selectedItem, setSelectedItem] = useState(null);
 
-// const handleCardClick = (item) => {
-//   if (item.Title === "Business Apps") {
-//     setSelectedItem(item); // Set item to render BusinessAppsComponent
-//   } else {
-//     window.location.href = item.LinkUrl; // Navigate for other items
-//   }
-// };
+  // const handleCardClick = (item) => {
+  //   if (item.Title === "Business Apps") {
+  //     setSelectedItem(item); // Set item to render BusinessAppsComponent
+  //   } else {
+  //     window.location.href = item.LinkUrl; // Navigate for other items
+  //   }
+  // };
 
-// const handleBackClick = () => {
-//   setSelectedItem(null); // Reset state to go back
-// };
+  // const handleBackClick = () => {
+  //   setSelectedItem(null); // Reset state to go back
+  // };
   return (
 
     <div id="wrapper" ref={elementRef}>
@@ -301,7 +303,7 @@ const [selectedItem, setSelectedItem] = useState(null);
       <div className="content-page">
         <HorizontalNavbar _context={sp} siteUrl={SiteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}` }}>
-          <div  className="container-fluid  paddb">
+          <div className="container-fluid  paddb">
             <div className="row pt-0" style={{ paddingLeft: '0.5rem' }}>
               <div className="col-lg-3">
                 <CustomBreadcrumb Breadcrumb={Breadcrumb} />
@@ -324,8 +326,8 @@ const [selectedItem, setSelectedItem] = useState(null);
                       </div>)
                     }) : (<div>Access Denied</div>)
                 } */}
-           
-      {/* {!showIframe ? (
+
+                {/* {!showIframe ? (
         IsUserAlllowed ? (
           settingArray.map((item) => {
             //const ImageUrl = item.ImageIcon == undefined || item.ImageIcon == null ? "" : JSON.parse(item.ImageIcon);
@@ -348,7 +350,7 @@ const [selectedItem, setSelectedItem] = useState(null);
                   >
                     <div className="icon">
                       {/* <img src={ImageUrl?.serverUrl + ImageUrl?.serverRelativeUrl} alt="Icon" /> */}
-                      <img src={imageUrl} alt="Icon" />
+                {/* <img src={imageUrl} alt="Icon" />
                     </div>
                     <p className="text-dark">{item.Title}</p>
                   </div>
@@ -357,7 +359,7 @@ const [selectedItem, setSelectedItem] = useState(null);
                     <div className="card-master box1">
                       <div className="icon">
                         {/* <img src={ImageUrl?.serverUrl + ImageUrl?.serverRelativeUrl} alt="Icon" /> */}
-                        <img src={imageUrl} alt="Icon" />
+                {/* <img src={imageUrl} alt="Icon" />
                       </div>
                       <p className="text-dark">{item.Title}</p>
                     </div>
@@ -385,54 +387,63 @@ const [selectedItem, setSelectedItem] = useState(null);
             title="Content"
           ></iframe>
         </div>
-      )} */}
+      )}  */}
 
-{!selectedItem 
-? ( // Show cards when no selection
-        IsUserAlllowed ? (
-          settingArray.map((item) => {
-            const ImageUrl =
-              item.ImageIcon == undefined || item.ImageIcon == null
-                ? ""
-                : JSON.parse(item.ImageIcon);
+                {!selectedItem
+                  ? ( // Show cards when no selection
+                    IsUserAlllowed ? (
+                      settingArray.map((item) => {
+                        //const ImageUrl =
+                          // item.ImageIcon == undefined || item.ImageIcon == null
+                          //   ? ""
+                          //   : JSON.parse(item.ImageIcon);
+                            const imageData = item.ImageIcon == undefined || item.ImageIcon == null ? "" : JSON.parse(item.ImageIcon);
+                            let siteId = siteID;
+                            let listID =response && response.Id;
+                            let img1 = imageData && imageData.fileName ? `${SiteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${item.ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
+                            let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
+                            const imageUrl = imageData
+                              //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
+                              //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`
+                              ? img
+                              : require("../assets/news.png");
+                        return (
+                          <div className="col-sm-3 col-md-3 mt-2" key={item.Title}>
+                            <div
+                              className="card-master box1"
+                              onClick={() => handleCardClick(item)}
+                            >
+                              <div className="icon">
+                                <img
+                                  src={imageUrl}
+                                  alt="Icon"
+                                />
+                              </div>
+                              <p className="text-dark">{item.Title}</p>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div>Access Denied</div>
+                    )
+                  ) : (
+                    // Render BusinessAppsComponent when Business Apps is clicked
+                    <div>
+                      <button
+                        style={{ margin: "10px" }}
+                        className="btn btn-secondary"
+                        onClick={handleBackClick}
+                      >
+                        Back
+                      </button>
+                      <BusinessAppsComponent data={selectedItem} />
+                    </div>
+                  )}
 
-            return (
-              <div className="col-sm-3 col-md-3 mt-2" key={item.Title}>
-                <div
-                  className="card-master box1"
-                  onClick={() => handleCardClick(item)}
-                >
-                  <div className="icon">
-                    <img
-                      src={ImageUrl?.serverUrl + ImageUrl?.serverRelativeUrl}
-                      alt="Icon"
-                    />
-                  </div>
-                  <p className="text-dark">{item.Title}</p>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <div>Access Denied</div>
-        )
-      ) : (
-        // Render BusinessAppsComponent when Business Apps is clicked
-        <div>
-          <button
-            style={{ margin: "10px" }}
-            className="btn btn-secondary"
-            onClick={handleBackClick}
-          >
-            Back
-          </button>
-          <BusinessAppsComponent data={selectedItem} />
-        </div>
-      )}
 
+                <div id="iframeContainer" style={{ marginTop: '20px' }}></div>
 
-      <div id="iframeContainer" style={{ marginTop: '20px' }}></div>
-  
 
                 {/* {
   IsUserAlllowed ? (

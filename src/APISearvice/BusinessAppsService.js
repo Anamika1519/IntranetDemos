@@ -123,10 +123,26 @@ const getUserGroups = async (_sp , context) => {
     const userAdGroupIds = response.value.map(group => group.id);
     console.log("User Azure AD Group IDs:", userAdGroupIds);
 
+    // const userAdGroupDetails = await Promise.all(
+    //   userAdGroupIds.map(async group => {
+    //     try {
+    //       const ownersResponse = await graphClient.api(`/groups/${group}/owners`).get();
+    //       const owners = ownersResponse.value.map(owner => owner.id);
+    //       return { ...group, owners };
+    //     } catch (error) {
+    //       console.error(`Error fetching owners for group ${group}:`, error);
+    //       return { ...group, owners: [] }; // Return empty owners if the call fails
+    //     }
+    //   })
+    // );
+
+    // console.log("User Azure AD Group Details with Owners:", userAdGroupDetails);
+
+
     // Fetch SharePoint Groups using REST API
       // Fetch SharePoint Groups using PnP JS
       const spGroupsResponse = await _sp.web.currentUser.groups();
-      console.log("User SharePoint Groups:", spGroupsResponse);
+      // console.log("User SharePoint Groups:", spGroupsResponse);
   
       // Extract SharePoint Group Titles
       const userSpGroupTitles = spGroupsResponse.map(group => group.Title);
@@ -140,7 +156,7 @@ const getUserGroups = async (_sp , context) => {
 };
 
 const normalizeGroupName = (groupName) => {
-  return groupName.replace(/\s*Members\s*$/i, "").trim();
+  return groupName?.replace(/\s*Members\s*$/i, "").trim();
 };
 
 const getAzureADGroupIds = async (groupNames, graphClient) => {
@@ -150,8 +166,9 @@ const getAzureADGroupIds = async (groupNames, graphClient) => {
     console.log("Group Names to Fetch from Azure AD:", groupNames);
 
     // Normalize group names
-    const normalizedGroupNames = groupNames.map(name => normalizeGroupName(name));
-    console.log("Normalized Group Names:", normalizedGroupNames);
+    const normalizedGroupNames = groupNames
+    // .map(name => normalizeGroupName(name));
+    // console.log("Normalized Group Names:", normalizedGroupNames);
 
     // Construct Graph API filter query for multiple group names
     const filterQuery = normalizedGroupNames.map(name => `displayName eq '${name}'`).join(" or ");
@@ -207,15 +224,25 @@ const { adGroupIds: userGroupIds, spGroupTitles: userSpGroupTitles } = await get
   if (res.length > 0) {
     // Extract valid Audience Entries
   // Extract valid Audience Entries (since Audience allows only ONE selection)
+// const audienceGroupNames = [...new Set(
+//   res.map(item => {
+//     console.log("Audience Data:", item.Audience);
+//     console.log("Audience Data Type:", typeof item.Audience);
+
+//     if (!item.Audience) return null; // Skip if null/undefined
+
+//     return item.Audience.Title; // Directly extract the group title (single selection)
+//   }).filter(title => title) // Remove null values
+// )];
 const audienceGroupNames = [...new Set(
-  res.map(item => {
+  res.flatMap(item => {
     console.log("Audience Data:", item.Audience);
     console.log("Audience Data Type:", typeof item.Audience);
 
-    if (!item.Audience) return null; // Skip if null/undefined
+    if (!item.Audience || !Array.isArray(item.Audience)) return []; // Skip if null/undefined or not an array
 
-    return item.Audience.Title; // Directly extract the group title (single selection)
-  }).filter(title => title) // Remove null values
+    return item.Audience.map(audience => audience.Title); // Extract titles from the Audience array
+  })
 )];
 
 
@@ -238,8 +265,12 @@ const audienceGroupNames = [...new Set(
       if (!item.EnableAudienceTargeting) return true; // Include if targeting is disabled
 
       // Extract Audience Group Titles
-      if (!item.Audience) return false;
-      const audienceGroupNames = item.Audience ? [item.Audience.Title] : [];
+      // if (!item.Audience) return false;
+      if (!Array.isArray(item.Audience) || item.Audience.length === 0) return false;
+      // const audienceGroupNames = item.Audience ? [item.Audience.Title] : [];
+      const audienceGroupNames = [...new Set(
+        item.Audience?.map(audience => audience.Title) || [] // Map over the Audience array to extract Titles
+      )];
 
 
       console.log("Checking Item:", item.SubTitle);
@@ -247,7 +278,8 @@ const audienceGroupNames = [...new Set(
       console.log("Audience Group Names:", audienceGroupNames);
 
       // Normalize Audience Group Names
-      const normalizedAudienceGroupNames = audienceGroupNames.map(name => normalizeGroupName(name));
+      const normalizedAudienceGroupNames = audienceGroupNames
+      // .map(name => normalizeGroupName(name));
 
       // Convert Audience Titles to Azure AD Group IDs (if they exist)
       const audienceGroupIds = normalizedAudienceGroupNames
@@ -260,14 +292,28 @@ const audienceGroupNames = [...new Set(
       const isMemberOfAzureADGroup = audienceGroupIds.some(groupId => userGroupIds.includes(groupId));
 
       // If not an Azure AD Group, assume it's a SharePoint Group (fallback mechanism)
+      // const isMemberOfSharePointGroup = normalizedAudienceGroupNames.some(name =>
+      //   userGroupIds.includes(name) // Assuming SharePoint groups are stored in userGroupIds
+      // );
       const isMemberOfSharePointGroup = normalizedAudienceGroupNames.some(name =>
-        userGroupIds.includes(name) // Assuming SharePoint groups are stored in userGroupIds
+        userSpGroupTitles.includes(name) // Assuming SharePoint groups are stored in userGroupIds
       );
 
       // return isMemberOfAzureADGroup || isMemberOfSharePointGroup;
       return isMemberOfAzureADGroup 
-  || isMemberOfSharePointGroup 
-  || userSpGroupTitles.includes(item.Audience.Title); // Check if user is in SharePoint Group
+      || isMemberOfSharePointGroup 
+      
+      || 
+      (item.Audience && item.Audience.some(audience => audience.Id === context.pageContext.legacyPageContext.userId));
+
+      // || 
+      // item.Audience.some(audience => 
+      //   SiteUserPeople.some(user => user.Id === audience.Id && user.Title === audience.Title)
+      // )
+      
+      // item.Audience.some(audience => userSpGroupTitles.includes(audience.Title)); // Check if user is in SharePoint Group
+
+  // userSpGroupTitles.includes(item.Audience.Title)
 
     });
   }

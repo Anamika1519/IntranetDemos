@@ -959,12 +959,45 @@ const MyApprovalContext = ({ props }: any) => {
     ApiCall("Pending");
   }, [useHide]);
 
+  // const ApiCall = async (status: string) => {
+  //   // if(activeTab == "Intranet"){
+  //   setLoading(true);
+  //   let MyApprovaldata = await getMyApproval(sp, status);
+  //   let Automationdata1 = await getApprovalListsData(sp, status);
+  //   let typedata = await getType(sp);
+  //   //setMyApprovalsData(MyApprovaldata);
+  //   setMyApprovalsDataAll(MyApprovaldata);
+  //   //}
+  //   //else if(activeTab == "Automation"){
+  //   // let Automationdata = Automationdata1.sort((a, b) => {
+  //   //   return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
+  //   // });
+  //   let Automationdata = Automationdata1.sort((a, b) => {
+  //     return b.Created - a.Created;
+  //   });
+  //   setMyApprovalsData(Automationdata);
+  //   setMyApprovalsDataAutomation(Automationdata);
+  //   setTimeout(() => {
+  //     setLoading(false);;
+  //   }, 15000);
+
+  //   console.log("Automationdata", Automationdata);
+  //   // }
+  // };
+
+  // const FilterDiscussionData = async (optionFilter: string) => {
+
+  //   setAnnouncementData(await getDiscussionFilterAll(sp, optionFilter));
+
+  // };
+ 
   const ApiCall = async (status: string) => {
     // if(activeTab == "Intranet"){
     setLoading(true);
     let MyApprovaldata = await getMyApproval(sp, status);
     let Automationdata1 = await getApprovalListsData(sp, status);
     let typedata = await getType(sp);
+    let Automationdata:any;
     //setMyApprovalsData(MyApprovaldata);
     setMyApprovalsDataAll(MyApprovaldata);
     //}
@@ -972,24 +1005,27 @@ const MyApprovalContext = ({ props }: any) => {
     // let Automationdata = Automationdata1.sort((a, b) => {
     //   return a.Created === b.Created ? 0 : a.Created ? -1 : 1;
     // });
-    let Automationdata = Automationdata1.sort((a, b) => {
-      return b.Created - a.Created;
-    });
-    setMyApprovalsData(Automationdata);
-    setMyApprovalsDataAutomation(Automationdata);
-    setTimeout(() => {
-      setLoading(false);;
-    }, 15000);
+    if (Automationdata1.length > 0) {
+      Automationdata = Automationdata1.sort((a, b) => {
+        return b.Created - a.Created;
+      });
+      setMyApprovalsData(Automationdata);
+      setMyApprovalsDataAutomation(Automationdata);
+      setLoading(false)
+    } else {
+      setMyApprovalsData([]);
+      setMyApprovalsDataAutomation([]);
+      setLoading(false)
+    }
+     
+    // setTimeout(() => {
+    //   setLoading(false);;
+    // }, 15000);
 
     console.log("Automationdata", Automationdata);
     // }
   };
 
-  // const FilterDiscussionData = async (optionFilter: string) => {
-
-  //   setAnnouncementData(await getDiscussionFilterAll(sp, optionFilter));
-
-  // };
   const handleStatusChange = async (name: string, value: string, actingfor: any) => {
     setLoading(true);
     actingforuseremail = actingfor

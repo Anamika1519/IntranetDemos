@@ -847,11 +847,17 @@ declare global {
       // const isoDate = date.toISOString();
       // console.log(isoDate);
       // const filterData=Mylistdata.find((item)=> item.CurrentUser === currentUserEmailRef.current || item.CurrentUser === props.actingforuseremail);
+      // let filterData:any;
+      // if(props.actingforuseremail !== '' && props.actingforuseremail !== null && props.actingforuseremail !== undefined){
+      //   filterData=Mylistdata.find((item)=> item.CurrentUser === props.actingforuseremail);
+      // }else{
+      //   filterData=Mylistdata.find((item)=> item.CurrentUser === currentUserEmailRef.current);
+      // }
       let filterData:any;
       if(props.actingforuseremail !== '' && props.actingforuseremail !== null && props.actingforuseremail !== undefined){
-        filterData=Mylistdata.find((item)=> item.CurrentUser === props.actingforuseremail);
+        filterData=Mylistdata.find((item)=> item.CurrentUser === props.actingforuseremail && item.Log === null);
       }else{
-        filterData=Mylistdata.find((item)=> item.CurrentUser === currentUserEmailRef.current);
+        filterData=Mylistdata.find((item)=> item.CurrentUser === currentUserEmailRef.current && item.Log === null);
       }
       console.log("filtered data Level",filterData.MasterApproval.Level);
       console.log("filterData id",filterData.FileUID.FileUID);

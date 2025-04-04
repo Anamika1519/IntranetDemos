@@ -126,7 +126,7 @@ const HelloWorldContext = ({ props }: any) => {
     } else {
       // Find the selected category based on activeTab
       const selectedCategory = mediagallerycategory.find(
-        (category) => category.CategoryName.toLowerCase() === activeTab
+        (category) => category.CategoryName.toLowerCase() === activeTab.toLowerCase()
       );
       { console.log("filteredMediaItemsselectedCategory", filteredMediaItems, activeTab, selectedCategory, mediagallerydata) }
       if (selectedCategory) {

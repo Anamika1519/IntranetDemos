@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import styles from './businessappcomponent.scss';
-import './businessappcomponent.css';
-export const BusinessAppsComponent = ({ data }: any) => {
+import './mastersettingsappcomponent.css';
+export const SettingsAppsComponent = ({ data }: any) => {
     React.useEffect(() => {
         // Immediately hide sidebar and navbar
         const hideElements = () => {
@@ -56,7 +56,7 @@ export const BusinessAppsComponent = ({ data }: any) => {
       }, []);
     
     return <div>
-        <iframe id="listIframe" src={`https://alrostamanigroupae.sharepoint.com/sites/Intranet/Lists/ARGBusinessApps?viewpath=%2Fsites%2FIntranetUAT%2FLists%2FARGBusinessApps`}  width="100%"
+        <iframe id="listIframe" src={`https://alrostamanigroupae.sharepoint.com/sites/Intranet/Lists/Settings/AllItems.aspx`}  width="100%"
       height="600px"
       style={{ border: 'none' }} />
     </div>;

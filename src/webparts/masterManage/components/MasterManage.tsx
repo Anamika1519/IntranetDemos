@@ -21,6 +21,7 @@ import HorizontalNavbar from '../../horizontalNavBar/components/HorizontalNavBar
 import { IMasterManageProps } from './IMasterManageProps';
 import { useEffect, useState } from 'react';
 import { BusinessAppsComponent } from './BusinessAppsComponent';
+import { SettingsAppsComponent } from './MasterSettingsAppComponent';
 const endsWith = (str: string, ending: string) => {
   console.log("strrrr", str, ending)
   return str.slice(-ending.length) === ending;
@@ -33,7 +34,7 @@ export const MastersettingContext = ({ props }: any) => {
   const [showIframe, setShowIframe] = useState(false);
   const [iframeUrl, setIframeUrl] = useState('');
   const handleCardClick = (url: any) => {
-    if (url.Title === "Business Apps") {
+    if (url.Title === "Business Apps" || url.Title === "Settings Master") {
       setSelectedItem(url); // Set item to render BusinessAppsComponent
       setShowIframe(true);
     } else {
@@ -204,14 +205,22 @@ export const MastersettingContext = ({ props }: any) => {
   };
 
   const ApiCall = async () => {
-    let path1= window.location.href;
-    let pathsplit = path1.split('/');
+    let path1 = window.location.href;
+
     let listTitle = 'Settings'
     let CurrentsiteID = props.context.pageContext.site.id;
     siteID = CurrentsiteID;
     response = await sp.web.lists.getByTitle(listTitle).select('Id')();
-    console.log("resp", response);
-    const settingsData = setsettingArray(pathsplit.indexOf("ManageMaster") > -1 ? await getSettingAPImanagemaster(sp) :await getSettingAPIPpowerappsmaster(sp))
+    console.log("resp", path1, path1.toLowerCase().includes("managemaster"), path1.toLowerCase().includes("powerappsmaster"));
+    let settingsData: any;
+    if (path1.toLowerCase().includes("managemaster")) {
+      setsettingArray(await getSettingAPImanagemaster(sp))
+    } else if (path1.toLowerCase().includes("powerappsmaster")) {
+      setsettingArray(await getSettingAPIPpowerappsmaster(sp))
+    }
+    //let Managemasterdata = If(path1.includes("managemaster") ? await getSettingAPImanagemaster(sp)
+    //let Powerappsmasterdata =
+    //settingsData = setsettingArray(path1.includes("managemaster") ? await getSettingAPImanagemaster(sp) : await getSettingAPIPpowerappsmaster(sp))
     console.log(settingsData, 'settingsData');
   }
 
@@ -394,19 +403,19 @@ export const MastersettingContext = ({ props }: any) => {
                     IsUserAlllowed ? (
                       settingArray.map((item) => {
                         //const ImageUrl =
-                          // item.ImageIcon == undefined || item.ImageIcon == null
-                          //   ? ""
-                          //   : JSON.parse(item.ImageIcon);
-                            const imageData = item.ImageIcon == undefined || item.ImageIcon == null ? "" : JSON.parse(item.ImageIcon);
-                            let siteId = siteID;
-                            let listID =response && response.Id;
-                            let img1 = imageData && imageData.fileName ? `${SiteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${item.ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
-                            let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
-                            const imageUrl = imageData
-                              //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
-                              //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`
-                              ? img
-                              : require("../assets/news.png");
+                        // item.ImageIcon == undefined || item.ImageIcon == null
+                        //   ? ""
+                        //   : JSON.parse(item.ImageIcon);
+                        const imageData = item.ImageIcon == undefined || item.ImageIcon == null ? "" : JSON.parse(item.ImageIcon);
+                        let siteId = siteID;
+                        let listID = response && response.Id;
+                        let img1 = imageData && imageData.fileName ? `${SiteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${item.ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
+                        let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
+                        const imageUrl = imageData
+                          //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
+                          //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`
+                          ? img
+                          : require("../assets/news.png");
                         return (
                           <div className="col-sm-3 col-md-3 mt-2" key={item.Title}>
                             <div
@@ -437,9 +446,15 @@ export const MastersettingContext = ({ props }: any) => {
                       >
                         Back
                       </button>
-                      <BusinessAppsComponent data={selectedItem} />
+                      {selectedItem?.Title === "Business Apps" ? (
+                        <BusinessAppsComponent data={selectedItem} />
+                      ) : selectedItem?.Title === "Settings Master" ? (
+                        <SettingsAppsComponent data={selectedItem} />
+                      ) : null}
                     </div>
-                  )}
+                  )
+
+                }
 
 
                 <div id="iframeContainer" style={{ marginTop: '20px' }}></div>

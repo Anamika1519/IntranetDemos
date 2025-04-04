@@ -56,7 +56,7 @@ export const SettingsAppsComponent = ({ data }: any) => {
       }, []);
     
     return <div>
-        <iframe id="listIframe" src={`https://alrostamanigroupae.sharepoint.com/sites/Intranet/Lists/Settings/AllItems.aspx`}  width="100%"
+        <iframe id="listIframe" src={`https://alrostamanigroupae.sharepoint.com/sites/IntranetUAT/Lists/Settings/AllItems.aspx`}  width="100%"
       height="600px"
       style={{ border: 'none' }} />
     </div>;

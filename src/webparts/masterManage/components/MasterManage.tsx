@@ -211,18 +211,36 @@ export const MastersettingContext = ({ props }: any) => {
     let CurrentsiteID = props.context.pageContext.site.id;
     siteID = CurrentsiteID;
     response = await sp.web.lists.getByTitle(listTitle).select('Id')();
-    console.log("resp", path1, path1.toLowerCase().includes("managemaster"), path1.toLowerCase().includes("powerappsmaster"));
-    let settingsData: any;
-    if (path1.toLowerCase().includes("managemaster")) {
-      setsettingArray(await getSettingAPImanagemaster(sp))
-    } else if (path1.toLowerCase().includes("powerappsmaster")) {
-      setsettingArray(await getSettingAPIPpowerappsmaster(sp))
-    }
-    //let Managemasterdata = If(path1.includes("managemaster") ? await getSettingAPImanagemaster(sp)
-    //let Powerappsmasterdata =
-    //settingsData = setsettingArray(path1.includes("managemaster") ? await getSettingAPImanagemaster(sp) : await getSettingAPIPpowerappsmaster(sp))
-    console.log(settingsData, 'settingsData');
-  }
+
+    // this is code done by anamika
+  //   console.log("resp", path1, path1.toLowerCase().includes("managemaster"), path1.toLowerCase().includes("powerappsmaster"));
+  //   let settingsData: any;
+  //   if (path1.toLowerCase().includes("managemaster")) {
+  //     setsettingArray(await getSettingAPImanagemaster(sp))
+  //   } else if (path1.toLowerCase().includes("powerappsmaster")) {
+  //     setsettingArray(await getSettingAPIPpowerappsmaster(sp))
+  //   }
+  //   //let Managemasterdata = If(path1.includes("managemaster") ? await getSettingAPImanagemaster(sp)
+  //   //let Powerappsmasterdata =
+  //   //settingsData = setsettingArray(path1.includes("managemaster") ? await getSettingAPImanagemaster(sp) : await getSettingAPIPpowerappsmaster(sp))
+  //   console.log(settingsData, 'settingsData');
+  // }
+
+  // this is code done by riya
+  let pathsplit = path1.split('/');
+  console.log("resp", response);
+  // const settingsData = setsettingArray(pathsplit.indexOf("ManageMaster") > -1 ? await getSettingAPImanagemaster(sp) :await getSettingAPIPpowerappsmaster(sp))
+  const cleanPath = pathsplit.map(part => part.replace(".aspx", "")); 
+
+const settingsData = setsettingArray(
+  cleanPath.includes("ManageMaster") 
+      ? await getSettingAPImanagemaster(sp) 
+      : await getSettingAPIPpowerappsmaster(sp)
+);
+  console.log(settingsData, 'settingsData');
+}
+
+
 
   // Bannerthing
   const [showModal, setShowModal] = React.useState(false);

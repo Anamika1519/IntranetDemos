@@ -97,14 +97,14 @@ export const getListDataFromSiteCollection = async (_sp, listName, status, porta
   // Setup PnPJs for a specific site collection URL
   let arr = [];
   console.log("sdsssss", sp, _sp)
-  debugger
+  
   let apiUrl;
-  let FinalStatus = "";
-  if (status == "Pending") {
-    FinalStatus = "Not Started"
-  } else if (status == "Approved") {
-    FinalStatus = "Completed"
-  }
+  let FinalStatus = status;
+  // if (status == "Pending") {
+  //   FinalStatus = "Not Started"
+  // } else if (status == "Approved") {
+  //   FinalStatus = "Completed"
+  // }
   let currentUser;
   await _sp.web.currentUser()
     .then(user => {
@@ -116,7 +116,7 @@ export const getListDataFromSiteCollection = async (_sp, listName, status, porta
       return [];
     });
   if (!currentUser) return arr; // Return empty array if user fetch failed
-  apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Requestor_x0020_Name/ID,Requestor_x0020_Name/Title,Requestor_x0020_Name/EMail&$expand=Requestor_x0020_Name&$filter=${`Requestor_x0020_Name/EMail eq 'Taha.Ahmed@alrostamanigroup.ae' and WFStatus eq '${FinalStatus}'`}`;
+  apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Requestor_x0020_Name/ID,Requestor_x0020_Name/Title,Requestor_x0020_Name/EMail&$expand=Requestor_x0020_Name&$filter=${`Requestor_x0020_Name/EMail eq '${currentUser}' and RequestStatus eq '${FinalStatus}'`}`;
 
 
   try {
@@ -151,20 +151,29 @@ export const getDataFromMultipleSites = async (_sp, listName, status, portal, Si
   const siteUrls = [
     SiteBaseURL
   ];
+  if(portal == "Others"){
   // Loop through each site collection URL and fetch data
   for (const siteUrl of siteUrls) {
     const data = await getListDataFromSiteCollection(_sp, listName, status, portal, siteUrl);
     allData.push(...data);
     console.log("dadadadadad", data);
   }
+} else{
+    for (const siteUrl of siteUrls) {
+      const data = await getMyRequestsdata(_sp, listName, status, portal, siteUrl);
+      allData.push(...data);
+      console.log("dadadadadad", data);
+    }
+}
   console.log('Combined data from all site collections:', allData);
   return allData;
 }
 
 export const getRequestListsData = async (_sp, status) => {
+  
   let arr = []
   let Status = status == "Pending" ? "Submitted" : status;
-  await _sp.web.lists.getByTitle("AllRequestLists").items.orderBy("Created", false).getAll()
+  await _sp.web.lists.getByTitle("AllRequestLists").items.filter(`IsActive eq 'Yes'`).orderBy("Created", false).getAll()
     .then(async (res) => {
       console.log("AllRequestLists", res);
       let AllRequestArr = [];
@@ -176,16 +185,6 @@ export const getRequestListsData = async (_sp, status) => {
               if (resData && resData.length > 0) {
                 for (let j = 0; j < resData.length; j++) {
                   AllRequestArr.push({
-                    // ID: resData[j].ID,
-                    // RequestID: resData[j].ID,
-                    // ApprovalTitle: resData[j].Title,
-                    // Author: resData[j].Requestor_x0020_Name,
-                    // ProcessName: res[i].ProcessName,
-                    // Created: resData[j].Created,
-                    // Status: resData[j].TaskStatus,
-                    // TaskID: resData[j].MasterID,
-                    // AppID: res[i].AppId,
-                    // RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
                     ID: resData[j].ID,
                     RequestID: resData[j].Title,
                     // ApprovalTitle: res[i].RequestTitle,RequestTitle
@@ -193,7 +192,7 @@ export const getRequestListsData = async (_sp, status) => {
                     Author: resData[j].Requestor_x0020_Name,
                     ProcessName: res[i].ProcessName,
                     Created: new Date(resData[j].Created),
-                    Status: resData[j].WFStatus,
+                    Status: resData[j].RequestStatus,
                     AppID: res[i].AppId,
                     RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].ID}`
                   })
@@ -206,7 +205,7 @@ export const getRequestListsData = async (_sp, status) => {
               console.error("Error fetching data:", error);
             });
         } else {
-          getMyRequestsdata(_sp, res[i].Title, Status).then((resData) => {
+         await getDataFromMultipleSites(_sp, res[i].Title, Status, res[i].RedirectionLinkSource, res[i].SiteBaseURL).then((resData) => {
             if (resData && resData.length > 0) {
               for (let j = 0; j < resData.length; j++) {
                 AllRequestArr.push({
@@ -236,69 +235,123 @@ export const getRequestListsData = async (_sp, status) => {
     });
   return arr;
 }
-export const getMyRequestsdata = async (_sp, listName, status) => {
 
-  let arr = []
-
+export const getMyRequestsdata = async (_sp, listName, status, portal, SiteBaseURL) => {
+  // Setup PnPJs for a specific site collection URL
+  let arr = [];
+  console.log("sdsssss", sp, _sp)
+  
+  let apiUrl;
+  let FinalStatus = status;
+  // if (status == "Pending") {
+  //   FinalStatus = "Pending"
+  // } else if (status == "Approved") {
+  //   FinalStatus = "Approved"
+  // }
   let currentUser;
-
   await _sp.web.currentUser()
-
     .then(user => {
-
-      console.log("usertesttt", user, listName, status);
-
-      currentUser = user.Id; // Get the current user's Email
-
+      console.log("user", user);
+      currentUser = user.Email; // Get the current user's Email
     })
-
     .catch(error => {
-
       console.error("Error fetching current user: ", error);
-
       return [];
-
     });
-
-
   if (!currentUser) return arr; // Return empty array if user fetch failed
+  apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail&$expand=Author&$filter=${`Author/EMail eq '${currentUser}' and Status eq '${FinalStatus}'`}`;
 
 
-  await _sp.web.lists.getByTitle(listName).items
-
-    .select("*,Author/ID,Author/Title,Author/EMail").expand("Author")
-
-    .filter(`AuthorId eq ${currentUser} and Status eq '${status}'`)
-
-    .orderBy("Created", false).getAll()
-
-    .then((res) => {
-
-      console.log(`--MyRequest${listName}`, res);
-
-      arr = res
-
-      // arr = res.filter(item => 
-
-      //     // Include public groups or private groups where the current user is in the InviteMembers array
-
-      //     item.GroupType === "Public" || 
-
-      //     (item.GroupType === "Private" && item.InviteMemebers && item.InviteMemebers.some(member => member.Id === currentUser))
-
-      //   );
-
-    })
-
-    .catch((error) => {
-
-      console.log("Error fetching data: ", error);
-
+  try {
+    console.log("apiUrlapiUrl", apiUrl);
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
     });
-
-  return arr;
-
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    // Wait for the response to be converted to JSON
+    const data = await response.json();
+    // Immediately handle data
+    console.log('List Items ellllllllnew:', data.value);
+    // You can now manipulate or return the data as needed
+    if (data.value.length > 0) {
+      arr = data.value;
+    } else {
+      arr = []
+    }
+    return arr;  // Directly returning the array if needed
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 }
+
+// export const getMyRequestsdata = async (_sp, listName, status, portal, SiteBaseURL) => {
+
+//   let arr = []
+
+//   let currentUser;
+
+//   await _sp.web.currentUser()
+
+//     .then(user => {
+
+//       console.log("usertesttt", user, listName, status);
+
+//       currentUser = user.Id; // Get the current user's Email
+
+//     })
+
+//     .catch(error => {
+
+//       console.error("Error fetching current user: ", error);
+
+//       return [];
+
+//     });
+
+
+//   if (!currentUser) return arr; // Return empty array if user fetch failed
+
+
+//   await _sp.web.lists.getByTitle(listName).items
+
+//     .select("*,Author/ID,Author/Title,Author/EMail").expand("Author")
+
+//     .filter(`AuthorId eq ${currentUser} and Status eq '${status}'`)
+
+//     .orderBy("Created", false).getAll()
+
+//     .then((res) => {
+
+//       console.log(`--MyRequest${listName}`, res);
+
+//       arr = res
+
+//       // arr = res.filter(item => 
+
+//       //     // Include public groups or private groups where the current user is in the InviteMembers array
+
+//       //     item.GroupType === "Public" || 
+
+//       //     (item.GroupType === "Private" && item.InviteMemebers && item.InviteMemebers.some(member => member.Id === currentUser))
+
+//       //   );
+
+//     })
+
+//     .catch((error) => {
+
+//       console.log("Error fetching data: ", error);
+
+//     });
+
+//   return arr;
+
+// }
 
 // Intranet My Request
 export const getRequestListsDataIntranet = async (_sp, status) => {

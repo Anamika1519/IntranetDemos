@@ -597,12 +597,22 @@ font-size: 42px; font-weight: 400;color: #fff;  margin-top: 10px;
 .tile ul{display: flex; gap: 10px; padding: 0px; margin: 0px;}
 .tile ul li{width: 13.2%; list-style: none; padding: 30px 20px;transition:  0.5s; color: #fff; font-size: 16px; text-transform: capitalize; font-weight: 600; border-radius: 10px; box-sizing: border-box; height: 150px; background: #ffc313;}
 .tile ul li:hover{margin-top: -10px;transition:  0.5s;}
+//For Production 
 .logo img{
     position: absolute;
     left: 32px;
     top: 23px;
     // top: 60px;
 }
+
+/* For UAT 
+.logo img{
+    position: absolute;
+    left: 32px;
+    top: 60px;
+} */
+
+
 #s4-workspace{overflow-y:hidden !important;}
 footer{background: transparent !important;}
 #myHeader svg,.dropcssUser,#myHeader a{color: #fff !important;}

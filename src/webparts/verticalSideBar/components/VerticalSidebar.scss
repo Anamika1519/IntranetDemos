@@ -42,9 +42,17 @@
   height: 40px !important;
   margin-top: 2px;
   margin-right: 5px;}
+
+// For Production 
 .paddb {
 padding: 22px 34px 0px 18px;min-height: 100vh;
 }
+
+/* For UAT   */
+// .paddb {
+// padding: 50px 34px 0px 18px;min-height: 100vh;
+// }
+
 .mt100{margin-top: 100%;}
 .newiconsvg svg{height: 115px !important; width: 115px !important;
   color: #b7b7b7;

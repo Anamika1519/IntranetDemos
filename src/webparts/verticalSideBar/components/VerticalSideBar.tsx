@@ -85,7 +85,7 @@ const VerticalContext = ({ _context }: any) => {
       setCurrentUser(res.Title)
       console.log(res, "currentuser");
     })
-    debugger
+    
     const siteUrl = "https://alrostamanigroupae.sharepoint.com/sites/Intranet";
     let listTitle = 'UtilitySettings'
     let CurrentsiteID = "a505b4c0-aec7-4fef-96d6-b0f11e787e0d";
@@ -470,7 +470,7 @@ const VerticalContext = ({ _context }: any) => {
   };
 
   const getIcon = (iconName: string) => {
-    debugger
+    
     const iconMap: { [key: string]: any } = {
       home: Airplay,
       calendar: Calendar,

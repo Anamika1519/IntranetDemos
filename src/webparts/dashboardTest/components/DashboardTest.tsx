@@ -1,43 +1,145 @@
-import * as React from 'react';
-import styles from './DashboardTest.module.scss';
-import type { IDashboardTestProps } from './IDashboardTestProps';
-import { escape } from '@microsoft/sp-lodash-subset';
+//import * as React from 'react';
+//import styles from './ArgAutomation.module.scss';
+import { IDashboardTestProps } from './IDashboardTestProps';
 
-export default class DashboardTest extends React.Component<IDashboardTestProps, {}> {
-  public render(): React.ReactElement<IDashboardTestProps> {
-    const {
-      description,
-      isDarkTheme,
-      environmentMessage,
-      hasTeamsContext,
-      userDisplayName
-    } = this.props;
+import React, { useEffect, useState } from "react";
+import { getSP } from "../../businessApps/loc/pnpjsConfig";
+import { SPFI } from "@pnp/sp";
+import "bootstrap/dist/css/bootstrap.min.css";
+//import "../../../CustomCss/mainCustom.scss";
+//import "../../discussionForum/components/DiscussionForum.scss";
+//import "../../verticalSideBar/components/VerticalSidebar.scss";
+//import VerticalSideBar from "../../verticalSideBar/components/VerticalSideBar";
+import UserContext from "../../../GlobalContext/context";
+import Provider from "../../../GlobalContext/provider";
+//import { useMediaQuery } from "react-responsive";
+import context from "../../../GlobalContext/context";
+//import CustomCarousel from "../../../CustomJSComponents/carousel/CustomCarousel";
+//import "../../../Assets/Figtree/Figtree-VariableFont_wght.ttf";
+//import "./DashboardTest.scss";
+let siteID: any;
+let response: any;
+const HelloWorldContext = ({ props }: any) => {
+  const sp: SPFI = getSP();
+  const { useHide }: any = React.useContext(UserContext);
+  const [RedirectUrl, setRedirectUrl] = useState("");
+  const elementRef = React.useRef<HTMLDivElement>(null);
+  const { setHide }: any = context;
+  React.useEffect(() => {
+    ApiCall();
 
-    return (
-      <section className={`${styles.dashboardTest} ${hasTeamsContext ? styles.teams : ''}`}>
-        <div className={styles.welcome}>
-          <img alt="" src={isDarkTheme ? require('../assets/welcome-dark.png') : require('../assets/welcome-light.png')} className={styles.welcomeImage} />
-          <h2>Well done, {escape(userDisplayName)}!</h2>
-          <div>{environmentMessage}</div>
-          <div>Web part property value: <strong>{escape(description)}</strong></div>
-        </div>
-        <div>
-          <h3>Welcome to SharePoint Framework!</h3>
-          <p>
-            The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
-          </p>
-          <h4>Learn more about SPFx development:</h4>
-          <ul className={styles.links}>
-            <li><a href="https://aka.ms/spfx" target="_blank" rel="noreferrer">SharePoint Framework Overview</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-graph" target="_blank" rel="noreferrer">Use Microsoft Graph in your solution</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-teams" target="_blank" rel="noreferrer">Build for Microsoft Teams using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-viva" target="_blank" rel="noreferrer">Build for Microsoft Viva Connections using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-store" target="_blank" rel="noreferrer">Publish SharePoint Framework applications to the marketplace</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-api" target="_blank" rel="noreferrer">SharePoint Framework API reference</a></li>
-            <li><a href="https://aka.ms/m365pnp" target="_blank" rel="noreferrer">Microsoft 365 Developer Community</a></li>
-          </ul>
-        </div>
-      </section>
-    );
+    // const currentUrl = window.location.href;
+    // const rootUrl = "https://alrostamanigroupae.sharepoint.com";
+    // const redirectUrl = "https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/Home.aspx";
+
+    // if (currentUrl === rootUrl || currentUrl === rootUrl + "/") {
+    //   window.location.href = redirectUrl;
+    // }
+
+  }, [useHide]);
+  // Media query to check if the screen width is less than 768px
+  // useEffect(() => {
+  //   const currentUrl = window.location.href;
+  //   const rootUrl = "https://alrostamanigroupae.sharepoint.com";
+  //   const redirectUrl = "https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/Home.aspx";
+
+  //   if (currentUrl === rootUrl || currentUrl === rootUrl + "/") {
+  //     window.location.href = redirectUrl;
+  //   }
+  // }, []);
+
+  const siteUrl = props.siteUrl;
+  // useEffect(() => {
+  //   ApiCall();
+  // }, [])
+  const ApiCall = async () => {
+    debugger
+    let listTitle = 'ConfigurationURLList'
+    let arr: any;
+    // let CurrentsiteID = props.context.pageContext.site.id;
+    // siteID = CurrentsiteID;
+    let SiteBaseURL = "https://alrostamanigroupae.sharepoint.com/"
+    let apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listTitle}')/items?$select=*&$filter=${`Title eq 'ProductionURL'`}`;
+    //response = await sp.web.lists.getByTitle(listTitle).items.select('*')();
+    console.log("ressefesre", response, apiUrl);
+    try {
+      console.log("apiUrlapiUrl", apiUrl);
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+      console.log("respopopopop", response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // Wait for the response to be converted to JSON
+      const data = await response.json();
+
+      // Immediately handle data
+      console.log('List Items ellllllllnew:', data.value);
+      let redirectUrl = "";
+      // You can now manipulate or return the data as needed
+      if (data.value.length > 0) {
+        arr = data.value;
+        redirectUrl = data.value[0].URL;
+      } else {
+        arr = []
+      }
+      const currentUrl = window.location.href;
+      const matchUrl = "https://alrostamanigroupae.sharepoint.com";
+      if (currentUrl.includes(matchUrl)) {
+        window.location.href = redirectUrl;
+      }
+      //return arr;  // Directly returning the array if needed
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
-}
+  // const GotoNextPage = (item: any) => {
+  //   console.log("item-->>>>", item)
+  //   debugger
+  //   window.location.href = item.Url;
+  //   // const encryptedId = encryptId(String(item.ID));
+  //   // sessionStorage.setItem("mediaId", encryptedId);
+  //   // sessionStorage.setItem("dataID", item.Id)
+  //   // window.location.href = `${siteUrl}/SitePages/Mediadetails.aspx`;
+  // };
+  // const Breadcrumb = [
+  //   {
+  //     "MainComponent": "Home",
+  //     "MainComponentURl": `${siteUrl}/SitePages/Dashboard.aspx`
+  //   },
+  //   {
+  //     "ChildComponent": "Business App",
+  //     "ChildComponentURl": `${siteUrl}/SitePages/DashboardTest.aspx`
+  //   }
+  // ]
+  // const handleRedirect = (link: any) => {
+  //   console.log(link, "----link");
+  //   window.location.href = link;
+  // };
+  return (
+    <div id="wrapper" ref={elementRef}>
+
+
+    </div>
+
+  );
+};
+
+const DashboardTest: React.FC<IDashboardTestProps> = (props) => (
+
+  <Provider>
+    <HelloWorldContext props={props} />
+
+  </Provider>
+
+)
+
+export default DashboardTest;
+
+
+

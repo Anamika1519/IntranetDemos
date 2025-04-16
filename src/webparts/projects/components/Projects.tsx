@@ -294,7 +294,7 @@ const HelloWorldContext = ({ props }: any) => {
   const handleCancel = () => {
     debugger;
     window.location.href =
-      "https://alrostamanigroupae.sharepoint.com/sites/IntranetUAT/SitePages/Project.aspx";
+      "https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/Project.aspx";
   };
 
   const saveProjectData = async (formData: {
@@ -357,7 +357,7 @@ const HelloWorldContext = ({ props }: any) => {
         // // Budget: formData.Budget,
         ProjectOverview: formData.ProjectOverview,
         TeamMembersId: selectedIds,
-        ProjectFileManager: `/sites/IntranetUAT/ARGProjectsFiles/${formData.ProjectName}`,
+        ProjectFileManager: `/sites/Intranet/ARGProjectsFiles/${formData.ProjectName}`,
         ProjectStatus: "Ongoing",
         ProjectFolderName: formData.ProjectName,
         FolderInProgress: 'In Progress'

@@ -1546,3 +1546,301 @@ export const getRequestListsData = async (_sp) => {
     });
   return arr;
 }
+export const getApprovalListsDataAudit = async (_sp, status, Actingfor) => {
+  let arr = []
+  
+
+  if (!Actingfor) {
+    // alert(`acting for ${Actingfor} is not null in Automation`)
+    await _sp.web.lists.getByTitle("AllApprovalLists").items.filter(`IsActive eq 'Yes'`).orderBy("Created", false).getAll()
+      .then(async (res) => {
+        console.log("AllApprovallists", res);
+        let AllApprovalArr = [];
+
+        for (let i = 0; i < res.length; i++) {
+
+          if (res[i].RedirectionLinkSource == "Others" && res[i].Portal == "Others") {
+            await getDataFromMultipleSitesAudit(_sp, res[i].Title, status, Actingfor, res[i].RedirectionLinkSource, res[i].SiteBaseURL)
+              .then((resData) => {
+                if (resData && resData.length > 0) {
+                  for (let j = 0; j < resData.length; j++) {
+                    // AllApprovalArr.push(resData[j])
+                    AllApprovalArr.push({
+                      ID: resData[j].ID,
+                      RequestID: resData[j].Title,
+                      // ApprovalTitle: "",
+                      ApprovalTitle:resData[j]?.RequestTitle!= ""? resData[j]?.RequestTitle:"",
+                      Author: resData[j].Requestor_x0020_Name,
+                      ProcessName: res[i].ProcessName,
+                      Created: new Date(resData[j].Created),
+                      Status: resData[j].TaskStatus,
+                      TaskID: resData[j].ID,
+                      AppID: res[i].AppId,
+                      RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
+                    })
+                  }
+                }
+                // Handle the combined data here
+                console.log("Final combined data:", resData);
+              })
+              .catch((error) => {
+                console.error("Error fetching data:", error);
+              });
+
+
+          } else {
+            await getDataFromMultipleSitesAudit(_sp, res[i].Title, status, Actingfor, res[i].RedirectionLinkSource, res[i].SiteBaseURL).then((resData) => {
+              if (resData && resData.length > 0) {
+                console.log("resDataresDataresDataresData", resData);
+                for (let j = 0; j < resData.length; j++) {
+                  AllApprovalArr.push({
+                    ID: resData[j].ID,
+                    RequestID: resData[j].RequestID,
+                    ApprovalTitle: resData[j].ApprovalTitle,
+                    Author: resData[j].Author,
+                    ProcessName: resData[j].ProcessName,
+                    Created: new Date(resData[j].Created),
+                    Status: resData[j].Status,
+                    TaskID: "",
+                    AppID: "",
+                    RedirectionLink: resData[j].RedirectionLink
+                  })
+                }
+              }
+            })
+          }
+
+        }
+        console.log("AllApprovalArr in action for is not null", AllApprovalArr);
+        arr = AllApprovalArr;
+        console.log("AllApprovalArIF", AllApprovalArr)
+      })
+      .catch((error) => {
+        console.log("Error fetching data: ", error);
+      });
+    return arr;
+  } else {
+    // alert(`acting for ${Actingfor} is null in Automation`)
+    await _sp.web.lists.getByTitle("AllApprovalLists").items.filter(`IsActive eq 'Yes'`).orderBy("Created", false).getAll()
+      .then(async (res) => {
+        console.log("AllApprovallists", res);
+        let AllApprovalArr = [];
+        if (res.length > 0) {
+          for (let i = 0; i < res.length; i++) {
+            if (res[i].RedirectionLinkSource == "Others" && res[i].Portal == "Others") {
+              await getDataFromMultipleSitesAudit(_sp, res[i].Title, status, Actingfor, res[i].RedirectionLinkSource, res[i].SiteBaseURL)
+                .then((resData) => {
+                  if (resData && resData.length > 0) {
+                    for (let j = 0; j < resData.length; j++) {
+                      // AllApprovalArr.push(resData[j])
+                      // AllApprovalArr.push({
+                      //   ID: resData[j].ID,
+                      //   RequestID: resData[j].ID,
+                      //   ApprovalTitle: resData[j].Title,
+                      //   Author: resData[j].Requestor_x0020_Name,
+                      //   ProcessName: res[i].ProcessName,
+                      //   Created: resData[j].Created,
+                      //   Status: resData[j].TaskStatus,
+                      //   TaskID: resData[j].MasterID,
+                      //   AppID: res[i].AppId,
+                      //   RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
+                      // })
+                      AllApprovalArr.push({
+                        ID: resData[j].ID,
+                        RequestID: resData[j].Title,
+                        ApprovalTitle: "",
+                        Author: resData[j].Requestor_x0020_Name,
+                        ProcessName: res[i].ProcessName,
+                        Created: resData[j].Created,
+                        Status: resData[j].TaskStatus,
+                        TaskID: resData[j].ID,
+                        AppID: res[i].AppId,
+                        RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}?hidenavbar=true&RequestNo=${resData[j].MasterID}&TaskNo=${resData[j].ID}`
+                      })
+                    }
+                  }
+                  // Handle the combined data here
+                  console.log("Final combined data:", resData);
+                })
+                .catch((error) => {
+                  console.error("Error fetching data:", error);
+                });
+
+
+            } else {
+              await getDataFromMultipleSitesAudit(_sp, res[i].Title, status, Actingfor, res[i].RedirectionLinkSource, res[i].SiteBaseURL).then((resData) => {
+                if (resData && resData.length > 0) {
+                  console.log("resDataresDataresDataresData", resData);
+                  for (let j = 0; j < resData.length; j++) {
+                    AllApprovalArr.push({
+                      ID: resData[j].ID,
+                      RequestID: resData[j].RequestID,
+                      ApprovalTitle: resData[j].ApprovalTitle,
+                      Author: resData[j].Author,
+                      ProcessName: resData[j].ProcessName,
+                      Created: resData[j].Created,
+                      Status: resData[j].Status,
+                      TaskID: "",
+                      AppID: "",
+                      RedirectionLink: resData[j].RedirectionLink
+                    })
+                  }
+                }
+              })
+            }
+          }
+        }
+        console.log("AllApprovalArr in action for is not null", AllApprovalArr);
+        arr = AllApprovalArr;
+        console.log("AllApprovalArrelse", AllApprovalArr)
+      })
+      .catch((error) => {
+        console.log("Error fetching data: ", error);
+      });
+    return arr;
+  }
+
+}
+export const getDataFromMultipleSitesAudit = async (_sp, listName, status, Actingfor, portal, SiteBaseURL) => {
+  const allData = [];
+  const siteUrls = [
+    SiteBaseURL
+  ];
+
+  // Loop through each site collection URL and fetch data
+  if (portal == "Others"){
+    for (const siteUrl of siteUrls) {
+      const data = await getListDataFromSiteCollectionAudit(_sp, listName, status, Actingfor, portal, siteUrl);
+      allData.push(...data);
+      console.log("dadadadadad", data);
+    }
+  } else{
+    for (const siteUrl of siteUrls) {
+      const data = await getMyApprovalsdataAudit(_sp, listName, status, Actingfor, portal, siteUrl);
+      allData.push(...data);
+      console.log("dadadadadad", data);
+    }
+  }
+
+
+  console.log('Combined data from all site collections:', allData);
+  return allData;
+}
+export const getListDataFromSiteCollectionAudit = async (_sp, listName, status, Actingfor, portal, SiteBaseURL) => {
+  // Setup PnPJs for a specific site collection URL
+  let arr = [];
+  console.log("sdsssss", sp, _sp)
+  
+  let apiUrl;
+  let FinalStatus = "";
+  if (status == "Pending") {
+    FinalStatus = "Not Started"
+  } else if (status == "Approved") {
+    FinalStatus = "Completed"
+  }
+  if (Actingfor != null && Actingfor != undefined && Actingfor != "") {
+    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Requestor_x0020_Name/ID,Requestor_x0020_Name/Title,Requestor_x0020_Name/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail&$expand=Requestor_x0020_Name,AssignedTo&$filter=${`AssignedTo/EMail eq '${Actingfor}' and TaskStatus eq '${FinalStatus}'`}`;
+  } else {
+    let currentUser;
+    await _sp.web.currentUser()
+      .then(user => {
+        console.log("user", user);
+        currentUser = user.Email; // Get the current user's Email
+      })
+      .catch(error => {
+        console.error("Error fetching current user: ", error);
+        return [];
+      });
+
+    if (!currentUser) return arr; // Return empty array if user fetch failed
+    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Requestor_x0020_Name/ID,Requestor_x0020_Name/Title,Requestor_x0020_Name/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail&$expand=Requestor_x0020_Name,AssignedTo&$filter=${`AssignedTo/EMail eq '${currentUser}' and TaskStatus eq '${FinalStatus}'`}`;
+  }
+  try {
+    console.log("apiUrlapiUrl", apiUrl);
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Wait for the response to be converted to JSON
+    const data = await response.json();
+
+    // Immediately handle data
+    console.log('List Items ellllllllnew:', data.value);
+
+    // You can now manipulate or return the data as needed
+    if (data.value.length > 0) {
+      arr = data.value;
+    } else {
+      arr = []
+    }
+    return arr;  // Directly returning the array if needed
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+export const getMyApprovalsdataAudit = async (_sp, listName, status, Actingfor, portal, SiteBaseURL) => {
+  // Setup PnPJs for a specific site collection URL
+  let arr = [];
+  console.log("sdsssss", sp, _sp)
+  
+  let apiUrl;
+  let FinalStatus = status;
+  // if (status == "Pending") {
+  //   FinalStatus = "Pending"
+  // } else if (status == "Approved") {
+  //   FinalStatus = "Approved"
+  // }
+  if (Actingfor != null && Actingfor != undefined && Actingfor != "") {
+    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail&$expand=Author,AssignedTo&$filter=${`AssignedTo/EMail eq '${Actingfor}' and Status eq '${FinalStatus}'`}`;
+  } else {
+    let currentUser;
+    await _sp.web.currentUser()
+      .then(user => {
+        console.log("user", user);
+        currentUser = user.Email; // Get the current user's Email
+      })
+      .catch(error => {
+        console.error("Error fetching current user: ", error);
+        return [];
+      });
+
+    if (!currentUser) return arr; // Return empty array if user fetch failed
+    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail&$expand=Author,AssignedTo&$filter=${`AssignedTo/EMail eq '${currentUser}' and Status eq '${FinalStatus}'`}`;
+  }
+  try {
+    console.log("apiUrlapiUrl", apiUrl);
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Wait for the response to be converted to JSON
+    const data = await response.json();
+
+    // Immediately handle data
+    console.log('List Items ellllllllnew:', data.value);
+
+    // You can now manipulate or return the data as needed
+    if (data.value.length > 0) {
+      arr = data.value;
+    } else {
+      arr = []
+    }
+    return arr;  // Directly returning the array if needed
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}

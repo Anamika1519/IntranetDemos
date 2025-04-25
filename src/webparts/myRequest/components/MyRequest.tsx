@@ -282,48 +282,48 @@ const MyRequestContext = ({ props }: any) => {
     // setTimeout(() => {
     //   setLoading(false);;
     // }, 10000);  setLoading(true);
-      console.log("name,value", Statusvalue);
-      // Filter records based on the selected type
-      let Myrequestdata = await getMyRequest(sp, Statusvalue);
-      let Automationdata = await getRequestListsData(sp, Statusvalue);
-      let mydmsData = await gteDMSApproval(sp, Statusvalue);
-      //let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
-      setmyRequestDataAll(await getMyRequest(sp, Statusvalue));
-      setAutomationData(Automationdata.sort((a, b) => b.Created - a.Created));
-      setMyRequestDataAllDMS(await gteDMSApproval(sp, Statusvalue));
-      if (tab == "Intranet") {
+    console.log("name,value", Statusvalue);
+    // Filter records based on the selected type
+    let Myrequestdata = await getMyRequest(sp, Statusvalue);
+    let Automationdata = await getRequestListsData(sp, Statusvalue);
+    let mydmsData = await gteDMSApproval(sp, Statusvalue);
+    //let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
+    setmyRequestDataAll(await getMyRequest(sp, Statusvalue));
+    setAutomationData(Automationdata.sort((a, b) => b.Created - a.Created));
+    setMyRequestDataAllDMS(await gteDMSApproval(sp, Statusvalue));
+    if (tab == "Intranet") {
 
-        setMyApprovalsData(await getMyRequest(sp, Statusvalue));
-        if(Myrequestdata.length > 0){
-          setTimeout(() => {
-            setLoading(false);
-          }, 5000);
-        }else{
-          setLoading(false)
-        }
-        console.log(myApprovalsData, "myApprovalsData");
-      } else if (tab == "DMS") {
-
-        setMyApprovalsData(await gteDMSApproval(sp, Statusvalue));
-        if(mydmsData.length > 0){
-          setTimeout(() => {
-            setLoading(false);
-          }, 3000);
-        }else{
-          setLoading(false)
-        }
-        console.log(myRequestDataAllDMS, "myRequestDataAllDMS");
-      } else if (tab == "Automation") {
-        setMyApprovalsData(Automationdata.sort((a, b) => b.Created - a.Created));
-        if(Automationdata.length > 0){
-          setTimeout(() => {
-            setLoading(false);
-          }, 3000);
-        }else{
-          setLoading(false)
-        }
+      setMyApprovalsData(await getMyRequest(sp, Statusvalue));
+      if (Myrequestdata.length > 0) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 5000);
+      } else {
+        setLoading(false)
       }
- 
+      console.log(myApprovalsData, "myApprovalsData");
+    } else if (tab == "DMS") {
+
+      setMyApprovalsData(await gteDMSApproval(sp, Statusvalue));
+      if (mydmsData.length > 0) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
+      } else {
+        setLoading(false)
+      }
+      console.log(myRequestDataAllDMS, "myRequestDataAllDMS");
+    } else if (tab == "Automation") {
+      setMyApprovalsData(Automationdata.sort((a, b) => b.Created - a.Created));
+      if (Automationdata.length > 0) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
+      } else {
+        setLoading(false)
+      }
+    }
+
   };
 
 
@@ -848,30 +848,30 @@ const MyRequestContext = ({ props }: any) => {
       setMyRequestDataAllDMS(await gteDMSApproval(sp, value));
       if (activeTab == "Intranet") {
         setMyApprovalsData(Myrequestdata);
-        if(Myrequestdata.length > 0){
+        if (Myrequestdata.length > 0) {
           setTimeout(() => {
             setLoading(false);
           }, 5000);
-        }else{
+        } else {
           setLoading(false)
         }
       } else if (activeTab == "DMS") {
         // alert(value)
         setMyApprovalsData(mydmsData);
-        if(mydmsData.length > 0){
+        if (mydmsData.length > 0) {
           setTimeout(() => {
             setLoading(false);
           }, 5000);
-        }else{
+        } else {
           setLoading(false)
         }
       } else if (activeTab == "Automation") {
         setMyApprovalsData(Automationdata.sort((a, b) => b.Created - a.Created));
-        if(Automationdata.length > 0){
+        if (Automationdata.length > 0) {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        }else{
+        } else {
           setLoading(false)
         }
       }
@@ -1627,7 +1627,7 @@ const MyRequestContext = ({ props }: any) => {
 
                             <tbody>
 
-                              {console.log("loaddddd", loading,currentData)}
+                              {console.log("loaddddd", loading, currentData)}
                               {((loading && currentData?.length == 0)
                                 ||
                                 (StatusChange)) && (
@@ -2334,7 +2334,7 @@ const MyRequestContext = ({ props }: any) => {
                                 </thead>
 
                                 <tbody>
-                                  {console.log("loaddddd", loading,currentData,StatusChange)}
+                                  {console.log("loaddddd", loading, currentData, StatusChange)}
                                   {((loading && currentData?.length == 0)
                                     ||
                                     (StatusChange)) && (
@@ -2713,7 +2713,7 @@ const MyRequestContext = ({ props }: any) => {
               </Modal.Header>
               <Modal.Body >
                 {
-                  <WorkflowAuditHistory ContentItemId={editID} ContentType={contenttype} ctx={props.context} />
+                  <WorkflowAuditHistory ContentItemId={editID} ContentType={contenttype} currenttab={activeTab} ctx={props.context} />
                 }
 
               </Modal.Body>

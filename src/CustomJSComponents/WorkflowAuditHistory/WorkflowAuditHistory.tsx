@@ -35,7 +35,7 @@ export interface IWorkflowAuditHistoryProps {
   ContentItemId: any;
 
   ContentType: string;
-
+  currenttab?: string;
   ctx: WebPartContext;
 
 
@@ -70,6 +70,10 @@ export const WorkflowAuditHistory = (props: IWorkflowAuditHistoryProps) => {
 
   const getAllAPI = async () => {
     let listname = "";
+    let columnname = "";
+    let newlistname = await sp.web.lists.getByTitle("AllApprovalLists").items
+      .filter(`IsActive eq 'Yes' and ProcessName eq '${props.ContentType}'`).orderBy("Created", false)();
+    let finallistname = newlistname[0].Title;
     if (props.ContentItemId) {
       switch (props.ContentType) {
         case "Capex Requisition":
@@ -90,34 +94,50 @@ export const WorkflowAuditHistory = (props: IWorkflowAuditHistoryProps) => {
         default:
       }
       setLoading(true);
+      if (props.currenttab == "Automation") {
+        sp.web.lists.getByTitle(listname).items
+          .select("*,RequestedBy/Id,RequestedBy/Title,ApprovedBy/Id,ApprovedBy/Title")
+          .expand("ApprovedBy,RequestedBy")
+          .filter(`columnname eq ${props.ContentItemId}`)
+          .orderBy('Created')().then(datarows => {
+            if (datarows.length == 0) {
+              setIsHistoryData(true);
+              setLoading(false);
+            }
+            if (datarows.length > 0) {
+              setLoading(false);
+              setIsHistoryData(true);
+            }
+            setAuditHistoryRows(datarows);
+          })
+      } else {
+        sp.web.lists.getByTitle("ARGMyRequest").items
+          .select("*,Requester/Id,Requester/Title,Approver/Id,Approver/Title")
+          .expand("Approver,Requester")
+          .filter('ContentId eq ' + props.ContentItemId + "and ProcessName eq '" + props.ContentType + "'")
+          .orderBy('Created')().then(datarows => {
 
-      sp.web.lists.getByTitle("ARGMyRequest").items
-        .select("*,Requester/Id,Requester/Title,Approver/Id,Approver/Title")
-        .expand("Approver,Requester")
-        .filter('ContentId eq ' + props.ContentItemId + "and ProcessName eq '" + props.ContentType + "'")
-        .orderBy('Created')().then(datarows => {
+            if (datarows.length == 0) {
 
-          if (datarows.length == 0) {
+              setIsHistoryData(true);
 
-            setIsHistoryData(true);
+              setLoading(false);
 
-            setLoading(false);
+            }
 
-          }
+            if (datarows.length > 0) {
 
-          if (datarows.length > 0) {
+              setLoading(false);
 
-            setLoading(false);
+              setIsHistoryData(true);
 
-            setIsHistoryData(true);
+            }
 
-          }
-
-          setAuditHistoryRows(datarows);
+            setAuditHistoryRows(datarows);
 
 
-        })
-
+          })
+      }
     }
 
   }

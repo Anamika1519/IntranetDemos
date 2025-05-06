@@ -1932,7 +1932,7 @@ const HelloWorldContext = ({ props }: any) => {
               ) : (<div></div>)
             }
             {
-              <WorkflowAuditHistory ContentItemId={editID} ContentType={CONTENTTYPE_Event} ctx={props.context} />
+              <WorkflowAuditHistory SiteBaseURL={''} listName={''} ContentItemId={editID} ContentType={CONTENTTYPE_Event} ctx={props.context} />
             }
 
             {

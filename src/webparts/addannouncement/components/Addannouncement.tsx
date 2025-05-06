@@ -2215,7 +2215,7 @@ const closeModal = () => {
                         </button></div>)
                     }
             {formData.title != "" &&
-              <WorkflowAuditHistory ContentItemId={editID} ContentType={CONTENTTYPE_Announcement} ctx={props.context} />
+              <WorkflowAuditHistory SiteBaseURL={''} listName={''} ContentItemId={editID} ContentType={CONTENTTYPE_Announcement} ctx={props.context} />
             }
             {/* Modal to display uploaded files */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size='lg' >

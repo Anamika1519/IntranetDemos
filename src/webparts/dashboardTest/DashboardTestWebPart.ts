@@ -10,8 +10,8 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'DashboardTestWebPartStrings';
 import DashboardTest from './components/DashboardTest';
-import { IDashboardTestProps } from './components/IDashboardTestProps';
-
+import { IDasboardProps } from './components/IDasboardProps';
+import { getSP } from './loc/pnpjsConfig';
 export interface IDashboardTestWebPartProps {
   description: string;
 }
@@ -22,25 +22,29 @@ export default class DashboardTestWebPart extends BaseClientSideWebPart<IDashboa
   private _environmentMessage: string = '';
 
   public render(): void {
-    const element: React.ReactElement<IDashboardTestProps> = React.createElement(
+    const element: React.ReactElement<IDasboardProps> = React.createElement(
       DashboardTest,
       {
         description: this.properties.description,
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        userDisplayName: this.context.pageContext.user.displayName,
+        context: this.context,
+        siteUrl: this.context.pageContext.web.absoluteUrl,
       }
     );
 
     ReactDom.render(element, this.domElement);
   }
 
-  protected onInit(): Promise<void> {
-    return this._getEnvironmentMessage().then(message => {
-      this._environmentMessage = message;
-    });
+  protected async onInit(): Promise<void> {
+    // this._environmentMessage = this._getEnvironmentMessage();
+
+    await super.onInit();
+    getSP(this.context);
   }
+
 
 
 

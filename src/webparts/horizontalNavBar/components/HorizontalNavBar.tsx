@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faExpand, faBell, faSun, faMoon, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faExpand, faBell, faSun, faMoon, faGear, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import "../../horizontalNavBar/components/horizontalNavbar.scss";
 import { Bell, ChevronDown, Maximize, Menu, Moon, Search, Settings, User, X } from 'react-feather';
 import UserContext from '../../../GlobalContext/context';
@@ -81,7 +81,7 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
   const [CurrenuserProfilepic, SetCurrenuserProfilepic] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   let showdropdown: boolean = false;
-
+  let component= '' 
   function groupByFn(array: any, keyGetter: any) {
     return array.reduce((result: any, currentItem: any) => {
       const key = keyGetter(currentItem);
@@ -193,6 +193,19 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
 
 
   const ApiCall = async () => {
+
+  //  alert( window.location.href  +'window.location.href')
+  //  alert( window.location.origin  +'window.location.origin')
+  //  alert( window.location.pathname  +'window.location.pathname')
+   var currentPath = window.location.pathname;
+   var isHome = currentPath.endsWith("Home.aspx");
+   if(isHome){
+    component = "Home"
+    // alert("home" + component)
+   }else{
+    component = ''
+    // alert("" + component)
+   }
     let curretuseris = await _context.web.currentUser().then(async (res: any) => {
       setCurrentUser(res.Title)
       setCurrentUserEmail(res.Email);
@@ -484,7 +497,7 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
             </div> */}
           </div>
           <div className="dropdown">
-            <div className='d-flex newalinc' onClick={toggleDropdown} style={{ gap: '2px', cursor: 'auto' }}>
+            <div className='d-flex newalinc' onClick={toggleDropdown} style={{ gap: '2px', cursor: 'pointer' }}>
               <div >
                 {currentUserEmail !== "" && CurrenuserProfilepic != null && Number(CurrentuserPicturePlaceholderState) == 0 ?
                   <img src={`${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${currentUserEmail}`}
@@ -526,11 +539,17 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
               </div>
               <div className='dropcssUser desktoView'>
                 <div>{currentUser}</div>
+                <FontAwesomeIcon  className="fa-solid fa-caret-down" icon={faCaretDown} size='lg' />
                 {/* <div><ChevronDown size={12} /></div> */}
               </div>
+              
             </div>
-            <div id="myDropdown" className={`dropdown-content newdrop ${isOpen ? 'show' : ''}`}>
-              <a href={`${siteUrl}/SitePages/DelegateMaster.aspx?`}>Delegation</a>
+            <div id="myDropdown" className={`dropdown-content newclass ${isOpen ? 'show' : ''}`}>
+              {
+                component === "" ? 
+                <a href={`${siteUrl}/SitePages/DelegateMaster.aspx?`}>Delegation</a> : null
+              }
+            
               {/* <a href="#about">About</a>
               <a href="#contact">Contact</a> */}
             </div>

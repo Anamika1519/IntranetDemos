@@ -370,7 +370,7 @@ const HelloWorldContext = ({ props }: any) => {
       "MainComponentURl": `${siteUrl}/SitePages/Dashboard.aspx`
     },
     {
-      "ChildComponent": "Business App",
+      "ChildComponent": "Business Apps",
       "ChildComponentURl": `${siteUrl}/SitePages/BusinessApps.aspx`
     }
   ]

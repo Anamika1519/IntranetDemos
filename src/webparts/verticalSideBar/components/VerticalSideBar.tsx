@@ -29,8 +29,9 @@ interface NavItem {
 let siteID: any;
 let response: any; 
 
-const VerticalContext = ({ _context }: any) => {
+const VerticalContext = ({ _context , component }: any) => {
   console.log(_context);
+  // alert(component + "component");
   // const graph = graphfi(...);
   const sp: SPFI = getSP();
   console.log(sp, 'sp');
@@ -151,28 +152,54 @@ const VerticalContext = ({ _context }: any) => {
     //     ID: item.ID
     //   };
     // });
-    await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title , IsActive").expand("Audience").filter("IsActive eq 1").orderBy("Order0", true).getAll().then((res: any) => {
-      console.log('%c res', "background-color:red", res);
-      const items: NavItem[] = res.map((item: any) => {
-        return {
-          Title: item.Title,
-          Url: item.Url,
-          Icon: item.Icon,
-          ParentId: item.ParentId,
-          ID: item.ID
-        };
+    if(component === "DashboardProd") {  
+      await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title , IsActive").expand("Audience").orderBy("Order0", true).getAll().then((res: any) => {
+        console.log('%c res', "background-color:red", res);
+        const items: NavItem[] = res.map((item: any) => {
+          return {
+            Title: item.Title,
+            Url: item.Url,
+            Icon: item.Icon,
+            ParentId: item.ParentId,
+            ID: item.ID
+          };
+        });
+        // localStorage.setItem('Navitems', JSON.stringify(items))
+        // setNavItems(res);
+        let securednavitems = res.filter((nav: any) => {
+          return (!nav.EnableAudienceTargeting || (nav.EnableAudienceTargeting && nav.Audience && nav.Audience.some((nv1: any) => { return grptitle.includes(nv1.Title.toLowerCase()); })))
+        }
+        )
+  
+        // setNavItems(res);
+        setNavItems(securednavitems);
+        return items;
       });
-      // localStorage.setItem('Navitems', JSON.stringify(items))
-      // setNavItems(res);
-      let securednavitems = res.filter((nav: any) => {
-        return (!nav.EnableAudienceTargeting || (nav.EnableAudienceTargeting && nav.Audience && nav.Audience.some((nv1: any) => { return grptitle.includes(nv1.Title.toLowerCase()); })))
-      }
-      )
-
-      // setNavItems(res);
-      setNavItems(securednavitems);
-      return items;
-    });
+    }else {
+      await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title , IsActive").expand("Audience").filter("IsActive eq 1").orderBy("Order0", true).getAll().then((res: any) => {
+        console.log('%c res', "background-color:red", res);
+        const items: NavItem[] = res.map((item: any) => {
+          return {
+            Title: item.Title,
+            Url: item.Url,
+            Icon: item.Icon,
+            ParentId: item.ParentId,
+            ID: item.ID
+          };
+        });
+        // localStorage.setItem('Navitems', JSON.stringify(items))
+        // setNavItems(res);
+        let securednavitems = res.filter((nav: any) => {
+          return (!nav.EnableAudienceTargeting || (nav.EnableAudienceTargeting && nav.Audience && nav.Audience.some((nv1: any) => { return grptitle.includes(nv1.Title.toLowerCase()); })))
+        }
+        )
+  
+        // setNavItems(res);
+        setNavItems(securednavitems);
+        return items;
+      });
+    }
+  
     // }
   };
   console.log(currentUser);
@@ -269,8 +296,8 @@ const VerticalContext = ({ _context }: any) => {
 
     if (matches) {
       const pageName = matches[1]; // Get the matched page name
-      // alert(pageName); // Alert the matched page name
-
+      //  alert(pageName); // Alert the matched page name
+      
       if (pageName === 'workbench') {
         // alert("set workbench");
         localStorage.setItem("NavId", String(24));
@@ -284,6 +311,11 @@ const VerticalContext = ({ _context }: any) => {
         // alert("set MediaGallery/Mediadetails");
         localStorage.setItem("NavId", String(2));
         setuseActive(2)
+      }
+      else if (pageName === "BusinessApps") {
+        // alert("set MediaGallery/Mediadetails");
+        localStorage.setItem("NavId", String(20));
+        setuseActive(20)
       }
 
       else if (pageName === "EventCalendar" || pageName === "EventDetailsCalendar") {
@@ -335,11 +367,11 @@ const VerticalContext = ({ _context }: any) => {
         localStorage.setItem("NavId", String(12));
         setuseActive(12)
       }
-      else if (pageName === "MyRequests") {
+      else if (pageName === "MyRequests" || pageName === "myrequests") {
         //alert(`useactive : ${useActive} `)
         // alert("set MediaGallery/Mediadetails");
-        localStorage.setItem("NavId", String(29));
-        setuseActive(29)
+        localStorage.setItem("NavId", String(17));
+        setuseActive(17)
       }
       else if (pageName === "DMSMAIN") {
         //alert(`useactive : ${useActive} `)
@@ -347,7 +379,7 @@ const VerticalContext = ({ _context }: any) => {
         localStorage.setItem("NavId", String(30));
         setuseActive(30)
       }
-      else if (pageName === "MyApprovals") {
+      else if (pageName === "MyApprovals" || pageName === "myapprovals") {
         //alert(`useactive : ${useActive} `)
         // alert("set MediaGallery/Mediadetails");
         localStorage.setItem("NavId", String(13));
@@ -671,10 +703,10 @@ const VerticalContext = ({ _context }: any) => {
 };
 
 
-const VerticalSideBar = ({ _context }: any) => {
+const VerticalSideBar = ({ _context ,  component  }: any) => {
   return (
     // <UserContext.Provider value={{ setHide: () => { }, useHide: true }}>
-    <VerticalContext _context={_context} />
+    <VerticalContext _context={_context} component={component} />
     // </UserContext.Provider>
   );
 };

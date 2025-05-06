@@ -3285,7 +3285,7 @@ const closeModal = () => {
               ) : (<div></div>)
             }
             {
-              <WorkflowAuditHistory ContentItemId={editID} ContentType={CONTENTTYPE_Media} ctx={props.context} />
+              <WorkflowAuditHistory SiteBaseURL={''} listName={''} ContentItemId={editID} ContentType={CONTENTTYPE_Media} ctx={props.context} />
             }
 
             {!InputDisabled ? (<div className="text-center butncss">

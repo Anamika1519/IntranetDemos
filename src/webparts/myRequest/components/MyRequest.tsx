@@ -656,6 +656,8 @@ const MyRequestContext = ({ props }: any) => {
   const newsCurrentData = filteredNewsData?.slice(startIndex, endIndex);
 
   const [editID, setEditID] = React.useState(null);
+  const [basesiteurl, setBasesiteurl] = React.useState('');
+  const [listName, setlistName] = React.useState('');
   const [contenttype, setContentType] = React.useState(null);
 
   const [ImagepostIdsArr, setImagepostIdsArr] = React.useState([]);
@@ -676,7 +678,7 @@ const MyRequestContext = ({ props }: any) => {
 
     {
 
-      ChildComponent: "My Request",
+      ChildComponent: "My Requests",
 
       ChildComponentURl: `${siteUrl}/SitePages/MyRequests.aspx`,
 
@@ -996,9 +998,15 @@ const MyRequestContext = ({ props }: any) => {
   const [showNestedDMSTable, setShowNestedDMSTable] = useState("");
   const openAuditModal = (item: any) => {
     console.log("iteiiiii", item);
-    setEditID(item.ContentID);
+
+    setEditID(item.ID);
     setContentType(activeTab == "Automation" ? item?.ProcessName : item.SourceName);
     setShowModal(true);
+    // alert(item?.BaseSiteUrl + "item?.BaseSiteUrl")
+    // alert(item?.ListName + "item?.ListName")
+    
+    setBasesiteurl(item.SiteBaseURL);
+    setlistName(item.listName);
   }
 
   const handleShowNestedDMSTable = (value: string) => {
@@ -1675,7 +1683,7 @@ const MyRequestContext = ({ props }: any) => {
                                 </div>
                               ) : (
                                 !StatusChange && currentData?.map((item: any, index: number) => (
-
+                                 console.log(item, "itemitemitemitemitemitem"),
                                   <tr
 
                                     // onClick={() =>
@@ -1770,9 +1778,9 @@ const MyRequestContext = ({ props }: any) => {
 
                                       <div style={{ cursor: 'auto' }} className="btn btn-light1">
                                         {/* {new Date(item?.Created).toLocaleString()}  */}
-                                        {new Date(item?.Created).toLocaleString('en-US', {
-                                          month: '2-digit',
+                                        {new Date(item?.Created).toLocaleString('en-GB', {
                                           day: '2-digit',
+                                          month: '2-digit',
                                           year: 'numeric',
                                           hour: '2-digit',
                                           minute: '2-digit',
@@ -2455,9 +2463,10 @@ const MyRequestContext = ({ props }: any) => {
                                         >
 
                                           {/* {new Date(item?.Created).toLocaleDateString()} */}
-                                          <div style={{ cursor: 'auto' }} className="btn btn-light1">  {new Date(item?.Created).toLocaleString('en-US', {
-                                            month: '2-digit',
-                                            day: '2-digit',
+                                          <div style={{ cursor: 'auto' }} className="btn btn-light1">  {new Date(item?.Created).toLocaleString('en-GB', {
+                                               day: '2-digit',
+                                               month: '2-digit',
+                                         
                                             year: 'numeric',
                                             hour: '2-digit',
                                             minute: '2-digit',
@@ -2713,7 +2722,7 @@ const MyRequestContext = ({ props }: any) => {
               </Modal.Header>
               <Modal.Body >
                 {
-                  <WorkflowAuditHistory ContentItemId={editID} ContentType={contenttype} currenttab={activeTab} ctx={props.context} />
+                  <WorkflowAuditHistory SiteBaseURL={basesiteurl} listName={listName} ContentItemId={editID} ContentType={contenttype} currenttab={activeTab} ctx={props.context} />
                 }
 
               </Modal.Body>

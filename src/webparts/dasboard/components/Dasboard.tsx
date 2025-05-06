@@ -33,7 +33,7 @@ import { addActivityLeaderboard, getLeaderTop } from "../../../APISearvice/Custo
 import { fertchprojectcomments, fetchprojectdataTop } from "../../../APISearvice/ProjectsService";
 import Avatar from "@mui/material/Avatar";
 
-const HelloWorldContext = ({ props }: any) => {
+const HelloWorldContext = ({ props ,  }: any) => {
   const sp: SPFI = getSP();
   console.log(sp, "sp");
   const { useHide }: any = React.useContext(UserContext);
@@ -384,7 +384,7 @@ const HelloWorldContext = ({ props }: any) => {
         <VerticalSideBar _context={sp} />
       </div>
       <div className="content-page">
-        <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
+        <HorizontalNavbar _context={sp} siteUrl={siteUrl} component={'Dashboard'} />
         <div className="content mt-4" style={{ marginLeft: `${!useHide ? '240px' : '80px'}` }}>
           {loading ? <div style={{ minHeight: '100vh', marginTop: '20%' }} className="loadernewadd mt-10">
             <div>
@@ -1475,7 +1475,7 @@ const HelloWorldContext = ({ props }: any) => {
   );
 };
 
-const Dashboard = (props: any) => {
+const Dashboard = (props: any ) => {
   return (
     <Provider>
       <HelloWorldContext props={props} />

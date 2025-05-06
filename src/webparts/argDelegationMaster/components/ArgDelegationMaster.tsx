@@ -316,7 +316,7 @@ const ArgDelegationMasterContext = ({ props }: any) => {
                             <th style={{ minWidth: '120px', maxWidth: '120px' }}>
                               <div className="d-flex flex-column bd-highlight ">
                                 <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
-                                  <span >Delegate Name</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
+                                  <span >Employee Name</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
                                 <div className=" bd-highlight">
                                   <input type="text" placeholder="Filter by Title" onChange={(e) => handleFilterChange(e, 'Title')}
                                     onKeyDown={(e) => {
@@ -332,7 +332,7 @@ const ArgDelegationMasterContext = ({ props }: any) => {
                             <th style={{ minWidth: '120px', maxWidth: '120px' }}>
                               <div className="d-flex flex-column bd-highlight ">
                                 <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
-                                  <span >Acting For</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
+                                  <span >Delegate Access To</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
                                 <div className=" bd-highlight">
                                   <input type="text" placeholder="Filter by Title" onChange={(e) => handleFilterChange(e, 'Title')}
                                     onKeyDown={(e) => {
@@ -346,7 +346,7 @@ const ArgDelegationMasterContext = ({ props }: any) => {
                             </th>
                            
                             
-                            <th style={{ minWidth: '80px', maxWidth: '80px' }}>
+                            <th style={{ minWidth: '146px', maxWidth: '146px' }}>
                               <div className="d-flex flex-column bd-highlight ">
                                 <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
                                   <span >Start Date</span>  <span onClick={() => handleSortChange('SubmittedDate')}><FontAwesomeIcon icon={faSort} /> </span></div>
@@ -361,7 +361,7 @@ const ArgDelegationMasterContext = ({ props }: any) => {
                                 </div>
                               </div>
                             </th>
-                            <th style={{ minWidth: '80px', maxWidth: '80px' }}>
+                            <th style={{ minWidth: '146px', maxWidth: '146px' }}>
                               <div className="d-flex flex-column bd-highlight ">
                                 <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
                                   <span >Finish Date</span>  <span onClick={() => handleSortChange('SubmittedDate')}><FontAwesomeIcon icon={faSort} /> </span></div>
@@ -449,8 +449,28 @@ const ArgDelegationMasterContext = ({ props }: any) => {
                                   <td style={{ minWidth: '120px', maxWidth: '120px' }}>{item.DelegateName.Title}</td>
                                   <td style={{ minWidth: '120px', maxWidth: '120px' }}>{item.ActingFor.Title}</td>
                                  
-                                  <td style={{ minWidth: '80px', maxWidth: '80px',textAlign:'center' }}><div className='btn btn-light newlight'> {moment(item.StartDate).format("DD-MMM-YYYY")} </div> </td>
-                                  <td style={{ minWidth: '80px', maxWidth: '80px',textAlign:'center' }}><div className='btn btn-light newlight'> {moment(item.EndDate).format("DD-MMM-YYYY")} </div> </td>
+                                  <td style={{ minWidth: '146px', maxWidth: '146px',textAlign:'center' }}>
+                                    {/* <div className='btn btn-light newlight'> {moment(item.StartDate).format("DD-MMM-YYYY")} </div> */}
+                                    <div className='btn btn-light newlight'> {new Date(item.StartDate).toLocaleString('en-GB', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true
+})} </div>
+                                   </td>
+                                  <td style={{ minWidth: '146px', maxWidth: '146px',textAlign:'center' }}>
+                                    {/* <div className='btn btn-light newlight'> {moment(item.EndDate).format("DD-MMM-YYYY")} </div> */}
+                                    <div className='btn btn-light newlight'> {new Date(item.EndDate).toLocaleString('en-GB', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true
+})} </div>
+                                     </td>
                                   <td style={{ minWidth: '80px', maxWidth: '80px',textAlign:'center' }}>  <div className='btn btn-status newlight'> {item.Status} </div> </td>
                                   <td style={{ minWidth: '80px', maxWidth: '80px' }} className="ng-binding">
                                     <div className="d-flex  pb-0" style={{ justifyContent: 'center', gap: '5px' }}>

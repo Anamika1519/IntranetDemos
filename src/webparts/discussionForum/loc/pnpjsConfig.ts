@@ -24,17 +24,17 @@ import "@pnp/sp/presets/all";
 //   }
 //   return _sp;
 // };
-
+ 
 var _sp: SPFI;
 export const getSP = (context?: WebPartContext): SPFI => {
-  
-    
+ 
+   
   if (context !== null && (_sp === undefined ||_sp === null)) {
     //You must add the @pnp/logging package to include the PnPLogging behavior it is no longer a peer dependency
     // The LogLevel set's at what level a message will be written to the console
     _sp = spfi().using(SPFx(context)).using(PnPLogging(LogLevel.Warning));
-  
-    
+ 
+   
   }
   return _sp;
 }
@@ -44,9 +44,9 @@ export const getSPContext = (context?: WebPartContext): SPFI=> {
     //You must add the @pnp/logging package to include the PnPLogging behavior it is no longer a peer dependency
     // The LogLevel set's at what level a message will be written to the console
    _spurl = spfi().using(SPFx(context)).using(PnPLogging(LogLevel.Warning));
-  
-    
+ 
+   
   }
   return _spurl;
-  
+ 
 }

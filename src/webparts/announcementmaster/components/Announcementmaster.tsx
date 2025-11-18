@@ -608,7 +608,7 @@ const Announcementmastercontext = ({ props }: any) => {
 
               <div className="col-lg-6">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
               </div>
 

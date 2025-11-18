@@ -130,7 +130,7 @@ export const ApprovalConfigurationcontext = ({ props }: any) => {
           <div className="container-fluid paddb">
             <div className="row">
               <div className="col-lg-6 pt-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="col-lg-6">
                 <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">

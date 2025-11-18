@@ -755,7 +755,7 @@ const NewsdetailsContext = ({ props }: any) => {
 
                     <div className="col-lg-3">
 
-                      <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                       <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
                     </div>
 

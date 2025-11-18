@@ -538,9 +538,16 @@ const AddMediaGalaryContext = ({ props }: any) => {
         const imageVideoFiles = files.filter(file =>
 
           file.type.startsWith('image/') ||
-
-          file.type.startsWith('video/')
-
+          file.type.startsWith('video/') ||
+          file.type.startsWith('application/pdf') ||
+          file.type.startsWith('application/msword') ||
+          file.type.startsWith('application/vnd.ms-excel') ||
+          file.type.startsWith('application/vnd.ms-powerpoint') ||
+          file.type.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+          ||file.type.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") ||
+          file.type.startsWith("application/vnd.openxmlformats-officedocument.presentationml.presentation")
+         
+         
         );
 
 
@@ -658,7 +665,7 @@ const AddMediaGalaryContext = ({ props }: any) => {
 
         } else {
 
-          Swal.fire("only image & video can be upload")
+          Swal.fire("only image,video or document can be upload")
 
         }
 
@@ -754,7 +761,8 @@ const AddMediaGalaryContext = ({ props }: any) => {
 
   const handleCancel = () => {
 
-    debugger
+    // debugger
+    sessionStorage.removeItem("knowledgecenterId")
     if (pageValue == "MyRequest") {
       window.location.href = `${siteUrl}/SitePages/MyRequests.aspx`;
     } else if (pageValue == "MyApproval") {
@@ -942,7 +950,7 @@ const AddMediaGalaryContext = ({ props }: any) => {
 
                 //Image: bannerImageArray != "{}" && JSON.stringify(bannerImageArray),
 
-                MediaGalleryCategoryId: formData.Category
+                MediaGalleryCategoryId: Number(formData.Category)
 
               };
 
@@ -1073,7 +1081,7 @@ const AddMediaGalaryContext = ({ props }: any) => {
 
                 AuthorId: currentUser.Id,
 
-                MediaGalleryCategoryId: formData.Category
+                MediaGalleryCategoryId: Number(formData.Category)
 
               };
 
@@ -2163,7 +2171,7 @@ const AddMediaGalaryContext = ({ props }: any) => {
 
               <div className="col-lg-3 mt-0">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
               </div>
 

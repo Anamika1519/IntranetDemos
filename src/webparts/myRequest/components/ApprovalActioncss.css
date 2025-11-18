@@ -36,12 +36,16 @@
   .modal-title{    font-size: 1.25rem !important;}
   .pagination-container{margin-top: 5px !important;}
   .newmodal .mtbalenew th{padding: 10px !important;     background: #f2f3f5 !important;}
-  #audittable,.newmodal .modal-dialog{min-width: 80%;}
+  #audittable,.newmodal .modal-dialog{min-width: 98%;}
+  
   #audittable .modal-body .cardCss, .newmodal .modal-body .popsn  {border: 0px solid #ccc !important;margin: 0px !important;}
   .newmodal .modal-body .popsn{padding: 0px !important;}
   #audittable .modal-body .cardCss .card-body,.newmodal .modal-body  .card-body {padding: 0px !important;}
   #audittable .modal-body .cardCss .card-body h3,.newmodal .modal-body .card-body h3{display: none;}
   #audittable .modal-body .cardCss .card-body table,.newmodal .modal-body  .card-body table{margin: 0px !important;}
+  #audittable .modal-body .cardCss .card-body table{overflow: auto !important;}
+  #audittable .modal-body .cardCss .card-body table tbody{overflow: initial !important;}
+  #audittable .modal-body .cardCss .card-body table th,#audittable .modal-body .cardCss .card-body table td{min-width: 90px !important; max-width: 90px !important;}
   .stausbg{
   
       border-radius: 4px;
@@ -80,9 +84,18 @@
     
     #s4-workspace{overflow-y: auto !important;}
   }
-  @media(max-width: 768px)
+  @media(max-width:1180px){
+    .btn-status{
+     width:80px;
+     font-size: 11px !important;
+    } 
+    .btn-light1 {
+     width: 120px !important; font-size: 11px !important;padding: 5px;
+    }
+   }
+  @media(max-width: 1080px)
  {
-
+.respot tr{width: 48% !important; float:left; margin-right: 10px;}
 	/* Force table to not be like tables anymore */
 	.mtbalenew, .mtbalenew thead, .mtbalenew tbody, .mtbalenew th, .mtbalenew td, .mtbalenew tr { 
 		display: block; 
@@ -104,7 +117,7 @@
 		border: none;
 		border-bottom: 0px solid #eee; 
 		position: relative;
-   
+    padding: 10px 10px !important;
 		padding-left: 37% !important; 
     height: 40px;
 	}
@@ -123,7 +136,7 @@
 		white-space: initial;
 	}
 	.mtbalenew tbody tr:nth-child(2n) td {
-    background: #fff !important;
+    background: #fff !important; border-radius: 20px;
 }
 .mtbalenew tbody tr:nth-child(2n) {
   background-color: #fff;
@@ -160,6 +173,11 @@
 .table-responsive{overflow-x: hidden !important;}
   .DMSMasterContainer{margin-top: 10px;}
   .topv{vertical-align: top;}
+  
+  @media(max-width:992px){
+    .respot tr{width: 100% !important; float: none;}
+
+  }
   @media(max-width:640px){
     .table-responsive{overflow-x: auto;}
     .DMSMasterContainer{display: grid; overflow: hidden;}
@@ -198,7 +216,7 @@
 }
 .newintranet a{background: #ededed !important;}
 .myapprovalcomingsoon {
-  width: 189px !important;
+  width: 210px !important;
   pointer-events: none !important;
 
 } 

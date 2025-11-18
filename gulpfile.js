@@ -1,3 +1,9 @@
+process.on('unhandledRejection', error => {
+  console.error('🛑 Unhandled Rejection:', error);
+});
+process.on('uncaughtException', error => {
+  console.error('🛑 Uncaught Exception:', error);
+});
 'use strict';
 
 const build = require('@microsoft/sp-build-web');
@@ -12,5 +18,11 @@ build.rig.getTasks = function () {
 
   return result;
 };
+process.on('unhandledRejection', (reason) => {
+  console.error('🛑 Unhandled Rejection:\n', reason?.stack || JSON.stringify(reason, null, 2));
+});
 
+process.on('uncaughtException', (error) => {
+  console.error('🛑 Uncaught Exception:\n', error?.stack || JSON.stringify(error, null, 2));
+});
 build.initialize(require('gulp'));

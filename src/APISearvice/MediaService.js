@@ -194,7 +194,7 @@ const handleFileChange = async (event) => {
   const file = event.target.files[0];
   if (file) {
     try {
-      const folderUrl = `/sites/Intranet/${docLib}`; // Replace with your folder URL
+      const folderUrl = `/sites/Intranetdemos/${docLib}`; // Replace with your folder URL
       const fileName = file.name;
 
       const fileBlob = new Blob([file], { type: file.type });
@@ -242,7 +242,9 @@ export const addItem = async (itemData, _sp) => {
 export const updateItem = async (itemData, _sp, id) => {
   let resultArr = []
   try {
-    const newItem = await _sp.web.lists.getByTitle('ARGMediaGallery').items.getById(id).update(itemData);
+    // const newItem = await _sp.web.lists.getByTitle('ARGMediaGallery').items.getById(id).update(itemData);
+    const newItem = await _sp.web.lists.getByTitle('ARGKnowledgeCenter').items.getById(id).update(itemData);
+
     console.log('Item added successfully:', newItem);
     resultArr = newItem
     // Perform any necessary actions after successful addition

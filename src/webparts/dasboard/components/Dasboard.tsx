@@ -404,7 +404,7 @@ const HelloWorldContext = ({ props ,  }: any) => {
             </span>
           </div> :
             <div className="container-fluid pb-0  paddbnew">
-              <div>
+              {/* <div>
                 <div className="nav">
                   <div className="logo">
                     <img src={require("../assets/Logo.png")} />
@@ -415,47 +415,52 @@ const HelloWorldContext = ({ props ,  }: any) => {
                 </div>
                 <div className="heading-main">
                   <h5>Welcome To</h5>
-                  <h3>ONE ARG PORTAL</h3>
+                  <h3>AL ROSTAMANI GROUP PORTAL</h3>
 
                   <div className="tile">
                     <ul>
                       <li>
-                        {/* <a href=" https://officeindia.sharepoint.com/sites/Intranet/sitePages/dmsm.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/DMSMAIN.aspx">
+                        {/* <a href=" https://officeindia.sharepoint.com/sites/Intranetdemos/sitePages/dmsm.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/DMSM.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/dmsm.aspx"> */}
 
-                          <img src={require("../assets/dms.png")} />
+                          {/* <img src={require("../assets/dms.png")} />
 
-                          <p className="mt-1">Document Management</p> </a></li>
-                      <li style={{ backgroundColor: ' #1faee3' }} className="newmyr">
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranet/SitePages/BusinessApps.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/BusinessApps.aspx">
+                          <p className="mt-1">Document Management</p> </a></li> */} 
+                      {/* <li style={{ backgroundColor: ' #1faee3' }} className="newmyr">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/BusinessApps.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/BusinessApps.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/BusinessApps.aspx"> */}
 
-                          <img src={require("../assets/business-app.png")} />
+                          {/* <img src={require("../assets/business-app.png")} />
                           {/* <img src="business-app.png"/> */}
-                          <p className="mt-1">Business Apps</p> </a> </li>
-                      <li style={{ backgroundColor: ' #333333' }} >
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranet/SitePages/MyRequests.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/myrequests.aspx">
+                          {/* <p className="mt-1">Business Apps</p> </a> </li> */}
+                      {/* <li style={{ backgroundColor: ' #333333' }} > */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyRequests.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/myrequests.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyRequests.aspx"> */}
 
-                          <img src={require("../assets/my-request.png")} />
+                          {/* <img src={require("../assets/my-request.png")} />
                           {/* <img src="my-request.png"/> */}
-                          <p className="mt-1">My Requests</p> </a> </li>
-                      <li style={{ backgroundColor: ' #008551' }}>
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranet/SitePages/MyApprovals.aspx">  */}
+                          {/* <p className="mt-1">My Requests</p> </a> </li>
+                      <li style={{ backgroundColor: ' #008551' }}> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyApprovals.aspx">  */}
 
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/MyApprovals.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyApprovals.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyApprovals.aspx"> */}
 
-                          <img src={require("../assets/my-approval.png")} />
+                          {/* <img src={require("../assets/my-approval.png")} /> */}
                           {/* <img src="my-approval.png"/>  */}
-                          <p className="mt-1">My Approvals</p></a> </li>
-                      <li style={{ backgroundColor: ' #007aa7' }}>
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranet/SitePages/KnowledgeCenter.aspx"> */}
-                        <a href="https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/KnowledgeCenter.aspx">
+                          {/* <p className="mt-1">My Approvals</p></a> </li> */} 
+                      {/* <li style={{ backgroundColor: ' #007aa7' }}> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/KnowledgeCenter.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/KnowledgeCenter.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/KnowledgeCenter.aspx"> */}
 
-                          <img src={require("../assets/knowledge-center.png")} />
+                          {/* <img src={require("../assets/knowledge-center.png")} /> */}
                           {/* <img src="knowledge-center.png"/> */}
-                          <p className="mt-1">Knowledge Center</p> </a> </li>
-                    </ul>
+                          {/* <p className="mt-1">Knowledge Center</p> </a> </li> */}
+                    {/* </ul>
                   </div>
 
                   <div className="newbar">
@@ -467,9 +472,9 @@ const HelloWorldContext = ({ props ,  }: any) => {
 
                   </div>
 
-                </div>
-              </div>
-              {/* <div className="row">
+                </div> */}
+              {/* </div> */}
+               <div className="row">
                 <div
                   className="col-xl-9 col-lg-9 tabview1"
                 >
@@ -1464,7 +1469,7 @@ const HelloWorldContext = ({ props ,  }: any) => {
                     </div>
                   </div>
                 </div>
-              </div> */}
+              </div> 
             </div>
           }
         </div>

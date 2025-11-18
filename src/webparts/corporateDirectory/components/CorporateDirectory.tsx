@@ -1389,7 +1389,7 @@ const CorporateDirectoryContext = ({ props }: any) => {
 
               <div className="col-lg-5">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
               </div>
 

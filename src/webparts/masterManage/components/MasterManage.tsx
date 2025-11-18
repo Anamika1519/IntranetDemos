@@ -28,6 +28,7 @@ const endsWith = (str: string, ending: string) => {
 }
 let siteID: any;
 let response: any;
+const specialGroups = ['Super Admin Group', 'Content Contributor Group', 'Intranet Member Group'];
 export const MastersettingContext = ({ props }: any) => {
   const sp: SPFI = getSP();
   console.log(sp, 'sp');
@@ -37,11 +38,18 @@ export const MastersettingContext = ({ props }: any) => {
     if (url.Title === "Business Apps" || url.Title === "Settings Master") {
       setSelectedItem(url); // Set item to render BusinessAppsComponent
       setShowIframe(true);
-    } else {
+    }
+    else if(specialGroups.some(group => url.Title.includes(group))){
+      setSelectedItem(url); // Set item to render BusinessAppsComponent
+      setShowIframe(true);
+      setIframeUrl(url);
+      
+    }
+     else {
       window.location.href = url.LinkUrl; // Navigate for other items
     }
     setIframeUrl(url);
-    setShowIframe(true);
+    // setShowIframe(true);
     // hideElementsInIframe()
 
   };
@@ -130,7 +138,7 @@ export const MastersettingContext = ({ props }: any) => {
     },
     {
       "ChildComponent": "Settings",
-      "ChildComponentURl": `${SiteUrl}/SitePages/Settings.aspx`
+      "ChildComponentURl": `${SiteUrl}/SitePages/ManageMaster.aspx`
     }
   ]
   const IsUserAllowedAccess = async () => {
@@ -319,6 +327,8 @@ const settingsData = setsettingArray(
   // const handleBackClick = () => {
   //   setSelectedItem(null); // Reset state to go back
   // };
+
+  
   return (
 
     <div id="wrapper" ref={elementRef}>
@@ -331,9 +341,9 @@ const settingsData = setsettingArray(
         <HorizontalNavbar _context={sp} siteUrl={SiteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}` }}>
           <div className="container-fluid  paddb">
-            <div className="row pt-0" style={{ paddingLeft: '0.5rem' }}>
+            <div className="row pt-2" style={{ paddingLeft: '0.5rem' }}>
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="row manage-master mt-3">
                 {/* {console.log("IsUserAlllowed",IsUserAlllowed,settingArray)}
@@ -362,7 +372,7 @@ const settingsData = setsettingArray(
             let siteId = siteID;
             let listID =response && response.Id;
             let img1 = imageData && imageData.fileName ? `${SiteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${item.ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
-            let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
+            let img = imageData && imageData.serverRelativeUrl ? `https://officeindia.sharepoint.com${imageData.serverRelativeUrl}` : img1
             const imageUrl = imageData
               //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
               //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`
@@ -428,7 +438,7 @@ const settingsData = setsettingArray(
                         let siteId = siteID;
                         let listID = response && response.Id;
                         let img1 = imageData && imageData.fileName ? `${SiteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${item.ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
-                        let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
+                        let img = imageData && imageData.serverRelativeUrl ? `https://officeindia.sharepoint.com${imageData.serverRelativeUrl}` : img1
                         const imageUrl = imageData
                           //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
                           //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`
@@ -466,9 +476,18 @@ const settingsData = setsettingArray(
                       </button>
                       {selectedItem?.Title === "Business Apps" ? (
                         <BusinessAppsComponent data={selectedItem} />
-                      ) : selectedItem?.Title === "Settings Master" ? (
+                      ) : 
+                      selectedItem?.Title === "Settings Master" ? (
                         <SettingsAppsComponent data={selectedItem} />
-                      ) : null}
+                      ) :
+                      //  <SettingsAppsComponent data={selectedItem} />}
+                      <iframe
+                      id='iframe'
+                      src={selectedItem?.LinkUrl}
+                      style={{ width: '100%', height: '600px', border: 'none' }}
+                      title="Content"
+                    ></iframe>
+                       }
                     </div>
                   )
 

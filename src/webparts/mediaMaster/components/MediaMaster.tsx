@@ -344,7 +344,7 @@ const MediaMastercontext = ({ props }: any) => {
           <div className="container-fluid  paddb">
             <div className="row pt-0">
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="col-lg-9">
                 <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">

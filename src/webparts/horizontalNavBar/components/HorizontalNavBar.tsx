@@ -35,6 +35,7 @@ interface SearchResult {
   [key: string]: any;
 }
 const HorizontalNavbar = ({ _context, siteUrl }: any) => {
+  console.log('HorizontalNavbar rendered');
   const listFieldsMapping: { [key: string]: { fields: string[], pageName: string } } = {
     ARGAnnouncementAndNews: { fields: ["Title", "Overview", "Description", "Id", "AnnouncementandNewsTypeMaster/Id", "AnnouncementandNewsTypeMaster/TypeMaster"], pageName: "AnnouncementDetails" },
     ARGBlogs: { fields: ["Title", "Overview", "Description", "Id"], pageName: "BlogDetails" },
@@ -92,6 +93,10 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
       return result;
     }, {});
   }
+  const areEqual = (prevProps: any, nextProps: any) => {
+    return prevProps.siteUrl === nextProps.siteUrl &&
+           prevProps._context === nextProps._context;
+  };
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -565,4 +570,4 @@ const HorizontalNavbar = ({ _context, siteUrl }: any) => {
   );
 };
 
-export default HorizontalNavbar;
+export default React.memo(HorizontalNavbar);

@@ -181,7 +181,7 @@ const HelloWorldContext = ({ props }: any) => {
             <div className="row">
               <div className="col-lg-4">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
               </div>
               {/* <div className="col-lg-8">

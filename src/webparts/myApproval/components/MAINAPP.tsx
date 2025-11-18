@@ -46,7 +46,7 @@ import {
 import "../../../Assets/Figtree/Figtree-VariableFont_wght.ttf";
 
 import * as XLSX from "xlsx";
-let currentItemID= ''
+let currentItemID = ''
 import moment from "moment";
 
 
@@ -96,7 +96,7 @@ import { SPFI } from "@pnp/sp/presets/all";
 
 import { getSP } from "../loc/pnpjsConfig";
 
-import { Eye,Edit } from "react-feather";
+import { Eye, Edit } from "react-feather";
 
 import { getDataByID, getMyApproval, getMyRequest, updateItemApproval } from "../../../APISearvice/ApprovalService";
 import DMSMyApprovalAction from "./ApprovalAction";
@@ -104,7 +104,7 @@ import DMSMyApprovalAction from "./ApprovalAction";
 const MyApprovalContext = ({ props }: any) => {
 
   const sp: SPFI = getSP();
-  const [activeComponent, setActiveComponent] = useState<string >('');
+  const [activeComponent, setActiveComponent] = useState<string>('');
   const { useHide }: any = React.useContext(UserContext);
 
   const [announcementData, setAnnouncementData] = React.useState([]);
@@ -161,45 +161,45 @@ const MyApprovalContext = ({ props }: any) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const [IsinvideHide, setIsinvideHide] = React.useState(false);
-  
+
   const [Mylistdata, setMylistdata] = useState([]);
-  const handleReturnToMain = (Name:any) => {
+  const handleReturnToMain = (Name: any) => {
     setActiveComponent(Name); // Reset to show the main component
-    console.log(activeComponent , "activeComponent updated")
+    console.log(activeComponent, "activeComponent updated")
   };
   const getApprovalmasterTasklist = async () => {
     try {
       const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select(
-    "Log","CurrentUser","Remark"	 	
-         ,"LogHistory"	                 
-         ,"FileUID/FileUID"	         
-         ,"FileUID/SiteName"	            
-         ,"FileUID/DocumentLibraryName" 
-         ,"FileUID/FileName"	              
-         ,"FileUID/RequestNo"	              
+        "Log", "CurrentUser", "Remark"
+        , "LogHistory"
+        , "FileUID/FileUID"
+        , "FileUID/SiteName"
+        , "FileUID/DocumentLibraryName"
+        , "FileUID/FileName"
+        , "FileUID/RequestNo"
         //  ,"FileUID/FilePreviewUrl" 
-         ,"FileUID/Status"	
-         ,"FileUID/FolderPath"	 
-         ,"FileUID/RequestedBy"	 
-         ,"FileUID/Created"	 
-         ,"FileUID/ApproveAction"
-         ,"MasterApproval/ApprovalType" 
-         ,"MasterApproval/Level"	 
-         ,"MasterApproval/DocumentLibraryName"	 
-         
+        , "FileUID/Status"
+        , "FileUID/FolderPath"
+        , "FileUID/RequestedBy"
+        , "FileUID/Created"
+        , "FileUID/ApproveAction"
+        , "MasterApproval/ApprovalType"
+        , "MasterApproval/Level"
+        , "MasterApproval/DocumentLibraryName"
+
       )
-      .expand("FileUID", "MasterApproval")
-      .filter(`CurrentUser eq '${currentUserEmailRef.current}'`)();;
+        .expand("FileUID", "MasterApproval")
+        .filter(`CurrentUser eq '${currentUserEmailRef.current}'`)();;
       console.log(items, "DMSFileApprovalTaskList");
       setMylistdata(items);
-      
+
     } catch (error) {
       console.error("Error fetching list items:", error);
     }
   };
-  console.log(Mylistdata , "Mylistdata")
+  console.log(Mylistdata, "Mylistdata")
   const currentUserEmailRef = useRef('');
-  const getCurrrentuser=async()=>{
+  const getCurrrentuser = async () => {
     const userdata = await sp.web.currentUser();
     currentUserEmailRef.current = userdata.Email;
     getApprovalmasterTasklist();
@@ -209,21 +209,21 @@ const MyApprovalContext = ({ props }: any) => {
 
   }, []);
 
-  const truncateText =  (text: string, maxLength?: any) => {
-    if(text){
+  const truncateText = (text: string, maxLength?: any) => {
+    if (text) {
       return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
-    
+
   };
 
 
-  const getTaskItemsbyID = async (e:any, itemid:any)=>{
+  const getTaskItemsbyID = async (e: any, itemid: any) => {
     // currentItemID = itemid
     currentItemID = itemid
     setActiveComponent('Approval Action')
-    console.log("itemid" , itemid)
-    const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select("CurrentUser" , "FileUID/FileUID" , "Log").expand("FileUID").filter(`FileUID/RequestNo eq '${itemid}'`)();
-       console.log(items , "items")
+    console.log("itemid", itemid)
+    const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select("CurrentUser", "FileUID/FileUID", "Log").expand("FileUID").filter(`FileUID/RequestNo eq '${itemid}'`)();
+    console.log(items, "items")
   }
   const toggleDropdown = () => {
 
@@ -246,7 +246,7 @@ const MyApprovalContext = ({ props }: any) => {
     Remark: '',
 
   })
-  const handleCancel = () => {   
+  const handleCancel = () => {
     window.location.href = `${siteUrl}/SitePages/MyApprovals.aspx`;
   }
   //#region OnchangeData
@@ -315,41 +315,41 @@ const MyApprovalContext = ({ props }: any) => {
 
   const [activeTab, setActiveTab] = useState("Intranet");
 
-//   const handleTabClick = async (tab: React.SetStateAction<string>) => {
+  //   const handleTabClick = async (tab: React.SetStateAction<string>) => {
 
-//     setActiveTab(tab);
+  //     setActiveTab(tab);
 
-//     if (tab == "profile11") {
+  //     if (tab == "profile11") {
 
-//       FilterDiscussionData("Today");
+  //       FilterDiscussionData("Today");
 
-//     } else if (tab == "profile1") {
+  //     } else if (tab == "profile1") {
 
-//       setAnnouncementData(await getDiscussionMeAll(sp));
+  //       setAnnouncementData(await getDiscussionMeAll(sp));
 
-//     } else {
+  //     } else {
 
-//       const announcementArr = await getDiscussionForum(sp);
+  //       const announcementArr = await getDiscussionForum(sp);
 
-//       let lengArr: any;
+  //       let lengArr: any;
 
-//       for (var i = 0; i < announcementArr.length; i++) {
+  //       for (var i = 0; i < announcementArr.length; i++) {
 
-//         lengArr = await getDiscussionComments(sp, announcementArr[i].ID);
+  //         lengArr = await getDiscussionComments(sp, announcementArr[i].ID);
 
-//         console.log(lengArr, "rrr");
+  //         console.log(lengArr, "rrr");
 
-//         (announcementArr[i].commentsLength = lengArr.arrLength),
+  //         (announcementArr[i].commentsLength = lengArr.arrLength),
 
-//           (announcementArr[i].Users = lengArr.arrUser);
+  //           (announcementArr[i].Users = lengArr.arrUser);
 
-//       }
+  //       }
 
-//       setAnnouncementData(announcementArr);
+  //       setAnnouncementData(announcementArr);
 
-//     }
+  //     }
 
-//   };
+  //   };
 
 
   React.useEffect(() => {
@@ -370,11 +370,11 @@ const MyApprovalContext = ({ props }: any) => {
 
   };
 
-//   const FilterDiscussionData = async (optionFilter: string) => {
+  //   const FilterDiscussionData = async (optionFilter: string) => {
 
-//     setAnnouncementData(await getDiscussionFilterAll(sp, optionFilter));
+  //     setAnnouncementData(await getDiscussionFilterAll(sp, optionFilter));
 
-//   };
+  //   };
 
   const handleFilterChange = (
 
@@ -587,32 +587,32 @@ const MyApprovalContext = ({ props }: any) => {
 
   };
 
-//   const fetchOptions = async () => {
+  //   const fetchOptions = async () => {
 
-//     try {
+  //     try {
 
-//       const items = await fetchUserInformationList(sp);
+  //       const items = await fetchUserInformationList(sp);
 
-//       console.log(items, "itemsitemsitems");
+  //       console.log(items, "itemsitemsitems");
 
 
-//       const formattedOptions = items.map((item: { Title: any; Id: any }) => ({
+  //       const formattedOptions = items.map((item: { Title: any; Id: any }) => ({
 
-//         name: item.Title, // Adjust according to your list schema
+  //         name: item.Title, // Adjust according to your list schema
 
-//         id: item.Id,
+  //         id: item.Id,
 
-//       }));
+  //       }));
 
-//       setOpions(formattedOptions);
+  //       setOpions(formattedOptions);
 
-//     } catch (error) {
+  //     } catch (error) {
 
-//       console.error("Error fetching options:", error);
+  //       console.error("Error fetching options:", error);
 
-//     }
+  //     }
 
-//   };
+  //   };
 
 
   const handleSortChange = (key: string) => {
@@ -728,10 +728,10 @@ const MyApprovalContext = ({ props }: any) => {
           sessionkey = "announcementId";
           redirecturl = `${siteUrl}/SitePages/AddAnnouncement.aspx` + "?requestid=" + Item?.Id + "&mode=approval";
           break;
-          case "News":
-            sessionkey = "announcementId";
-            redirecturl = `${siteUrl}/SitePages/AddAnnouncement.aspx` + "?requestid=" + Item?.Id + "&mode=approval";
-            break;
+        case "News":
+          sessionkey = "announcementId";
+          redirecturl = `${siteUrl}/SitePages/AddAnnouncement.aspx` + "?requestid=" + Item?.Id + "&mode=approval";
+          break;
         case "Event":
           sessionkey = "EventId";
           redirecturl = `${siteUrl}/SitePages/EventMasterForm.aspx` + "?requestid=" + Item?.Id + "&mode=approval";
@@ -752,7 +752,7 @@ const MyApprovalContext = ({ props }: any) => {
 
     // sessionStorage.setItem("announcementId", encryptedId);
 
-    
+
   };
 
 
@@ -823,538 +823,538 @@ const MyApprovalContext = ({ props }: any) => {
 
               {/* <div className="col-lg-6">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
               </div> */}
 
             </div>
             <div className="row mt-4">
 
-<div className="col-12">
+              <div className="col-12">
 
-  <div className="card mb-0 cardcsss">
+                <div className="card mb-0 cardcsss">
 
-    <div className="card-body">
+                  <div className="card-body">
 
-      <div className="d-flex flex-wrap align-items-center justify-content-center">
+                    <div className="d-flex flex-wrap align-items-center justify-content-center">
 
-        <ul
+                      <ul
 
-          className="navs nav-pillss navtab-bgs"
+                        className="navs nav-pillss navtab-bgs"
 
-          role="tablist"
+                        role="tablist"
 
-          style={{
+                        style={{
 
-            gap: "5px",
+                          gap: "5px",
 
-            display: "flex",
+                          display: "flex",
 
-            listStyle: "none",
+                          listStyle: "none",
 
-            marginBottom: "unset",
+                          marginBottom: "unset",
 
-          }}
-
-        >
-
-          <li className="nav-itemcss">
-
-            <a
-
-              className={`nav-linkss ${activeTab === "cardView" ? "active" : ""
-
-                }`}
-
-              aria-selected={activeTab === "cardView"}
-
-              role="tab"
-
-              onClick={() => setActiveTab("Intranet")}
-
-            >
-              Intranet
-               
-
-            </a>
-
-          </li>
-
-          <li className="nav-itemcss">
-
-            <a
-
-              className={`nav-linkss ${activeTab === "listView" ? "active" : ""
-
-                }`}
-
-              aria-selected={activeTab === "listView"}
-
-              role="tab"
-
-              onClick={() => setActiveTab("DMS")}
-
-
-            // onClick={() => handleTabChange("listView")}
-
-            // className={`nav-link ${
-
-            //   activeTab === "listView" ? "active" : ""
-
-            // }`}
-
-            >
-             DMS
-
-            </a>
-
-          </li>
-          <li className="nav-itemcss">
-
-            <a
-
-              className={`nav-linkss ${activeTab === "listView" ? "active" : ""
-
-                }`}
-
-              aria-selected={activeTab === "listView"}
-
-              role="tab"
-
-              
-
-
-             onClick={() => setActiveTab("Automation")}
-
-            // className={`nav-link ${
-
-            //   activeTab === "listView" ? "active" : ""
-
-            // }`}
-
-            >
-
-             Automation
-            </a>
-
-          </li>
-
-        </ul>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-                  </div>
-                {activeTab === "Intranet" && (
-                  <div>
-                     {
-
-!isActivedata && (
-
-  <div className="card cardCss mt-4">
-   
-    <div className="card-body">
-
-      <div id="cardCollpase4" className="collapse show">
-
-        <div className="table-responsive pt-0">
-
-          <table
-
-            className="mtable mt-0 table-centered table-nowrap table-borderless mb-0"
-
-            style={{ position: "relative" }}
-
-          >
-
-            <thead>
-
-              <tr>
-
-                <th
-
-                  style={{
-
-                    borderBottomLeftRadius: "0px",
-
-                    minWidth: "40px",
-
-                    maxWidth: "40px",
-
-                    borderTopLeftRadius: "0px",
-
-                  }}
-
-                >
-
-                  <div
-
-                    className="d-flex pb-2"
-
-                    style={{ justifyContent: "space-between" }}
-
-                  >
-
-                    <span>S.No.</span>
-
-                    <span onClick={() => handleSortChange("SNo")}>
-
-                      <FontAwesomeIcon icon={faSort} />
-
-                    </span>
-
-                  </div>
-
-                  <div className="bd-highlight">
-
-                    <input
-
-                      type="text"
-
-                      placeholder="index"
-
-                      onChange={(e) => handleFilterChange(e, "SNo")}
-
-                      className="inputcss"
-
-                      style={{ width: "100%" }}
-
-                    />
-
-                  </div>
-
-                </th>
-
-                <th style={{ minWidth: "80px", maxWidth: "80px" }}>
-
-                  <div className="d-flex flex-column bd-highlight ">
-
-                    <div
-
-                      className="d-flex pb-2"
-
-                      style={{ justifyContent: "space-between" }}
-
-                    >
-
-                      <span>Request ID</span>
-
-                      <span
-
-                        onClick={() => handleSortChange("RequestID")}
+                        }}
 
                       >
 
-                        <FontAwesomeIcon icon={faSort} />
+                        <li className="nav-itemcss">
 
-                      </span>
+                          <a
 
-                    </div>
+                            className={`nav-linkss ${activeTab === "cardView" ? "active" : ""
 
-                    <div className=" bd-highlight">
+                              }`}
 
-                      <input
+                            aria-selected={activeTab === "cardView"}
 
-                        type="text"
+                            role="tab"
 
-                        placeholder="Filter by Request ID"
+                            onClick={() => setActiveTab("Intranet")}
 
-                        onChange={(e) =>
+                          >
+                            Intranet
 
-                          handleFilterChange(e, "RequestID")
 
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault(); // Prevents the new line in textarea
-                          }
-                        }}
-                        className="inputcss"
+                          </a>
 
-                        style={{ width: "100%" }}
+                        </li>
 
-                      />
+                        <li className="nav-itemcss">
 
-                    </div>
+                          <a
 
-                  </div>
+                            className={`nav-linkss ${activeTab === "listView" ? "active" : ""
 
-                </th>
+                              }`}
 
-                <th style={{ minWidth: "120px", maxWidth: "120px" }}>
+                            aria-selected={activeTab === "listView"}
 
-                  <div className="d-flex flex-column bd-highlight ">
+                            role="tab"
 
-                    <div
+                            onClick={() => setActiveTab("DMS")}
 
-                      className="d-flex  pb-2"
 
-                      style={{ justifyContent: "space-between" }}
+                          // onClick={() => handleTabChange("listView")}
 
-                    >
+                          // className={`nav-link ${
 
-                      <span>Process Name</span>{" "}
+                          //   activeTab === "listView" ? "active" : ""
 
-                      <span
+                          // }`}
 
-                        onClick={() =>
+                          >
+                            DMS
 
-                          handleSortChange("ProcessName")
+                          </a>
 
-                        }
+                        </li>
+                        <li className="nav-itemcss">
 
-                      >
+                          <a
 
-                        <FontAwesomeIcon icon={faSort} />{" "}
+                            className={`nav-linkss ${activeTab === "listView" ? "active" : ""
 
-                      </span>
+                              }`}
 
-                    </div>
+                            aria-selected={activeTab === "listView"}
 
-                    <div className=" bd-highlight">
+                            role="tab"
 
-                      <input
 
-                        type="text"
 
-                        placeholder="Filter by Process Name"
 
-                        onChange={(e) =>
+                            onClick={() => setActiveTab("Automation")}
 
-                          handleFilterChange(e, "ProcessName")
+                          // className={`nav-link ${
 
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault(); // Prevents the new line in textarea
-                          }
-                        }}
-                        className="inputcss"
+                          //   activeTab === "listView" ? "active" : ""
 
-                        style={{ width: "100%" }}
+                          // }`}
 
-                      />
+                          >
+
+                            Automation
+                          </a>
+
+                        </li>
+
+                      </ul>
 
                     </div>
 
                   </div>
 
-                </th>
+                </div>
 
-                <th style={{ minWidth: "100px", maxWidth: "100px" }}>
+              </div>
 
-                  <div className="d-flex flex-column bd-highlight ">
+            </div>
+            {activeTab === "Intranet" && (
+              <div>
+                {
 
-                    <div
+                  !isActivedata && (
 
-                      className="d-flex  pb-2"
+                    <div className="card cardCss mt-4">
 
-                      style={{ justifyContent: "space-between" }}
+                      <div className="card-body">
 
-                    >
+                        <div id="cardCollpase4" className="collapse show">
 
-                      <span>Requested By</span>{" "}
+                          <div className="table-responsive pt-0">
 
-                      <span
+                            <table
 
-                        onClick={() =>
+                              className="mtable mt-0 table-centered table-nowrap table-borderless mb-0"
 
-                          handleSortChange("RequestedBy")
+                              style={{ position: "relative" }}
 
-                        }
+                            >
 
-                      >
+                              <thead>
 
-                        <FontAwesomeIcon icon={faSort} />{" "}
+                                <tr>
 
-                      </span>
+                                  <th
 
-                    </div>
+                                    style={{
 
-                    <div className=" bd-highlight">
+                                      borderBottomLeftRadius: "0px",
 
-                      <input
+                                      minWidth: "40px",
 
-                        type="text"
+                                      maxWidth: "40px",
 
-                        placeholder="Filter by Requested By"
+                                      borderTopLeftRadius: "0px",
 
-                        onChange={(e) =>
+                                    }}
 
-                          handleFilterChange(e, "RequestedBy")
+                                  >
 
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault(); // Prevents the new line in textarea
-                          }
-                        }}
-                        className="inputcss"
+                                    <div
 
-                        style={{ width: "100%" }}
+                                      className="d-flex pb-2"
 
-                      />
+                                      style={{ justifyContent: "space-between" }}
 
-                    </div>
+                                    >
 
-                  </div>
+                                      <span>S.No.</span>
 
-                </th>
+                                      <span onClick={() => handleSortChange("SNo")}>
 
-                <th style={{ minWidth: "100px", maxWidth: "100px" }}>
+                                        <FontAwesomeIcon icon={faSort} />
 
-                  <div className="d-flex flex-column bd-highlight ">
+                                      </span>
 
-                    <div
+                                    </div>
 
-                      className="d-flex  pb-2"
+                                    <div className="bd-highlight">
 
-                      style={{ justifyContent: "space-between" }}
+                                      <input
 
-                    >
+                                        type="text"
 
-                      <span>Requested Date</span>{" "}
+                                        placeholder="index"
 
-                      <span
+                                        onChange={(e) => handleFilterChange(e, "SNo")}
 
-                        onClick={() =>
+                                        className="inputcss"
 
-                          handleSortChange("RequestedDate")
+                                        style={{ width: "100%" }}
 
-                        }
+                                      />
 
-                      >
+                                    </div>
 
-                        <FontAwesomeIcon icon={faSort} />{" "}
+                                  </th>
 
-                      </span>
+                                  <th style={{ minWidth: "80px", maxWidth: "80px" }}>
 
-                    </div>
+                                    <div className="d-flex flex-column bd-highlight ">
 
-                    <div className=" bd-highlight">
+                                      <div
 
-                      <input
+                                        className="d-flex pb-2"
 
-                        type="text"
+                                        style={{ justifyContent: "space-between" }}
 
-                        placeholder="Filter by Requested Date"
+                                      >
 
-                        onChange={(e) =>
+                                        <span>Request ID</span>
 
-                          handleFilterChange(e, "RequestedDate")
+                                        <span
 
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault(); // Prevents the new line in textarea
-                          }
-                        }}
-                        className="inputcss"
+                                          onClick={() => handleSortChange("RequestID")}
 
-                        style={{ width: "100%" }}
+                                        >
 
-                      />
+                                          <FontAwesomeIcon icon={faSort} />
 
-                    </div>
+                                        </span>
 
-                  </div>
+                                      </div>
 
-                </th>
+                                      <div className=" bd-highlight">
 
-                <th style={{ minWidth: "80px", maxWidth: "80px" }}>
+                                        <input
 
-                  <div className="d-flex flex-column bd-highlight ">
+                                          type="text"
 
-                    <div
+                                          placeholder="Filter by Request ID"
 
-                      className="d-flex  pb-2"
+                                          onChange={(e) =>
 
-                      style={{ justifyContent: "space-between" }}
+                                            handleFilterChange(e, "RequestID")
 
-                    >
+                                          }
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                              e.preventDefault(); // Prevents the new line in textarea
+                                            }
+                                          }}
+                                          className="inputcss"
 
-                      <span>Status</span>{" "}
+                                          style={{ width: "100%" }}
 
-                      <span
+                                        />
 
-                        onClick={() => handleSortChange("Status")}
+                                      </div>
 
-                      >
+                                    </div>
 
-                        <FontAwesomeIcon icon={faSort} />{" "}
+                                  </th>
 
-                      </span>
+                                  <th style={{ minWidth: "120px", maxWidth: "120px" }}>
 
-                    </div>
+                                    <div className="d-flex flex-column bd-highlight ">
 
-                    <div className=" bd-highlight">
+                                      <div
 
-                      <input
+                                        className="d-flex  pb-2"
 
-                        type="text"
+                                        style={{ justifyContent: "space-between" }}
 
-                        placeholder="Filter by Status"
+                                      >
 
-                        onChange={(e) =>
+                                        <span>Process Name</span>{" "}
 
-                          handleFilterChange(e, "Status")
+                                        <span
 
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault(); // Prevents the new line in textarea
-                          }
-                        }}
-                        className="inputcss"
+                                          onClick={() =>
 
-                        style={{ width: "100%" }}
+                                            handleSortChange("ProcessName")
 
-                      />
+                                          }
 
-                    </div>
+                                        >
 
-                  </div>
+                                          <FontAwesomeIcon icon={faSort} />{" "}
 
-                </th>
+                                        </span>
 
-                <th
+                                      </div>
 
-                  style={{
+                                      <div className=" bd-highlight">
 
-                    minWidth: "50px",
+                                        <input
 
-                    maxWidth: "50px",
+                                          type="text"
 
-                    borderBottomRightRadius: "0px",
+                                          placeholder="Filter by Process Name"
 
-                    borderTopRightRadius: "0px",
+                                          onChange={(e) =>
 
-                    textAlign: "center",
+                                            handleFilterChange(e, "ProcessName")
 
-                    verticalAlign: "top",
+                                          }
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                              e.preventDefault(); // Prevents the new line in textarea
+                                            }
+                                          }}
+                                          className="inputcss"
 
-                  }}
+                                          style={{ width: "100%" }}
 
-                >
+                                        />
 
-                  <div className="d-flex flex-column bd-highlight ">
+                                      </div>
 
-                    <div
+                                    </div>
 
-                      className="d-flex  pb-2"
+                                  </th>
 
-                      style={{ justifyContent: "space-between" }}
+                                  <th style={{ minWidth: "100px", maxWidth: "100px" }}>
 
-                    >
+                                    <div className="d-flex flex-column bd-highlight ">
 
-                      <span>Action</span>{" "}
+                                      <div
 
-                      {/* <span
+                                        className="d-flex  pb-2"
+
+                                        style={{ justifyContent: "space-between" }}
+
+                                      >
+
+                                        <span>Requested By</span>{" "}
+
+                                        <span
+
+                                          onClick={() =>
+
+                                            handleSortChange("RequestedBy")
+
+                                          }
+
+                                        >
+
+                                          <FontAwesomeIcon icon={faSort} />{" "}
+
+                                        </span>
+
+                                      </div>
+
+                                      <div className=" bd-highlight">
+
+                                        <input
+
+                                          type="text"
+
+                                          placeholder="Filter by Requested By"
+
+                                          onChange={(e) =>
+
+                                            handleFilterChange(e, "RequestedBy")
+
+                                          }
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                              e.preventDefault(); // Prevents the new line in textarea
+                                            }
+                                          }}
+                                          className="inputcss"
+
+                                          style={{ width: "100%" }}
+
+                                        />
+
+                                      </div>
+
+                                    </div>
+
+                                  </th>
+
+                                  <th style={{ minWidth: "100px", maxWidth: "100px" }}>
+
+                                    <div className="d-flex flex-column bd-highlight ">
+
+                                      <div
+
+                                        className="d-flex  pb-2"
+
+                                        style={{ justifyContent: "space-between" }}
+
+                                      >
+
+                                        <span>Requested Date</span>{" "}
+
+                                        <span
+
+                                          onClick={() =>
+
+                                            handleSortChange("RequestedDate")
+
+                                          }
+
+                                        >
+
+                                          <FontAwesomeIcon icon={faSort} />{" "}
+
+                                        </span>
+
+                                      </div>
+
+                                      <div className=" bd-highlight">
+
+                                        <input
+
+                                          type="text"
+
+                                          placeholder="Filter by Requested Date"
+
+                                          onChange={(e) =>
+
+                                            handleFilterChange(e, "RequestedDate")
+
+                                          }
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                              e.preventDefault(); // Prevents the new line in textarea
+                                            }
+                                          }}
+                                          className="inputcss"
+
+                                          style={{ width: "100%" }}
+
+                                        />
+
+                                      </div>
+
+                                    </div>
+
+                                  </th>
+
+                                  <th style={{ minWidth: "80px", maxWidth: "80px" }}>
+
+                                    <div className="d-flex flex-column bd-highlight ">
+
+                                      <div
+
+                                        className="d-flex  pb-2"
+
+                                        style={{ justifyContent: "space-between" }}
+
+                                      >
+
+                                        <span>Status</span>{" "}
+
+                                        <span
+
+                                          onClick={() => handleSortChange("Status")}
+
+                                        >
+
+                                          <FontAwesomeIcon icon={faSort} />{" "}
+
+                                        </span>
+
+                                      </div>
+
+                                      <div className=" bd-highlight">
+
+                                        <input
+
+                                          type="text"
+
+                                          placeholder="Filter by Status"
+
+                                          onChange={(e) =>
+
+                                            handleFilterChange(e, "Status")
+
+                                          }
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                              e.preventDefault(); // Prevents the new line in textarea
+                                            }
+                                          }}
+                                          className="inputcss"
+
+                                          style={{ width: "100%" }}
+
+                                        />
+
+                                      </div>
+
+                                    </div>
+
+                                  </th>
+
+                                  <th
+
+                                    style={{
+
+                                      minWidth: "50px",
+
+                                      maxWidth: "50px",
+
+                                      borderBottomRightRadius: "0px",
+
+                                      borderTopRightRadius: "0px",
+
+                                      textAlign: "center",
+
+                                      verticalAlign: "top",
+
+                                    }}
+
+                                  >
+
+                                    <div className="d-flex flex-column bd-highlight ">
+
+                                      <div
+
+                                        className="d-flex  pb-2"
+
+                                        style={{ justifyContent: "space-between" }}
+
+                                      >
+
+                                        <span>Action</span>{" "}
+
+                                        {/* <span
 
           onClick={() => handleSortChange("Category")}
 
@@ -1364,9 +1364,9 @@ const MyApprovalContext = ({ props }: any) => {
 
         </span> */}
 
-                    </div>
+                                      </div>
 
-                    {/* <div className=" bd-highlight">
+                                      {/* <div className=" bd-highlight">
 
         <input
 
@@ -1388,123 +1388,123 @@ const MyApprovalContext = ({ props }: any) => {
 
       </div> */}
 
-                  </div>
+                                    </div>
 
-                </th>
+                                  </th>
 
-              </tr>
+                                </tr>
 
-            </thead>
+                              </thead>
 
-            <tbody>
+                              <tbody>
 
-              {currentData.length === 0 ? (
+                                {currentData.length === 0 ? (
 
-                <div
+                                  <div
 
-                  className="no-results"
+                                    className="no-results"
 
-                  style={{
+                                    style={{
 
-                    display: "flex",
+                                      display: "flex",
 
-                    justifyContent: "center",
+                                      justifyContent: "center",
 
-                  }}
+                                    }}
 
-                >
+                                  >
 
-                  No results found
+                                    No results found
 
-                </div>
+                                  </div>
 
-              ) : (
+                                ) : (
 
-                currentData.map((item: any, index: number) => (
+                                  currentData.map((item: any, index: number) => (
 
-                  <tr
-
-
-                    key={index}
-
-                    style={{ cursor: "pointer" }}
-
-                  >
-                    <td style={{ minWidth: '40px', maxWidth: '40px' }}><div className='indexdesign'>   {startIndex + index + 1}</div>  </td>
+                                    <tr
 
 
+                                      key={index}
 
-                    <td
+                                      style={{ cursor: "pointer" }}
 
-                      style={{
-
-                        minWidth: "80px",
-
-                        maxWidth: "80px",
-
-                        textTransform: "capitalize",
-
-                      }}
-
-                    >
-
-                      {item.RequestID}
-
-                    </td>
-
-                    <td
-
-                      style={{ minWidth: "120px", maxWidth: "120px" }}
-
-                    >
-
-                      {item.ProcessName}
-
-                    </td>
-
-                    <td
-
-                      style={{ minWidth: "100px", maxWidth: "100px" }}
-
-                    >
-
-                      {item?.Requester?.Title}
-
-                    </td>
-
-                    <td
-
-                      style={{ minWidth: "100px", maxWidth: "100px" }}
-
-                    >
-                      <div className="btn btn-light">
-                        {new Date(item?.Created).toLocaleDateString()}
-                      </div>
-
-                    </td>
-
-                    <td
-
-                      style={{ minWidth: "80px", maxWidth: "80px" }}
-
-                    >
-                      <div className="btn btn-status">
-                        {item?.Status}
-                      </div>
-                    </td>
-
-                    <td
-
-                      style={{ minWidth: "50px", maxWidth: "50px" }}
-
-                      className="fe-eye font-18"
-
-                    >
-
-                      {/* <a href="my-approval-form.html"><i className="fe-eye font-18"></i> </a> */}
+                                    >
+                                      <td style={{ minWidth: '40px', maxWidth: '40px' }}><div className='indexdesign'>   {startIndex + index + 1}</div>  </td>
 
 
-                      {/* <img
+
+                                      <td
+
+                                        style={{
+
+                                          minWidth: "80px",
+
+                                          maxWidth: "80px",
+
+                                          textTransform: "capitalize",
+
+                                        }}
+
+                                      >
+
+                                        {item.RequestID}
+
+                                      </td>
+
+                                      <td
+
+                                        style={{ minWidth: "120px", maxWidth: "120px" }}
+
+                                      >
+
+                                        {item.ProcessName}
+
+                                      </td>
+
+                                      <td
+
+                                        style={{ minWidth: "100px", maxWidth: "100px" }}
+
+                                      >
+
+                                        {item?.Requester?.Title}
+
+                                      </td>
+
+                                      <td
+
+                                        style={{ minWidth: "100px", maxWidth: "100px" }}
+
+                                      >
+                                        <div className="btn btn-light">
+                                          {new Date(item?.Created).toLocaleDateString()}
+                                        </div>
+
+                                      </td>
+
+                                      <td
+
+                                        style={{ minWidth: "80px", maxWidth: "80px" }}
+
+                                      >
+                                        <div className="btn btn-status">
+                                          {item?.Status}
+                                        </div>
+                                      </td>
+
+                                      <td
+
+                                        style={{ minWidth: "50px", maxWidth: "50px" }}
+
+                                        className="fe-eye font-18"
+
+                                      >
+
+                                        {/* <a href="my-approval-form.html"><i className="fe-eye font-18"></i> </a> */}
+
+
+                                        {/* <img
 
           onClick={() =>
 
@@ -1532,279 +1532,279 @@ const MyApprovalContext = ({ props }: any) => {
 
         /> */}
 
-                      <Edit onClick={(e) =>
+                                        <Edit onClick={(e) =>
 
-                        handleRedirect(e, item)
+                                          handleRedirect(e, item)
 
-                      }
+                                        }
 
-                        style={{
+                                          style={{
 
-                          minWidth: "20px",
+                                            minWidth: "20px",
 
-                          maxWidth: "20px",
+                                            maxWidth: "20px",
 
-                          marginLeft: "15px",
+                                            marginLeft: "15px",
 
-                          cursor: "pointer",
+                                            cursor: "pointer",
 
-                        }} />
+                                          }} />
 
-                    </td>
+                                      </td>
 
-                  </tr>
+                                    </tr>
 
-                ))
+                                  ))
 
-              )}
+                                )}
 
-            </tbody>
+                              </tbody>
 
-          </table>
+                            </table>
 
-        </div>
+                          </div>
 
 
-        {currentData.length > 0 ? (
+                          {currentData.length > 0 ? (
 
-          <nav className="pagination-container">
+                            <nav className="pagination-container">
 
-            <ul className="pagination">
+                              <ul className="pagination">
 
-              <li
+                                <li
 
-                className={`page-item ${currentPage === 1 ? "disabled" : ""
+                                  className={`page-item ${currentPage === 1 ? "disabled" : ""
 
-                  }`}
+                                    }`}
 
-              >
+                                >
 
-                <a
+                                  <a
 
-                  className="page-link"
+                                    className="page-link"
 
-                  onClick={() => handlePageChange(currentPage - 1)}
+                                    onClick={() => handlePageChange(currentPage - 1)}
 
-                  aria-label="Previous"
+                                    aria-label="Previous"
 
-                >
+                                  >
 
-                  «
+                                    «
 
-                </a>
+                                  </a>
 
-              </li>
+                                </li>
 
-              {Array.from({ length: totalPages }, (_, num) => (
+                                {Array.from({ length: totalPages }, (_, num) => (
 
-                <li
+                                  <li
 
-                  key={num}
+                                    key={num}
 
-                  className={`page-item ${currentPage === num + 1 ? "active" : ""
+                                    className={`page-item ${currentPage === num + 1 ? "active" : ""
 
-                    }`}
+                                      }`}
 
-                >
+                                  >
 
-                  <a
+                                    <a
 
-                    className="page-link"
+                                      className="page-link"
 
-                    onClick={() => handlePageChange(num + 1)}
+                                      onClick={() => handlePageChange(num + 1)}
 
-                  >
+                                    >
 
-                    {num + 1}
+                                      {num + 1}
 
-                  </a>
+                                    </a>
 
-                </li>
+                                  </li>
 
-              ))}
+                                ))}
 
 
-              <li
+                                <li
 
-                className={`page-item ${currentPage === totalPages ? "disabled" : ""
+                                  className={`page-item ${currentPage === totalPages ? "disabled" : ""
 
-                  }`}
+                                    }`}
 
-              >
+                                >
 
-                <a
+                                  <a
 
-                  className="page-link"
+                                    className="page-link"
 
-                  onClick={() => handlePageChange(currentPage + 1)}
+                                    onClick={() => handlePageChange(currentPage + 1)}
 
-                  aria-label="Next"
+                                    aria-label="Next"
 
-                >
+                                  >
 
-                  »
+                                    »
 
-                </a>
+                                  </a>
 
-              </li>
+                                </li>
 
-            </ul>
+                              </ul>
 
-          </nav>
+                            </nav>
 
-        ) : (
+                          ) : (
 
-          <></>
+                            <></>
 
-        )}
+                          )}
 
-      </div>
+                        </div>
 
-    </div>
+                      </div>
 
-  </div>
+                    </div>
 
-)
+                  )
 
-}
+                }
 
-{
+                {
 
-isActivedata == true && ContentData.length > 0 && currentItem != null &&
+                  isActivedata == true && ContentData.length > 0 && currentItem != null &&
 
-(
+                  (
 
-  <div className="row mt-4">
+                    <div className="row mt-4">
 
-    <div className="col-12">
+                      <div className="col-12">
 
-      <div className="card">
+                        <div className="card">
 
-        <div className="card-body">
+                          <div className="card-body">
 
-          <h4 className="header-title mb-0">{ContentData[0].Title}</h4>
+                            <h4 className="header-title mb-0">{ContentData[0].Title}</h4>
 
-          <p className="sub-header">{currentItem.EntityName}</p>
+                            <p className="sub-header">{currentItem.EntityName}</p>
 
 
-          <div className="row">
+                            <div className="row">
 
-            <div className="col-lg-4">
+                              <div className="col-lg-4">
 
-              <div className="mb-3">
+                                <div className="mb-3">
 
-                <label className="form-label text-dark font-14">Company / Department:</label>
+                                  <label className="form-label text-dark font-14">Company / Department:</label>
 
-                <div><span className="text-muted font-14">{currentItem.EntityName}</span></div>
+                                  <div><span className="text-muted font-14">{currentItem.EntityName}</span></div>
 
-              </div>
+                                </div>
 
-            </div>
+                              </div>
 
-            <div className="col-lg-4">
+                              <div className="col-lg-4">
 
-              <div className="mb-3">
+                                <div className="mb-3">
 
-                <label className="form-label text-dark font-14">Date of Request:</label>
+                                  <label className="form-label text-dark font-14">Date of Request:</label>
 
-                <div><span className="text-muted font-14">{currentItem.Created}</span></div>
+                                  <div><span className="text-muted font-14">{currentItem.Created}</span></div>
 
-              </div>
+                                </div>
 
-            </div>
+                              </div>
 
-            <div className="col-lg-4">
+                              <div className="col-lg-4">
 
-              <div className="mb-3">
+                                <div className="mb-3">
 
-                <label className="form-label text-dark font-14">Status:</label>
+                                  <label className="form-label text-dark font-14">Status:</label>
 
-                <div><span className="text-muted font-14">{currentItem.Status}</span></div>
+                                  <div><span className="text-muted font-14">{currentItem.Status}</span></div>
 
-              </div>
+                                </div>
 
-            </div>
+                              </div>
 
-            <div className="col-lg-6">
+                              <div className="col-lg-6">
 
-              <div className="mb-0">
+                                <div className="mb-0">
 
-                <label className="form-label text-dark font-14">Content:</label>
+                                  <label className="form-label text-dark font-14">Content:</label>
 
-                <div>
+                                  <div>
 
-                  <span className="text-muted font-14">
+                                    <span className="text-muted font-14">
 
-                    {ContentData[0].Title || ContentData[0].EventName}
+                                      {ContentData[0].Title || ContentData[0].EventName}
 
-                  </span>
+                                    </span>
 
-                </div>
+                                  </div>
 
-              </div>
+                                </div>
 
-            </div>
+                              </div>
 
-            <div className="col-lg-6">
+                              <div className="col-lg-6">
 
-              <div className="mb-0">
+                                <div className="mb-0">
 
-                <label className="form-label text-dark font-14">Overview:</label>
+                                  <label className="form-label text-dark font-14">Overview:</label>
 
-                <div>
+                                  <div>
 
-                  <span className="text-muted font-14">
+                                    <span className="text-muted font-14">
 
-                    {ContentData[0].Overview}
+                                      {ContentData[0].Overview}
 
-                  </span>
+                                    </span>
 
-                </div>
+                                  </div>
 
-              </div>
+                                </div>
 
-            </div>
+                              </div>
 
-          </div>
+                            </div>
 
-        </div>
+                          </div>
 
-      </div>
+                        </div>
 
-      {
+                        {
 
-        ContentData[0]?.Description != null && (
+                          ContentData[0]?.Description != null && (
 
-          <div className="card">
+                            <div className="card">
 
-            <div className="card-body">
+                              <div className="card-body">
 
-              <h4 className="header-title mb-0">Description</h4>
+                                <h4 className="header-title mb-0">Description</h4>
 
-              <p className="sub-header">
+                                <p className="sub-header">
 
-                <div
+                                  <div
 
-                  dangerouslySetInnerHTML={{ __html: ContentData[0].Description }}
+                                    dangerouslySetInnerHTML={{ __html: ContentData[0].Description }}
 
-                ></div>
+                                  ></div>
 
 
-              </p>
+                                </p>
 
-            </div>
+                              </div>
 
-          </div>
+                            </div>
 
-        )
+                          )
 
-      }
+                        }
 
 
-      {/* card three */}
+                        {/* card three */}
 
 
-      {/* <div className="card">
+                        {/* <div className="card">
 
         <div className="card-body">
 
@@ -1882,10 +1882,10 @@ isActivedata == true && ContentData.length > 0 && currentItem != null &&
       </div> */}
 
 
-      {/* card four */}
+                        {/* card four */}
 
 
-      {/* <div className="card">
+                        {/* <div className="card">
 
         <div className="card-body">
 
@@ -1963,29 +1963,29 @@ isActivedata == true && ContentData.length > 0 && currentItem != null &&
       </div> */}
 
 
-      {/* card five */}
+                        {/* card five */}
 
 
-      {
+                        {
 
-        currentItem.Status == "Submitted" && (
+                          currentItem.Status == "Submitted" && (
 
-          <div className="card">
+                            <div className="card">
 
-            <div className="card-body">
+                              <div className="card-body">
 
-              {/* <h4 className="header-title mb-0">GCFO's Approval</h4> */}
+                                {/* <h4 className="header-title mb-0">GCFO's Approval</h4> */}
 
-              {/* <p className="sub-header">
+                                {/* <p className="sub-header">
 
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 
         </p> */}
 
 
-              <div className="row">
+                                <div className="row">
 
-                {/* <div className="col-lg-4">
+                                  {/* <div className="col-lg-4">
 
             <div className="mb-3">
 
@@ -2040,7 +2040,7 @@ isActivedata == true && ContentData.length > 0 && currentItem != null &&
           </div> */}
 
 
-                {/* <div className="col-lg-4">
+                                  {/* <div className="col-lg-4">
 
             <div className="mb-3">
 
@@ -2053,7 +2053,7 @@ isActivedata == true && ContentData.length > 0 && currentItem != null &&
           </div> */}
 
 
-                {/* <div className="col-lg-4">
+                                  {/* <div className="col-lg-4">
 
             <div className="mb-3">
 
@@ -2066,7 +2066,7 @@ isActivedata == true && ContentData.length > 0 && currentItem != null &&
           </div> */}
 
 
-                {/* <div className="col-lg-12">
+                                  {/* <div className="col-lg-12">
 
             <div className="mb-3">
 
@@ -2087,214 +2087,214 @@ isActivedata == true && ContentData.length > 0 && currentItem != null &&
           </div> */}
 
 
-                {
+                                  {
 
-                  currentItem.Status == "Submitted" && (<div className="col-lg-12">
+                                    currentItem.Status == "Submitted" && (<div className="col-lg-12">
 
-                    <div className="mb-0" >
+                                      <div className="mb-0" >
 
-                      <label htmlFor="example-textarea" className="form-label text-dark font-14">Remarks:</label>
+                                        <label htmlFor="example-textarea" className="form-label text-dark font-14">Remarks:</label>
 
-                      <textarea className="form-control" id="example-textarea" rows={5} name="Remark" value={formData.Remark}
+                                        <textarea className="form-control" id="example-textarea" rows={5} name="Remark" value={formData.Remark}
 
-                        onChange={(e) => onChange(e.target.name, e.target.value)}></textarea>
+                                          onChange={(e) => onChange(e.target.name, e.target.value)}></textarea>
+
+                                      </div>
+
+                                    </div>)
+
+                                  }
+
+
+                                </div>
+
+                                {
+
+
+                                  currentItem.Status == "Submitted" && (
+
+                                    <div className="row mt-3">
+
+                                      <div className="col-12 text-center">
+
+                                        <a href="my-approval.html">
+
+                                          <button type="button" className="btn btn-success waves-effect waves-light m-1" onClick={(e) => handleFromSubmit(e, 'Approved')}>
+
+                                            <i className="fe-check-circle me-1"></i> Approve
+
+                                          </button>
+
+                                        </a>
+
+                                        <a href="my-approval.html">
+
+                                          <button type="button" className="btn btn-warning waves-effect waves-light m-1" onClick={(e) => handleFromSubmit(e, 'Rework')}>
+
+                                            <i className="fe-corner-up-left me-1"></i> Rework
+
+                                          </button>
+
+                                        </a>
+
+                                        <a href="my-approval.html">
+
+                                          <button type="button" className="btn btn-danger waves-effect waves-light m-1" onClick={(e) => handleFromSubmit(e, 'Reject')}>
+
+                                            <i className="fe-x-circle me-1"></i> Reject
+
+                                          </button>
+
+                                        </a>
+
+                                        <button type="button" className="btn btn-light waves-effect waves-light m-1" onClick={(e) => handleCancel()}>
+
+                                          <i className="fe-x me-1"></i> Cancel
+
+                                        </button>
+
+                                      </div>
+
+                                    </div>
+
+                                  )
+
+                                }
+
+
+                              </div>
+
+                            </div>
+
+                          )
+
+                        }
+
+
+
+
+                      </div>
 
                     </div>
 
-                  </div>)
+                  )
 
                 }
-
-
               </div>
+            )
 
-              {
-
-
-                currentItem.Status == "Submitted" && (
-
-                  <div className="row mt-3">
-
-                    <div className="col-12 text-center">
-
-                      <a href="my-approval.html">
-
-                        <button type="button" className="btn btn-success waves-effect waves-light m-1" onClick={(e) => handleFromSubmit(e, 'Approved')}>
-
-                          <i className="fe-check-circle me-1"></i> Approve
-
-                        </button>
-
-                      </a>
-
-                      <a href="my-approval.html">
-
-                        <button type="button" className="btn btn-warning waves-effect waves-light m-1" onClick={(e) => handleFromSubmit(e, 'Rework')}>
-
-                          <i className="fe-corner-up-left me-1"></i> Rework
-
-                        </button>
-
-                      </a>
-
-                      <a href="my-approval.html">
-
-                        <button type="button" className="btn btn-danger waves-effect waves-light m-1" onClick={(e) => handleFromSubmit(e, 'Reject')}>
-
-                          <i className="fe-x-circle me-1"></i> Reject
-
-                        </button>
-
-                      </a>
-
-                      <button type="button" className="btn btn-light waves-effect waves-light m-1" onClick={(e) => handleCancel()}>
-
-                        <i className="fe-x me-1"></i> Cancel
-
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                )
-
-              }
-
-
-            </div>
-
-          </div>
-
-        )
-
-      }
-
-
-
-
-    </div>
-
-  </div>
-
-)
-
-}
-                  </div>
-                )
-
-                }
-                {activeTab === "DMS" &&(
-                  <div>
-     {activeComponent === "" ?
-               (<div>
+            }
+            {activeTab === "DMS" && (
+              <div>
+                {activeComponent === "" ?
+                  (<div>
                     <div className="DMSMasterContainer">
-                <h4 className="page-title fw-bold mb-1 font-20">My Approvals 1</h4>
-                <div className="" style={{ backgroundColor: 'white', border:'1px solid #54ade0', marginTop:'20px', borderRadius:'20px', padding: '15px'}}>
-                <table className="mtbalenew">
-    <thead>
-      <tr>
-        <th
-          style={{
-            minWidth: '40px',
-            maxWidth: '40px',
-         
-          }}
-        >
-          S.No
-        </th>
-        <th>Request ID</th>
-        <th>Process Name</th>
-        <th>Requested By</th>
-        <th >Requested Date</th>
-        <th style={{ minWidth: '80px', maxWidth: '80px' }}>Status</th>
-        <th
-          style={{
-            minWidth: '70px',
-            maxWidth: '70px',
-         
-          }}
-        >
-          Action
-        </th>
-      </tr>
-    </thead>
-    <tbody style={{ maxHeight: '8007px' }}>
-       
-      {Mylistdata.length > 0  ? Mylistdata.map((item, index) => {
-      return(
-        <tr>
-<td style={{ minWidth: '40px', maxWidth: '40px'}}>
-  <span style={{marginLeft:'5px'}} className="indexdesign">{index}</span>
-  </td>
-<td >{(truncateText(item.FileUID.FileUID, 22))}</td>
-<td >Capex Form</td>
-<td >{(truncateText(item.FileUID.RequestedBy, 22))}</td> 
-<td >
-<div
-  style={{
-    padding: '5px',
-    border: '1px solid #efefef',
-    background: '#fff', fontSize:'14px',
-    borderRadius: '30px',
-  
-  }}
-  className="btn btn-light"
->
- {item.FileUID.Created}
-</div>
-</td>
-<td style={{ minWidth: '80px', maxWidth: '80px', textAlign:'center' }}>
-<div className="finish mb-0">Pending</div>
-</td>
-<td style={{ minWidth: '70px', maxWidth: '70px' }}>
-<a onClick={(e )=>getTaskItemsbyID(e , item.FileUID.RequestNo)}>
- <FontAwesomeIcon icon={faEye} />
-</a>
-</td>
-</tr>
-      )
+                      <h4 className="page-title fw-bold mb-1 font-20">My Approvals 1</h4>
+                      <div className="" style={{ backgroundColor: 'white', border: '1px solid #54ade0', marginTop: '20px', borderRadius: '20px', padding: '15px' }}>
+                        <table className="mtbalenew">
+                          <thead>
+                            <tr>
+                              <th
+                                style={{
+                                  minWidth: '40px',
+                                  maxWidth: '40px',
 
-       })
-       :""
+                                }}
+                              >
+                                S.No
+                              </th>
+                              <th>Request ID</th>
+                              <th>Process Name</th>
+                              <th>Requested By</th>
+                              <th >Requested Date</th>
+                              <th style={{ minWidth: '80px', maxWidth: '80px' }}>Status</th>
+                              <th
+                                style={{
+                                  minWidth: '70px',
+                                  maxWidth: '70px',
 
-}
+                                }}
+                              >
+                                Action
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody style={{ maxHeight: '8007px' }}>
 
-      
-   
+                            {Mylistdata.length > 0 ? Mylistdata.map((item, index) => {
+                              return (
+                                <tr>
+                                  <td style={{ minWidth: '40px', maxWidth: '40px' }}>
+                                    <span style={{ marginLeft: '5px' }} className="indexdesign">{index}</span>
+                                  </td>
+                                  <td >{(truncateText(item.FileUID.FileUID, 22))}</td>
+                                  <td >Capex Form</td>
+                                  <td >{(truncateText(item.FileUID.RequestedBy, 22))}</td>
+                                  <td >
+                                    <div
+                                      style={{
+                                        padding: '5px',
+                                        border: '1px solid #efefef',
+                                        background: '#fff', fontSize: '14px',
+                                        borderRadius: '30px',
 
-     
-    </tbody>
-  </table>
-        </div>
-              </div>
-               </div>) : (
-                <div>
-                  {activeComponent === 'Approval Action' && (
-                    <div>
-                   <button style={{float:'right'}} type="button" className="btn btn-secondary" onClick={()=>handleReturnToMain('')}> Back </button>
-                  <DMSMyApprovalAction props={currentItemID}/>
+                                      }}
+                                      className="btn btn-light"
+                                    >
+                                      {item.FileUID.Created}
+                                    </div>
+                                  </td>
+                                  <td style={{ minWidth: '80px', maxWidth: '80px', textAlign: 'center' }}>
+                                    <div className="finish mb-0">Pending</div>
+                                  </td>
+                                  <td style={{ minWidth: '70px', maxWidth: '70px' }}>
+                                    <a onClick={(e) => getTaskItemsbyID(e, item.FileUID.RequestNo)}>
+                                      <FontAwesomeIcon icon={faEye} />
+                                    </a>
+                                  </td>
+                                </tr>
+                              )
+
+                            })
+                              : ""
+
+                            }
+
+
+
+
+
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-               
-                  )} 
-             
-                </div>
-               
-            
-               )
-               }
+                  </div>) : (
+                    <div>
+                      {activeComponent === 'Approval Action' && (
+                        <div>
+                          <button style={{ float: 'right' }} type="button" className="btn btn-secondary" onClick={() => handleReturnToMain('')}> Back </button>
+                          <DMSMyApprovalAction props={currentItemID} />
+                        </div>
 
-                  </div>
-              
-                )
+                      )}
 
+                    </div>
+
+
+                  )
                 }
-                {activeTab === "Automation" &&(
-                  <div>Automation</div>
-              
-                )
 
-                }
+              </div>
+
+            )
+
+            }
+            {activeTab === "Automation" && (
+              <div>Automation</div>
+
+            )
+
+            }
 
 
           </div>

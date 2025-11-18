@@ -542,7 +542,7 @@ const BlogsContext = ({ props }: any) => {
                 file,
                 sp,
                 "Documents",
-                "https://alrostamanigroupae.sharepoint.com"
+                "https://officeindia.sharepoint.com"
               );
             }
           }
@@ -706,7 +706,7 @@ const BlogsContext = ({ props }: any) => {
                 file,
                 sp,
                 "Documents",
-                "https://alrostamanigroupae.sharepoint.com"
+                "https://officeindia.sharepoint.com"
               );
             }
           }
@@ -994,7 +994,7 @@ const BlogsContext = ({ props }: any) => {
               :
               <div className="row">
                 <div className="col-lg-3">
-                  <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                   <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
                 </div>
 
 
@@ -1713,7 +1713,7 @@ const BlogsContext = ({ props }: any) => {
                                   {DocumentpostArr1.map((file: any, index: number) => (
                                     <tr key={index}>
                                       <td style={{ minWidth: '40px', maxWidth: '40px' }} className='text-center'>{index + 1}</td>
-                                      <td style={{ minWidth: '100px', maxWidth: '100px' }}>{file.fileName.replace("/sites/Intranet", "")}</td>
+                                      <td style={{ minWidth: '100px', maxWidth: '100px' }}>{file.fileName.replace("/sites/Intranetdemos", "")}</td>
                                       <td style={{ minWidth: '40px', maxWidth: '40px' }} className='text-right'>{file.fileSize}</td>
                                       <td style={{ minWidth: '40px', maxWidth: '40px' }} className='text-center'> <img style={{ cursor: 'pointer' }} src={require("../../../CustomAsset/del.png")} onClick={() => deleteLocalFile(index, DocumentpostArr1, "docs")} /> </td>
                                     </tr>

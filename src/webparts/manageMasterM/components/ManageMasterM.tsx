@@ -189,7 +189,7 @@ export const MastersettingContext = ({ props }: any) => {
           <div className="container-fluid  paddb">
             <div className="row pt-0" style={{ paddingLeft: '0.5rem' }}>
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="row manage-master mt-3">
                 {console.log("IsUserAlllowed",IsUserAlllowed,settingArray)}

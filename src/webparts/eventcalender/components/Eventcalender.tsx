@@ -289,7 +289,7 @@ const EventcalenderContext = ({ props }: any) => {
           <div className="container-fluid  paddb">
             <div className="row">
               <div className="col-lg-4">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               {/* <div className="col-lg-8">
                 <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">

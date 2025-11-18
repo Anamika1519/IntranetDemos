@@ -457,6 +457,30 @@
           "manifest": "./src/webparts/knowledgeCenterMaster/KnowledgeCenterMasterWebPart.manifest.json"
         }
       ]
+    },
+    "dashboard-report-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/dashboardReport/DashboardReportWebPart.js",
+          "manifest": "./src/webparts/dashboardReport/DashboardReportWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-project-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myProject/MyProjectWebPart.js",
+          "manifest": "./src/webparts/myProject/MyProjectWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-task-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myTask/MyTaskWebPart.js",
+          "manifest": "./src/webparts/myTask/MyTaskWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {
@@ -527,6 +551,9 @@
     "KnowledgeCenterWebPartStrings": "lib/webparts/knowledgeCenter/loc/{locale}.js",
     "KnowledgeCenterDetailsWebPartStrings": "lib/webparts/knowledgeCenterDetails/loc/{locale}.js",
     "KnowledgeCenterFormWebPartStrings": "lib/webparts/knowledgeCenterForm/loc/{locale}.js",
-    "KnowledgeCenterMasterWebPartStrings": "lib/webparts/knowledgeCenterMaster/loc/{locale}.js"
+    "KnowledgeCenterMasterWebPartStrings": "lib/webparts/knowledgeCenterMaster/loc/{locale}.js",
+    "DashboardReportWebPartStrings": "lib/webparts/dashboardReport/loc/{locale}.js",
+    "MyProjectWebPartStrings": "lib/webparts/myProject/loc/{locale}.js",
+    "MyTaskWebPartStrings": "lib/webparts/myTask/loc/{locale}.js"
   }
 }

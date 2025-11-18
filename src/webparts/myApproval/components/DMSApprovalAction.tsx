@@ -55,6 +55,8 @@ declare global {
   let approvedLevel: any = ''
   let filepreviewurl = ''
   let remark: any = ''
+  let readablefilepreviewurl:any
+  let editablefilepreviewurl:any
   let Level: any = ''
   let setFinalStatus: any = ''
   let FileUID: any = ''
@@ -159,6 +161,11 @@ declare global {
     ////////////////////////////////////  DMS Code Start From Here //////////////////////////////////////////////////////////////////
     const [Mylistdata, setMylistdata] = useState([]);
     ////
+    const [isFullScreen, setIsFullScreen] = useState(false);
+    //save button for edit file
+    const [isEditMode, setIsEditMode] = useState(false);
+
+
     const [storedUserInfo, setStoredUserInfo] = useState(null);
     const [ApprovedStatus, setApprovedStatus] = useState('');  // State for ApprovalType 0
     // const [approvedLevel, setApprovedLevel] = useState<number>();
@@ -180,6 +187,10 @@ declare global {
       console.log(activeComponent, "activeComponent updated")
     };
     const getApprovalmasterTasklist = async () => {
+      const spinner = document.getElementById("spinner");
+      if (spinner) {
+        spinner.style.display = "block"; // Show the spinner
+      }
       try {
         const items = await sp.web.lists.getByTitle('DMSFileApprovalTaskList').items.select(
           "Log", "CurrentUser", "Remark"
@@ -2145,64 +2156,164 @@ declare global {
     //     checkAndHideButton();
     //   };
     // }
+    //previous working fine file
+    // const previewFile = async (previewUrl: string) => {
+    //   try {
+    //     console.log("Previewing file at URL:", previewUrl);
+    //     const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
+    //     // const spinner = document.getElementById("spinner") as HTMLElement;
+  
+    //     // Show the spinner and hide the iframe initially
+    //     // spinner.style.display = "block";
+    //     iframe.style.display = "none";
+    //     iframe.src = previewUrl;
+  
+    //     // Add an onload event listener to the iframe
+    //     iframe.onload = () => {
+    //       console.log("Iframe has loaded");
+  
+    //       const checkAndHideButton = () => {
+    //         try {
+    //           const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
+    //           if (iframeDocument) {
+    //             const button = iframeDocument.getElementById("OneUpCommandBar") as HTMLElement;
+    //             const excelToolbar = iframeDocument.getElementById("m_excelEmbedRenderer_m_ewaEmbedViewerBar") as HTMLElement;
+    //             if (excelToolbar) {
+    //               excelToolbar.style.display = "none"
+    //             }
+    //             if (button) {
+    //               console.log("Hiding the OneUpCommandBar element");
+    //               button.style.display = "none";
+  
+  
+    //               // spinner.style.display = "none";
+    //               iframe.style.display = "block";
+  
+  
+    //             } else {
+    //               console.log("OneUpCommandBar not found, rechecking...");
+    //             }
+  
+    //             const helpbutton = iframeDocument.getElementById("m_excelEmbedRenderer_m_ewaEmbedViewerBar") as HTMLElement;
+    //             if (helpbutton) {
+    //               helpbutton.style.display = "none"
+    //             }
+    //           }
+    //         } catch (error) {
+    //           console.error("Error accessing iframe content:", error);
+    //         }
+  
+  
+    //         // setTimeout(checkAndHideButton, 100);
+    //       };
+  
+  
+    //       checkAndHideButton();
+    //     };
+    //   } catch (error) {
+    //     console.error("Error previewing file:", error);
+    //   }
+  
+    // };
+
     const previewFile = async (previewUrl: string) => {
       try {
         console.log("Previewing file at URL:", previewUrl);
         const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
-        // const spinner = document.getElementById("spinner") as HTMLElement;
-  
-        // Show the spinner and hide the iframe initially
-        // spinner.style.display = "block";
+        const spinner = document.getElementById("spinner") as HTMLElement;
+    
+        // Show loader and hide iframe initially
+        if (spinner) spinner.style.display = "none";
         iframe.style.display = "none";
         iframe.src = previewUrl;
-  
-        // Add an onload event listener to the iframe
+        readablefilepreviewurl = previewUrl;
+
         iframe.onload = () => {
-          console.log("Iframe has loaded");
-  
+          console.log("Iframe has loaded ✅");
+    
+          // 🔹 Immediately hide loader when iframe is ready
+          if (spinner) spinner.style.display = "none";
+          iframe.style.display = "block";
+    
+          // Continue toolbar cleanup asynchronously
           const checkAndHideButton = () => {
             try {
               const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
               if (iframeDocument) {
                 const button = iframeDocument.getElementById("OneUpCommandBar") as HTMLElement;
                 const excelToolbar = iframeDocument.getElementById("m_excelEmbedRenderer_m_ewaEmbedViewerBar") as HTMLElement;
+    
                 if (excelToolbar) {
-                  excelToolbar.style.display = "none"
+                  excelToolbar.style.display = "none";
                 }
                 if (button) {
                   console.log("Hiding the OneUpCommandBar element");
                   button.style.display = "none";
-  
-  
-                  // spinner.style.display = "none";
-                  iframe.style.display = "block";
-  
-  
-                } else {
-                  console.log("OneUpCommandBar not found, rechecking...");
-                }
-  
-                const helpbutton = iframeDocument.getElementById("m_excelEmbedRenderer_m_ewaEmbedViewerBar") as HTMLElement;
-                if (helpbutton) {
-                  helpbutton.style.display = "none"
+                  return; // stop retrying once hidden
                 }
               }
             } catch (error) {
               console.error("Error accessing iframe content:", error);
             }
-  
-  
-            // setTimeout(checkAndHideButton, 100);
+    
+            // Retry if not yet found
+            setTimeout(checkAndHideButton, 100);
           };
-  
-  
+    
           checkAndHideButton();
         };
       } catch (error) {
         console.error("Error previewing file:", error);
       }
-  
     };
+
+    const openfileinedit = (e:any) =>{
+
+        e.preventDefault();
+        e.stopPropagation();
+        setIsEditMode(true);
+        const availreadurl:any = readablefilepreviewurl;
+        console.log(availreadurl , "availreadurl");
+
+        // Function to convert read-only URL to editable URL
+        function convertToEditableUrl(availreadurl:any) {
+            try {
+                // Extract the 'id' parameter which contains the server-relative path
+                const url = new URL(availreadurl);
+                console.log(url , "url");
+                const idParam = url.searchParams.get('id');
+                
+                if (idParam) {
+                    // URL decode the parameter to get the actual path
+                    const serverRelativePath = decodeURIComponent(idParam);
+                    
+                    // Construct the editable Office Online URL
+                    const editableUrl = `https://officeindia.sharepoint.com/:w:/r/sites/Intranetdemos${encodeURIComponent(serverRelativePath.split("/sites/Intranetdemos")[1])}?web=1`;
+                     console.log(editableUrl , "editableUrl");
+                     const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
+                     iframe.src = editableUrl;
+                    return editableUrl;
+                }
+            } catch (error) {
+                console.error("Error converting URL:", error);
+            }
+            
+            return null;
+        }
+        
+        const editableUrl = convertToEditableUrl(availreadurl);
+        console.log(editableUrl);
+        // Result: https://officeindia.sharepoint.com/:w:/r/sites/Intranetdemos/Location/Section/Transmittal_1758641391232.docx?web=1
+    }
+   
+      const handleSave = () => {
+        console.log("Saving file");
+        const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
+                     iframe.src = readablefilepreviewurl;
+        
+        setIsEditMode(false);
+      };
+    
     return (
   
       <div>
@@ -2220,7 +2331,68 @@ declare global {
                       <div id="dynamicDetailsContainer"></div>
                     </div>
                     <div className="" style={{ backgroundColor: 'white', border: '1px solid #54ade0', marginTop: '20px', borderRadius: '20px', padding: '15px' }}>
-                    <iframe id="filePreview" width="100%" height="400"></iframe>
+                    <div style={{display:'flex',gap:'5px', justifyContent:'end', marginBottom:'5px'}}>         <button
+        type="button"
+        style={{
+          padding: "10px 15px",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontWeight: "600",
+          backgroundColor: "#6c757d",
+          color: "white",
+          position: isFullScreen ? "fixed" : "static",
+          top: isFullScreen ? "10px" : "auto",
+          right: isFullScreen ? "10px" : "auto",
+          zIndex: 10000,
+          transition: "background-color 0.3s ease",
+        
+        }}
+        onMouseOver={(e) => {
+          const target = e.target as HTMLButtonElement;
+          target.style.backgroundColor = "#5a6268";
+        }}
+        onMouseOut={(e) => {
+          const target = e.target as HTMLButtonElement;
+          target.style.backgroundColor = "#6c757d";
+        }}
+        onClick={() => setIsFullScreen(!isFullScreen)}
+      >
+        {isFullScreen ? "Exit Full Screen" : "Full Screen"}
+      </button>
+
+                    {toggleLog && (
+                      <div style={{display:'flex',gap:'5px', alignItems:'center', justifyContent:'end'}}> 
+                        <button style={{color:"white" ,  padding: "10px 15px", border: "none", borderRadius: "4px",backgroundColor:"#666"}} className="EditFilebutton" onClick={(e)=>openfileinedit(e)}>Edit File</button>
+                        {isEditMode && (
+      <button style={{color:"white" ,  padding: "10px 15px", border: "none", borderRadius: "4px",backgroundColor:"#2c9942"}}  onClick={handleSave} className="SaveButton">
+        Save Button
+      </button>
+    )}
+                        </div>
+
+                        )} </div>
+                    <div style={{textAlign:'center'}} className='spinner' id="spinner">
+                 
+        <img style={{width :'116px'  ,margin: '0px auto'}} src={require("../assets/ESSAROLLER.gif")} alt="Loading..." />
+        <div style={{color:"black", marginBottom:'10px'}}>Loading Preview File</div>
+        </div>
+                    {/* <iframe id="filePreview" width="100%" height="400"></iframe> */}
+                    <iframe
+        id="filePreview"
+        src="https://example.com/yourfile.pdf" // replace with your file
+        style={{
+          width: isFullScreen ? "100vw" : "100%",
+          height: isFullScreen ? "100vh" : "1200px",
+          border: "none",
+          position: isFullScreen ? "fixed" : "relative",
+          top: isFullScreen ? 0 : "auto",
+          left: isFullScreen ? 0 : "auto",
+          zIndex: isFullScreen ? 9999 : "auto",
+          background: "#fff",
+        }}
+        title="File Preview"
+      ></iframe>
                     </div>
                     {toggleLog && (
                       <div className="" style={{ backgroundColor: 'white', border: '1px solid #54ade0', marginTop: '20px', borderRadius: '20px', padding: '15px' }}>
@@ -2380,7 +2552,8 @@ declare global {
                                     </td>
                                     <td style={{ minWidth: '150px', maxWidth: '150px' }}>
   
-                                      {moment(item?.LogHistory).format("DD-MMM-YYYY")}
+                                      {/* {moment(item?.LogHistory).format("DD-MMM-YYYY")} */}
+                                      {item?.LogHistory ? item.LogHistory : ""}
   
   
                                     </td>

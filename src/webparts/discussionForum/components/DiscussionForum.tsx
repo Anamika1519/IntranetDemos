@@ -835,7 +835,7 @@ const DiscussionForumContext = ({ props }: any) => {
                   file,
                   sp,
                   "Documents",
-                  "https://alrostamanigroupae.sharepoint.com"
+                  "https://officeindia.sharepoint.com"
                 );
               }
             } else {
@@ -1153,7 +1153,7 @@ const DiscussionForumContext = ({ props }: any) => {
                 InviteMemebersId: selectedIds,
                 ARGDiscussionStatus: "Ongoing",
                 DiscussionInProgress: "In Progress",
-                DiscussionFileManager: `/sites/Intranet/ARGDiscussionFiles/${formData.topic}`,
+                DiscussionFileManager: `/sites/Intranetdemos/ARGDiscussionFiles/${formData.topic}`,
                 DiscussionFolderName: formData.topic
               };
             }
@@ -1167,7 +1167,7 @@ const DiscussionForumContext = ({ props }: any) => {
                 DiscussionForumCategoryId: Number(formData.category),
                 ARGDiscussionStatus: "Ongoing",
                 DiscussionInProgress: "In Progress",
-                DiscussionFileManager: `/sites/Intranet/ARGDiscussionFiles/${formData.topic}`,
+                DiscussionFileManager: `/sites/Intranetdemos/ARGDiscussionFiles/${formData.topic}`,
                 DiscussionFolderName: formData.topic
               };
             }
@@ -1276,7 +1276,7 @@ const DiscussionForumContext = ({ props }: any) => {
 
   const handleCancel = () => {
     window.location.href =
-      "https://alrostamanigroupae.sharepoint.com/sites/Intranet/SitePages/Blogs.aspx";
+      "https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/Blogs.aspx";
   };
 
   const formats = [
@@ -1387,7 +1387,7 @@ const DiscussionForumContext = ({ props }: any) => {
           <div className="container-fluid paddb">
           <div className="row" style={{paddingLeft:'0.5rem'}}>
               <div className="col-lg-6">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
 
               <div className="col-lg-6">

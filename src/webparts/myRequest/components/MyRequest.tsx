@@ -1059,12 +1059,12 @@ const MyRequestContext = ({ props }: any) => {
 
             <div className="row" style={{ paddingLeft: "0.5rem" }}>
 
-              <div className="col-lg-8">
+              <div className="col-md-6">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
               </div>
-              <div className="col-md-4 ivon">
+              <div className="col-md-6 ivon">
                 <div className="row">
                   <div style={{ textAlign: "right", padding: '0px' }} className="col-md-4 newtexleft">
                     <div className="mb-0">
@@ -1233,7 +1233,7 @@ const MyRequestContext = ({ props }: any) => {
                         <>
                           <table
 
-                            className="mt-0 mtbalenew table-centered table-nowrap table-borderless mb-0"
+                            className="mt-0 mtbalenew table-centered table-nowrap table-borderless mb-0 respot"
 
                             style={{ position: "relative" }}
 
@@ -1972,7 +1972,7 @@ const MyRequestContext = ({ props }: any) => {
                           showNestedDMSTable === "" ? (
                             <div>
                               <table
-                                className="mt-0 mtbalenew table-centered table-nowrap table-borderless mb-0"
+                                className="mt-0 mtbalenew table-centered table-nowrap table-borderless mb-0 respot"
                                 style={{ position: "relative" }}
                               >
                                 <thead>

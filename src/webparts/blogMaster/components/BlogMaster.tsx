@@ -369,7 +369,7 @@ const BlogsContext = ({ props }: any) => {
                   file,
                   sp,
                   "Documents",
-                  "https://alrostamanigroupae.sharepoint.com"
+                  "https://officeindia.sharepoint.com"
                 );
               }
             } else {
@@ -516,7 +516,7 @@ const BlogsContext = ({ props }: any) => {
                     file,
                     sp,
                     "Documents",
-                    "https://alrostamanigroupae.sharepoint.com"
+                    "https://officeindia.sharepoint.com"
                   );
                 }
               } else {
@@ -686,7 +686,7 @@ const BlogsContext = ({ props }: any) => {
                   file,
                   sp,
                   "Documents",
-                  "https://alrostamanigroupae.sharepoint.com"
+                  "https://officeindia.sharepoint.com"
                 );
               }
             }
@@ -935,7 +935,7 @@ const BlogsContext = ({ props }: any) => {
           <div className="container-fluid  paddb">
             <div className="row">
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="col-lg-9">
                 <div className="d-flex flex-wrap align-items-center justify-content-end mt-3 mb-3">

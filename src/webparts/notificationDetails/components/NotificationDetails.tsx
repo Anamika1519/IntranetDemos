@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VerticalSideBar from "../../verticalSideBar/components/VerticalSideBar";
 import HorizontalNavbar from "../../horizontalNavBar/components/HorizontalNavBar";
 import CustomBreadcrumb from "../../../CustomJSComponents/CustomBreadcrumb/CustomBreadcrumb";
@@ -33,18 +33,7 @@ const NotificationDetailsContext = ({ props }: any) => {
     },
   ];
 
-  const getTodayNotificationList = async () => {
-    setTodayNotificationArray(await getTodayARGNotificationHistory(sp))
-  }
 
-
-  const getLastSevenDateNotificationList = async () => {
-    setlastSevenDaysNotificationArray(await getlastSevenDaysARGNotificationHistory(sp))
-  }
-
-  const getOldNotificationList = async () => {
-    setOlderNotificationArray(await getOlderARGNotificationHistory(sp))
-  }
 
   const notificationsData: Record<NotificationType, { id: number; author: string; message: string; time: string }[]> = {
     new: [
@@ -65,7 +54,25 @@ const NotificationDetailsContext = ({ props }: any) => {
   const [TodayactiveTab, setTodayactiveTab] = useState(true);
 
   const [PreviousactiveTab, setPreviousactiveTab] = useState(false);
-  getTodayNotificationList();
+ // getTodayNotificationList();
+ useEffect(() => {
+  getTodayNotificationList(); // runs only once on initial render
+  getLastSevenDateNotificationList(); // runs only once on initial render
+  getOldNotificationList(); // runs only once on initial render  
+}, []);
+
+const getTodayNotificationList = async () => {
+  setTodayNotificationArray(await getTodayARGNotificationHistory(sp))
+}
+
+
+const getLastSevenDateNotificationList = async () => {
+  setlastSevenDaysNotificationArray(await getlastSevenDaysARGNotificationHistory(sp))
+}
+
+const getOldNotificationList = async () => {
+  setOlderNotificationArray(await getOlderARGNotificationHistory(sp))
+}
   const handleTodayactiveTab = () => {
     setTodayactiveTab(true);
     setOldactiveTab(false);
@@ -103,7 +110,7 @@ const NotificationDetailsContext = ({ props }: any) => {
             <div className="container-fluid  paddb">
               <div className="row">
                 <div className="col-lg-5">
-                  <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                   <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
                 </div>
               </div>
               {/* <div className="row">

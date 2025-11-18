@@ -1704,7 +1704,7 @@ const ProjectDetailsContext = ({ props }: any) => {
             )}
             <div className="row ">
               <div className="col-lg-8 mt-0">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
 
             </div>

@@ -196,7 +196,7 @@ export const MastersettingContext = ({ props }: any) => {
           <div  className="container-fluid  paddb">
             <div className="row pt-0" style={{ paddingLeft: '0.5rem' }}>
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="row manage-master mt-3">
                 {
@@ -207,7 +207,7 @@ export const MastersettingContext = ({ props }: any) => {
                     let siteId = siteID;
                     let listID =response && response.Id;
                     let img1 = imageData && imageData.fileName ? `${SiteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${item.ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
-                    let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
+                    let img = imageData && imageData.serverRelativeUrl ? `https://officeindia.sharepoint.com${imageData.serverRelativeUrl}` : img1
                     const imageUrl = imageData
                       //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
                       //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`

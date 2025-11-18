@@ -159,7 +159,7 @@ const NotificationMastercontext = ({ props }: any) => {
                     {/* <!-- start page title --> */}
           <div className="row">
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               {/* <div className="col-lg-7">
                 <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">

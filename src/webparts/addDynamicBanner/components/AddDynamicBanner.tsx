@@ -336,7 +336,7 @@ const AddDynamicBannerContext = ({ props }: any) => {
   //           //   for (const file of BnnerImagepostArr) {
   //           //     if (!file.serverRelativeUrl) {
   //           //       // const uploadedBanner = await uploadFile(file, sp, "Documents", Url);
-  //           //       bannerImageArray = await uploadFile(file, sp, "Documents", "https://alrostamanigroupae.sharepoint.com");
+  //           //       bannerImageArray = await uploadFile(file, sp, "Documents", "https://officeindia.sharepoint.com");
   //           //     }
 
   //           //   }
@@ -415,7 +415,7 @@ const AddDynamicBannerContext = ({ props }: any) => {
   //           // if (BnnerImagepostArr.length > 0) {
   //           //   for (const file of BnnerImagepostArr) {
   //           //     // const uploadedBanner = await uploadFile(file, sp, "Documents", Url);
-  //           //     bannerImageArray = await uploadFile(file, sp, "Documents", "https://alrostamanigroupae.sharepoint.com");
+  //           //     bannerImageArray = await uploadFile(file, sp, "Documents", "https://officeindia.sharepoint.com");
   //           //   }
   //           // }
   //           if (BnnerImagepostArr.length > 0 && BnnerImagepostArr[0]?.files?.length > 0) {
@@ -598,7 +598,7 @@ debugger
           <div className="container-fluid  paddb">
             <div className="row">
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
             </div>
             <div className="card mt-3">

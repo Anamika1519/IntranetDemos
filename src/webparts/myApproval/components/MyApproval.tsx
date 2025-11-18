@@ -101,6 +101,24 @@ import DMSMyApprovalAction from "./DMSApprovalAction";
 import { getApprovalListsData } from "../../../APISearvice/BusinessAppsService";
 // import DMSMyFolderApprovalAction from "./DMSFolderApprovalAction";
 import DMSMyFolderApprovalAction from "./DMSFolderApprovalAction1";
+import Select from 'react-select';
+
+interface ApprovalHierarchyItem {
+  id?: number;
+  level: string;
+  approverRole: string;
+  approver: string;
+  approvers: string[]; // New array for multiple approvers
+  approvalCriteria: string;
+  serialNumber?: number;
+  assignedTo?: any[];
+}
+interface UserOption {
+  value: string;
+  label: string;
+  email: string;
+}
+
 let actingforuseremail: any
 const MyApprovalContext = ({ props }: any) => {
   const sp: SPFI = getSP();
@@ -170,6 +188,22 @@ const MyApprovalContext = ({ props }: any) => {
 
   const [IsinvideHide, setIsinvideHide] = React.useState(false);
   const [Mylistdata, setMylistdata] = useState([]);
+  const [ProjectWorkflowdata, setProjectWorkflowdata] = useState([]);
+  const [selectedProjectTask, setSelectedProjectTask] = React.useState<any>(null);
+  const [showProjectForm, setShowProjectForm] = React.useState(false);
+  const [projectNeedsFurtherApproval, setProjectNeedsFurtherApproval] = React.useState<string>("Select");
+  const [projectWantsToPublishInDossier, setProjectWantsToPublishInDossier] = React.useState<string>("Select");
+  const [projectRemarks, setProjectRemarks] = React.useState<string>("");
+  const [projectHierarchy, setProjectHierarchy] = React.useState<ApprovalHierarchyItem[]>([]);
+  const [projectDocumentInfo, setProjectDocumentInfo] = React.useState<{
+    documentUrl: string;
+    fileName: string;
+    fileLeafRef: string;
+    fileRef: string;
+    sharedLink?: string;
+  } | null>(null);
+  const [users, setUsers] = React.useState<UserOption[]>([]);
+
   const handleReturnToMain = (Name: any) => {
     setActiveComponent(Name); // Reset to show the main component
     console.log(activeComponent, "activeComponent updated");
@@ -548,6 +582,253 @@ const MyApprovalContext = ({ props }: any) => {
   //     console.error("Error fetching list items:", error);
   //   }
   // };
+  // Add this function near your other data fetching functions
+  // const getProjectWorkflowApprovals = async (status: string, actingfor?: any) => {
+  //   try {
+  //     const currentUserEmail = actingfor || currentUserEmailRef.current;
+
+  //     // Fetch from ProjectApprovals list (adjust the list name and fields as needed)
+  //     const items = await sp.web.lists.getByTitle('ProjectApprovals').items.select(
+  //       "*",
+  //       "ID",
+  //       "Status",
+  //       "RequestedBy/Title",
+  //       "RequestedBy/EMail",
+  //       "Created",
+  //     )
+  //       .expand("RequestedBy")
+  //       .filter(`Status eq '${status}'`).orderBy("Created", false).getAll();
+
+  //     console.log(items, "ProjectApprovals List");
+
+  //     // Format the data to match your table structure
+  //     const formattedItems = items.map((item: any) => ({
+  //       Id: item.ID,
+  //       RequestID: `PROJ-${item.ID}`,
+  //       ProcessName: "Project Workflow",
+  //       Status: item.Status,
+  //       Requester: {
+  //         Title: item.RequestedBy?.Title || "",
+  //         EMail: item.RequestedBy?.EMail || ""
+  //       },
+  //       Author: {
+  //         Title: item.RequestedBy?.Title || "", 
+  //       },
+  //       Created: item.Created,
+  //       // Add any other project-specific fields you need
+  //     }));
+
+  //     return formattedItems;
+  //   } catch (error) {
+  //     console.error("Error fetching Project Workflow items:", error);
+  //     return [];
+  //   }
+  // };
+
+
+  const getProjectWorkflowApprovals = async (status: string, actingfor?: any) => {
+    try {
+      const currentUserEmail = actingfor || currentUserEmailRef.current;
+
+      // Get current user ID for filtering
+      const currentUser = await sp.web.currentUser();
+      const currentUserId = currentUser.Id;
+
+      // Fetch main approval items with the same fields and expands as your example
+      const items = await sp.web.lists.getByTitle("ProjectApprovals").items
+        .select(
+          "*",
+          "DeliverablesDetailsId/Deliverables",
+          "DeliverablesDetailsId/DocNumber",
+          "DeliverablesDetailsId/Organization",
+          "DeliverablesDetailsId/Area",
+          "DeliverablesDetailsId/ID",
+          "ProjectCreationListID/ProjectName",
+          "ProjectCreationListID/ID",
+          "AssignedTo/ID",
+          "AssignedTo/Title",
+          "AssignedTo/EMail",
+          "Author/Title",
+          "Author/EMail"
+        )
+        .expand("DeliverablesDetailsId", "ProjectCreationListID", "AssignedTo", "Author")
+        .filter(`AssignedTo/ID eq ${currentUserId} and Status eq '${status}' and ApproverRole ne 'Vendor'`)
+        .orderBy("Created", false)();
+
+      console.log(items, "ProjectApprovals List with current user filter");
+
+      // Transform items with additional data from ProjectCreationList (similar to your example)
+      const approvals = await Promise.all(
+        items.map(async (item: any, index: number) => {
+          try {
+            let creationItem = null;
+
+            // Fetch additional project creation data if ProjectCreationListID exists
+            if (item.ProjectCreationListID?.ID) {
+              creationItem = await sp.web.lists.getByTitle("ProjectCreationList").items.getById(item.ProjectCreationListID.ID)
+                .select(
+                  "*",
+                  "PreparedBy/Title",
+                  "ProjectType/ProjectType",
+                  "ProjectType/Id",
+                  "ClientName"
+                )
+                .expand("ProjectType", "PreparedBy")();
+            }
+
+            // Format the data to match your table structure
+            return {
+              Id: item.Id,
+              RequestID: item.DocNumber || `PROJ-${item.Id}`,
+              Title: item.ProjectCreationListID?.ProjectName || "Project Approval",
+              ApprovalTitle: item.ProjectCreationListID?.ProjectName || "Project Approval",
+              ProcessName: "Project Workflow",
+              Status: item.Status,
+              Requester: {
+                Title: item.Author?.Title || "",
+                EMail: item.Author?.EMail || ""
+              },
+              Author: {
+                Title: item.Author?.Title || "",
+              },
+              Created: item.Created,
+              InitiatedBy: creationItem?.AuthorId,
+
+              // Project-specific fields from your example
+              ProjectName: item.ProjectCreationListID?.ProjectName || "",
+              ProjectType: creationItem?.ProjectType?.ProjectType || "",
+              ClientName: creationItem?.ClientName || "",
+              PreparedBy: creationItem?.PreparedBy?.Title || "",
+              Deliverable: item.DeliverablesDetailsId?.Deliverables || "",
+              Area: item.DeliverablesDetailsId?.Area || "",
+              DocType: item.DocumentType || "",
+              DocNumber: item.DeliverablesDetailsId?.DocNumber || "",
+              DoYouNeedApproval: item.Doyouneedapproval || "",
+              CurrentApprovalLevel: item.Level || "",
+              ApprovalRole: item.ApproverRole || "",
+              ApprovalSN: item.SerialNumber || 0,
+              ApprovalCriteria: item.ApprovalCriteria || "",
+              AssignedTo: item.AssignedTo?.Title || "",
+              Org: item.DeliverablesDetailsId?.Organization || "",
+              RevisionNumber: item.RevisionNumber || "0",
+              DocumentNumber: item.DocNumber || "",
+              ProjectDate: item.Created ? new Date(item.Created).toLocaleDateString('en-GB') : "",
+              ProjectId: item.ProjectCreationListID?.ID,
+              DeliverableId: item.DeliverablesDetailsId?.ID,
+              Remarks: item.Remarks || "",
+
+              // For redirection or additional actions
+              RedirectionLink: item.RedirectionLink || "", // Add if you have this field
+
+              // Additional fields that might be useful for filtering
+              SNo: index + 1
+            };
+          } catch (error) {
+            console.error(`Error fetching creation item for project ${item.ProjectCreationListID?.ID}:`, error);
+
+            // Return fallback data if creationItem fetch fails
+            return {
+              Id: item.Id,
+              RequestID: item.DocNumber || `PROJ-${item.Id}`,
+              Title: item.ProjectCreationListID?.ProjectName || "Project Approval",
+              ApprovalTitle: item.ProjectCreationListID?.ProjectName || "Project Approval",
+              ProcessName: "Project Workflow",
+              Status: item.Status,
+              Requester: {
+                Title: item.Author?.Title || "",
+                EMail: item.Author?.EMail || ""
+              },
+              Author: {
+                Title: item.Author?.Title || "",
+              },
+              Created: item.Created,
+              ProjectName: item.ProjectCreationListID?.ProjectName || "",
+              ProjectType: "",
+              ClientName: "",
+              PreparedBy: "",
+              Deliverable: item.DeliverablesDetailsId?.Deliverables || "",
+              Area: item.DeliverablesDetailsId?.Area || "",
+              DocType: item.DocumentType || "",
+              DocNumber: item.DeliverablesDetailsId?.DocNumber || "",
+              DoYouNeedApproval: item.Doyouneedapproval || "",
+              CurrentApprovalLevel: item.Level || "",
+              ApprovalRole: item.ApproverRole || "",
+              ApprovalSN: item.SerialNumber || 0,
+              ApprovalCriteria: item.ApprovalCriteria || "",
+              AssignedTo: item.AssignedTo?.Title || "",
+              Org: item.DeliverablesDetailsId?.Organization || "",
+              RevisionNumber: item.RevisionNumber || "0",
+              DocumentNumber: item.DocNumber || "",
+              ProjectDate: item.Created ? new Date(item.Created).toLocaleDateString('en-GB') : "",
+              ProjectId: item.ProjectCreationListID?.ID,
+              DeliverableId: item.DeliverablesDetailsId?.ID,
+              Remarks: item.Remarks || "",
+              RedirectionLink: item.RedirectionLink || "",
+              SNo: index + 1
+            };
+          }
+        })
+      );
+
+      console.log("Transformed Project Approvals:", approvals);
+      return approvals;
+
+    } catch (error) {
+      console.error("Error fetching Project Workflow items:", error);
+      return [];
+    }
+  };
+
+  // Add these functions
+  const addNewProjectApprovalRow = (item?: any) => {
+    const newRow: ApprovalHierarchyItem = {
+      level: `Level ${projectHierarchy.length + 1}`,
+      approverRole: item?.ApproverRole || '',
+      approver: item?.AssignedTo?.Title || '',
+      approvers: item?.AssignedTo ? [item.AssignedTo.Title] : [],
+      approvalCriteria: item?.ApprovalCriteria || 'Anyone',
+      assignedTo: item?.AssignedTo ? [item.AssignedTo] : []
+    };
+    setProjectHierarchy(prev => [...prev, newRow]);
+  };
+
+  const deleteProjectApprovalRow = (index: number) => {
+    setProjectHierarchy(prev => {
+      const updatedHierarchy = prev.filter((_, i) => i !== index);
+      // Renumber the levels sequentially
+      return updatedHierarchy.map((row, i) => ({
+        ...row,
+        level: `Level ${i + 1}`
+      }));
+    });
+  };
+
+  const updateProjectApprovalRow = (index: number, field: keyof ApprovalHierarchyItem, value: string) => {
+    setProjectHierarchy(prev => prev.map((row, i) =>
+      i === index ? { ...row, [field]: value } : row
+    ));
+  };
+
+  const handleProjectApproverChange = (index: number, selectedOptions: any) => {
+    setProjectHierarchy(prev => prev.map((row, i) => {
+      if (i === index) {
+        const selectedUsers = selectedOptions || [];
+        const approverNames = selectedUsers.map((user: any) => user.label).join(', ');
+        const assignedToArray = selectedUsers.map((user: any) => ({
+          ID: parseInt(user.value),
+          Title: user.label,
+          EMail: user.email
+        }));
+
+        return {
+          ...row,
+          approver: approverNames,
+          assignedTo: assignedToArray
+        };
+      }
+      return row;
+    }));
+  };
 
   const getApprovalmasterTasklist = async (value: any, actingfor?: any) => {
     // alert(`Status value is ${value} is acting for ${actingfor} in DMS`)
@@ -815,9 +1096,31 @@ const MyApprovalContext = ({ props }: any) => {
     getApprovalmasterTasklist('Pending', '');
     myActingfordata()
   };
+  const fetchUsers = async () => {
+    try {
+      const siteUsers = await sp.web.siteUsers();
+      const userOptions: UserOption[] = siteUsers
+        .filter((user: any) => user.Email && user.Title) // Filter out users without email or title
+        .map((user: any) => ({
+          value: user.Id.toString(),
+          label: user.Title,
+          email: user.Email
+        }));
+      setUsers(userOptions);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      // Fallback to some default users if fetch fails
+      setUsers([
+        { value: '1', label: 'Current User', email: props.context.pageContext.user.email },
+        { value: '2', label: 'Admin User', email: 'admin@contoso.com' }
+      ]);
+    }
+  };
   React.useEffect(() => {
     getCurrrentuser();
+    fetchUsers();
   }, []);
+
 
 
 
@@ -926,6 +1229,10 @@ const MyApprovalContext = ({ props }: any) => {
     [key: string]: string;
   }>({});
 
+  const [documentControllerId, setDocumentControllerId] = React.useState<number | null>(null);
+  const [dccId, setDccId] = React.useState<number | null>(null);
+
+
   //const [activeTab, setActiveTab] = useState("home1");
   const [activeTab, setActiveTab] = useState("Automation");
   const handleTabClick = async (tab: React.SetStateAction<string>) => {
@@ -951,57 +1258,783 @@ const MyApprovalContext = ({ props }: any) => {
     //   setMyApprovalsData(myApprovalsDataAutomation);
     //   //setMyApprovalsDataAutomation(myApprovalsDataAutomation);
     // }
-    let MyApprovaldata: any=[];
-    let Automationdata: any=[];
+    let MyApprovaldata: any = [];
+    let Automationdata: any = [];
     // let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
-    let MyDMSAPPROVALDATA: any=[];
+    let MyDMSAPPROVALDATA: any = [];
+    let ProjectWorkflowData: any = []; // NEW
     if (actingforuseremail === undefined || actingforuseremail === null || actingforuseremail === "") {
       MyApprovaldata = await getMyApproval(sp, Statusvalue);
       Automationdata = await getApprovalListsData(sp, Statusvalue);
       // let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
       MyDMSAPPROVALDATA = await getApprovalmasterTasklist(Statusvalue)
+      ProjectWorkflowData = await getProjectWorkflowApprovals(Statusvalue); // NEW
     } else {
       MyApprovaldata = await getMyApproval(sp, Statusvalue, actingforuseremail);
       Automationdata = await getApprovalListsData(sp, Statusvalue, actingforuseremail);
       // let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
       MyDMSAPPROVALDATA = await getApprovalmasterTasklist(Statusvalue, actingforuseremail)
+      ProjectWorkflowData = await getProjectWorkflowApprovals(Statusvalue, actingforuseremail); // NEW
     }
     console.log("MyDMSAPPROVALDATA", MyDMSAPPROVALDATA)
     setMyApprovalsDataAll(MyApprovaldata);
     setMyApprovalsDataAutomation(Automationdata);
+    setProjectWorkflowdata(ProjectWorkflowData); // NEW
     if (tab == "Intranet") {
       setMyApprovalsData(MyApprovaldata);
-      if(MyApprovaldata.length > 0){
+      if (MyApprovaldata.length > 0) {
         setTimeout(() => {
           setLoading(false);
         }, 5000);
-      }else{
+      } else {
         setLoading(false)
       }
-     
+
     } else if (tab == "DMS") {
       // alert(value)
-      setMyApprovalsData(MyDMSAPPROVALDATA);
-      if(MyDMSAPPROVALDATA.length > 0){
+      // setMyApprovalsData(MyDMSAPPROVALDATA);
+      setMyApprovalsData(Mylistdata);
+      if (Mylistdata.length > 0) {
         setTimeout(() => {
           setLoading(false);
         }, 5000);
-      }else{
+      } else {
+        setLoading(false)
+      }
+    } else if (tab == "ProjectWorkflow") { // NEW SECTION
+      setMyApprovalsData(ProjectWorkflowData);
+      if (ProjectWorkflowData.length > 0) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 5000);
+      } else {
         setLoading(false)
       }
     } else if (tab == "Automation") {
-      setMyApprovalsData(Automationdata.sort((a:any, b:any) => b.Created - a.Created));
-      if(Automationdata.length > 0){
+      setMyApprovalsData(Automationdata.sort((a: any, b: any) => b.Created - a.Created));
+      if (Automationdata.length > 0) {
         setTimeout(() => {
           setLoading(false);
         }, 5000);
-      }else{
+      } else {
         setLoading(false)
       }
       console.log("Automationdata", Automationdata);
     }
-   
+
   };
+
+  const getProjectConfiguration = async (): Promise<{ documentControllerId: number | null; dccId: number | null }> => {
+    try {
+      const items = await sp.web.lists
+        .getByTitle("ProjectConfiguration")
+        .items.select(
+          "*",
+          "DocumentController/ID",
+          "DocumentController/Title",
+          "DocumentController/EMail",
+          "DCC/ID",
+          "DCC/Title",
+          "DCC/EMail"
+        )
+        .expand("DocumentController", "DCC")
+        .orderBy("Created", false)();
+
+      if (items.length > 0) {
+        const documentControllerId = items[0]?.DocumentControllerId || null;
+        const dccId = items[0]?.DCCId || null;
+
+        console.log("Document Controller ID:", documentControllerId);
+        console.log("DCC ID:", dccId);
+
+        return { documentControllerId, dccId };
+      }
+      return { documentControllerId: null, dccId: null };
+    } catch (error) {
+      console.error("Error fetching Project Configuration:", error);
+      return { documentControllerId: null, dccId: null };
+    }
+  };
+  React.useEffect(() => {
+    const initializeData = async () => {
+      const { documentControllerId, dccId } = await getProjectConfiguration();
+      setDocumentControllerId(documentControllerId);
+      setDccId(dccId);
+    };
+
+    initializeData();
+  }, []);
+
+
+  // Add this function near your other action handlers
+  const handleProjectWorkflowAction = async (e: any, item: any, mode: string) => {
+    e.preventDefault();
+
+    // For both view and approval modes, just show the form details
+    await handleProjectViewClick(item);
+  };
+
+  // Handle project view click - just sets the data and shows form
+  const handleProjectViewClick = async (task: any) => {
+    setSelectedProjectTask(task);
+    setShowProjectForm(true);
+    setProjectNeedsFurtherApproval(task.DoYouNeedApproval || "Select");
+    setProjectRemarks(task.Remarks || "");
+
+    // You can keep document fetching if needed for display
+    if (task.DeliverableId) {
+      const docInfo = await fetchDocumentForDeliverable(task.DeliverableId);
+      setProjectDocumentInfo(docInfo);
+      // You might want to set document info state if needed for display
+    }
+    // Initialize projectHierarchy if needed
+    if (task.ProjectId && task.DeliverableId) {
+      await getProjectApprovalHierarchy(task.ProjectId, task.DeliverableId, task.DocType);
+    } else {
+      addNewProjectApprovalRow();
+    }
+  };
+
+  const getProjectApprovalHierarchy = async (projectId: number, deliverableId: number, documentType: string) => {
+    try {
+      const items = await sp.web.lists.getByTitle("ApprovalHierarchy").items
+        .select("*,DeliverablesDetailsId/ID,ProjectCreationListID/ID,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail")
+        .expand("DeliverablesDetailsId,ProjectCreationListID,AssignedTo")
+        .filter(`ProjectCreationListID/ID eq ${projectId} and DeliverablesDetailsId/ID eq ${deliverableId}`)
+        .orderBy("SerialNumber", true)();
+
+      if (items.length > 0) {
+        const hierarchyItems: ApprovalHierarchyItem[] = items.map((item: any, index: number) => {
+          // AssignedTo will be an array (for multi-select people fields)
+          const assignedArray = Array.isArray(item.AssignedTo) ? item.AssignedTo : [];
+
+          return {
+            id: item.Id,
+            level: `Level ${index + 1}`,
+            approverRole: item.ApproverRole || '',
+            approver: assignedArray.map((a: any) => a.Title).join(", "),
+            approvers: assignedArray.map((a: any) => a.Title),
+            approvalCriteria: item.ApprovalCriteria || 'Anyone',
+            serialNumber: item.SerialNumber,
+            assignedTo: assignedArray.map((a: any) => ({
+              ID: a.ID,
+              Title: a.Title,
+              EMail: a.EMail
+            }))
+          };
+        });
+
+        setProjectHierarchy(hierarchyItems);
+      } else {
+        await getProjectWorkflowConfiguration(documentType);
+      }
+    } catch (error) {
+      console.error("Error fetching approval projectHierarchy:", error);
+      await getProjectWorkflowConfiguration(documentType);
+    }
+  };
+
+  // Get Project Workflow Configuration
+  const getProjectWorkflowConfiguration = async (docType: string) => {
+    try {
+      const items = await sp.web.lists.getByTitle("ProjectWorflowConfiguration").items
+        .select("*,DocumentType/ID,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail")
+        .expand("DocumentType,AssignedTo")
+        .filter(`DocumentType/DocumentType eq '${docType}'`)
+        .orderBy("ID", true)();
+
+      if (items.length > 0) {
+        const hierarchyItems: ApprovalHierarchyItem[] = items.map((item: any, index: number) => ({
+          level: `Level ${index + 1}`,
+          approverRole: item.Role || '',
+          approver: item.AssignedTo?.Title || '',
+          approvers: item?.AssignedTo ? [item.AssignedTo.Title] : [],
+          approvalCriteria: item.ApprovalCriteria || 'Anyone',
+          assignedTo: item.AssignedTo ? [item.AssignedTo] : []
+        }));
+        setProjectHierarchy(hierarchyItems);
+      } else {
+        // Add one default row if no configuration found
+        addNewProjectApprovalRow();
+      }
+    } catch (error) {
+      console.error("Error fetching workflow configuration:", error);
+      addNewProjectApprovalRow();
+    }
+  };
+
+  // Update the handleProjectBackClick to reset all states
+  const handleProjectBackClick = () => {
+    setSelectedProjectTask(null);
+    setShowProjectForm(false);
+    setProjectHierarchy([]);
+    setProjectNeedsFurtherApproval("Select");
+    setProjectRemarks("");
+    setProjectDocumentInfo(null);
+  };
+
+  // Simple project document open function (if needed)
+  // Handle project document open with proper URL construction
+  const handleProjectOpenDocument = () => {
+    if (!projectDocumentInfo) {
+      console.error('No document available');
+      alert('No document available to open.');
+      return;
+    }
+
+    try {
+      let documentUrl = '';
+
+      // Priority 1: Use SharedLink if available
+      if (projectDocumentInfo.sharedLink) {
+        documentUrl = projectDocumentInfo.sharedLink;
+        console.log('Opening document using SharedLink:', documentUrl);
+      }
+      // Priority 2: Use the document URL to construct the full URL
+      else if (projectDocumentInfo.documentUrl) {
+        const siteUrl = props.siteUrl; // Use your siteUrl from props
+        documentUrl = `${siteUrl}${projectDocumentInfo.documentUrl}`;
+        console.log('Opening document using ServerRelativeUrl:', documentUrl);
+      }
+      // Priority 3: Use fileRef if available
+      else if (projectDocumentInfo.fileRef) {
+        const siteUrl = props.siteUrl;
+        documentUrl = `${siteUrl}${projectDocumentInfo.fileRef}`;
+        console.log('Opening document using FileRef:', documentUrl);
+      }
+      else {
+        throw new Error('No valid document URL found');
+      }
+
+      // Open the document in a new tab
+      window.open(documentUrl, '_blank', 'noopener,noreferrer');
+
+      console.log(`Opened document: ${projectDocumentInfo.fileName || projectDocumentInfo.fileLeafRef}`);
+
+    } catch (error) {
+      console.error('Error opening document:', error);
+      alert('Error opening document. Please try again or contact administrator.');
+    }
+  };
+
+  // Function to fetch document for a specific deliverable
+  const fetchDocumentForDeliverable = async (deliverableId: number) => {
+    try {
+      const documents = await sp.web.lists.getByTitle("DeliverablesDocument").items
+        .select("*,File/ServerRelativeUrl,FileLeafRef,FileRef,Author/ID,Author/Title,SharedLink")
+        .expand("File", "Author")
+        .filter(`DeliverablesDetailsId eq ${deliverableId}`)
+        .orderBy("ID", false)
+        .top(1)(); // Get the latest document
+
+      if (documents.length > 0) {
+        const latestDoc = documents[0];
+        return {
+          documentUrl: latestDoc.File.ServerRelativeUrl,
+          fileName: latestDoc.FileLeafRef,
+          fileLeafRef: latestDoc.FileLeafRef,
+          fileRef: latestDoc.FileRef,
+          sharedLink: latestDoc.SharedLink // Get the SharedLink column value
+        };
+      } else {
+        console.warn(`No documents found for deliverable ID: ${deliverableId}`);
+        return null;
+      }
+    } catch (error) {
+      console.error(`Error fetching documents for deliverable ${deliverableId}:`, error);
+      return null;
+    }
+  };
+
+  // Project Approval Code starts here ----------------
+  const handleProjectApprovalAction = async (status: "Approved" | "Rejected" | "Rework") => {
+    if (!selectedProjectTask) return;
+
+    try {
+      // Update the current approval status
+      await updateCurrentApprovalStatus(status);
+      console.log("Status updated successfully, now checking status type:", status);
+
+      let actionExecuted = false; // ✅ Flag to control alert
+
+      if (status === "Approved") {
+        await handleApprovedAction();
+        actionExecuted = true;
+      } else if (status === "Rework") {
+        await handleReworkAction();
+        actionExecuted = true;
+      } else if (status === "Rejected") {
+        await handleRejectedAction();
+        actionExecuted = true;
+      }
+
+      if (actionExecuted) { // ✅ Only show alert if something executed
+        alert(`${status} successfully!`);
+        handleProjectBackClick();
+        window.location.reload(); // optional refresh
+      } else {
+        console.warn("⚠️ No matching action found for status:", status);
+      }
+    } catch (error) {
+      console.error("Error in approval action:", error);
+      alert("Something went wrong while processing approval.");
+    }
+  };
+  // Update current approval status
+  const updateCurrentApprovalStatus = async (status: string) => {
+    if (!selectedProjectTask) return;
+
+    try {
+      const data: any = {
+        Status: status,
+        Remarks: projectRemarks,
+        ApprovalDate: new Date(),
+      };
+
+      if (projectNeedsFurtherApproval !== "Select") {
+        data.Doyouneedapproval = projectNeedsFurtherApproval;
+      }
+
+      if (status === "Rework" && selectedProjectTask.ApprovalRole === "Document Controller") {
+        data.OutgoingDate = new Date();
+      }
+
+      await sp.web.lists.getByTitle("ProjectApprovals").items.getById(selectedProjectTask.Id).update(data);
+      console.log("Status Updated");
+    } catch (error) {
+      console.error("Error in updateCurrentApprovalStatus:", error);
+      throw error; // Re-throw to be caught in main handler
+    }
+  };
+
+  // Handle Approved action
+  const handleApprovedAction = async () => {
+    if (!selectedProjectTask) return;
+
+    const approvals = await getAllProjectApproval(selectedProjectTask.ProjectId!, selectedProjectTask.DeliverableId!);
+    console.log('Array?', Array.isArray(approvals));
+    await addMultipleApproval("Approved", approvals);
+  };
+
+  // Get all project approvals
+  const getAllProjectApproval = async (projectId: number, deliverableId: number) => {
+    try {
+      const items = await sp.web.lists.getByTitle("ProjectApprovals").items
+        .select("*,DeliverablesDetailsId/ID,ProjectCreationListID/ID,AssignedTo/ID,AssignedTo/Title")
+        .expand("DeliverablesDetailsId,ProjectCreationListID,AssignedTo")
+        .filter(`ProjectCreationListID/ID eq ${projectId} and DeliverablesDetailsId/ID eq ${deliverableId}`)
+        .orderBy("Created", false)();
+
+      // setProjectApprovalArr(items);
+      return items;
+    } catch (error) {
+      console.error("Error fetching project approvals:", error);
+      return [];
+    }
+  };
+
+  // Add Multiple Approval logic
+  const addMultipleApproval = async (statusUpdate: string, allApprovals: any[]) => {
+    if (!selectedProjectTask) return;
+    console.log('Array?', Array.isArray(allApprovals), allApprovals.length);
+    try {
+      if (statusUpdate === "Approved") {
+        const currentRole = selectedProjectTask.ApprovalRole;
+        const currentCriteria = selectedProjectTask.ApprovalCriteria;
+
+        if (currentRole === "Document Controller" && projectNeedsFurtherApproval === "Yes") {
+          // Create projectHierarchy and approvals for multiple approvers
+          for (let index = 0; index < projectHierarchy.length; index++) {
+            const row = projectHierarchy[index];
+            const approverAssignOwner = row.assignedTo?.map(user => user.ID) || [];
+
+            // Update or create projectHierarchy
+            const rowData = {
+              ProjectCreationListIDId: selectedProjectTask.ProjectId,
+              DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+              // AssignedToId: { 'results': approverAssignOwner },
+              AssignedToId: approverAssignOwner,
+              RequestedById: props.context.pageContext.legacyPageContext.userId,
+              RequestedDate: new Date(),
+              DocumentType: selectedProjectTask.DocType,
+              ApproverRole: row.approverRole,
+              ApprovalCriteria: row.approvalCriteria,
+              Status: 'Pending',
+              Doyouneedapproval: projectNeedsFurtherApproval,
+              Level: row.level,
+              SerialNumber: row.serialNumber || index + 1,
+            };
+
+            if (row.id) {
+              await sp.web.lists.getByTitle("ApprovalHierarchy").items.getById(row.id).update(rowData);
+            } else {
+              await sp.web.lists.getByTitle("ApprovalHierarchy").items.add(rowData);
+            }
+
+            // Create approvals for Level 1
+            if (row.level === "Level 1") {
+              for (const userId of approverAssignOwner) {
+                const approvalData = {
+                  ProjectCreationListIDId: selectedProjectTask.ProjectId,
+                  DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+                  AssignedToId: userId,
+                  RequestedById: props.context.pageContext.legacyPageContext.userId,
+                  RequestedDate: new Date(),
+                  DocumentType: selectedProjectTask.DocType,
+                  ApproverRole: row.approverRole,
+                  ApprovalCriteria: row.approvalCriteria,
+                  Doyouneedapproval: projectNeedsFurtherApproval,
+                  Status: 'Pending',
+                  Level: row.level,
+                  SerialNumber: row.serialNumber || index + 1,
+                  RevisionNumber: selectedProjectTask.RevisionNumber,
+                };
+                await sp.web.lists.getByTitle("ProjectApprovals").items.add(approvalData);
+              }
+            }
+          }
+        } else if (currentRole === "Document Controller" && projectNeedsFurtherApproval === "No") {
+          // Create DCC approval
+          const approvalData = {
+            ProjectCreationListIDId: selectedProjectTask.ProjectId,
+            DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+            AssignedToId: dccId,
+            RequestedById: props.context.pageContext.legacyPageContext.userId,
+            RequestedDate: new Date(),
+            DocumentType: selectedProjectTask.DocType,
+            ApproverRole: "DCC",
+            ApprovalCriteria: "Anyone",
+            Status: 'Pending',
+            Level: `Level ${selectedProjectTask.ApprovalSN + 1}`,
+            SerialNumber: selectedProjectTask.ApprovalSN + 1,
+            RevisionNumber: selectedProjectTask.RevisionNumber,
+          };
+          await sp.web.lists.getByTitle("ProjectApprovals").items.add(approvalData);
+          await updateDeliverableStatus(statusUpdate);
+        } else {
+          // Regular approval flow
+          const currentApprovals = allApprovals.filter(x =>
+            x.ApproverRole === currentRole &&
+            x.ProjectCreationListIDId === selectedProjectTask.ProjectId &&
+            x.DeliverablesDetailsIdId === selectedProjectTask.DeliverableId
+          );
+
+          const allApproved = currentApprovals.length > 0 &&
+            currentApprovals.every(item => item.Status === "Approved" || item.Status === "Rework");
+
+          // Update current approvals if criteria = "Anyone"
+          if (currentCriteria === "Anyone" && allApprovals.length > 0) {
+            for (const approvalItem of allApprovals) {
+              if (approvalItem.Id && approvalItem.ApproverRole === currentRole) {
+                const updateData = {
+                  Status: statusUpdate,
+                  ApprovalDate: new Date(),
+                };
+                await sp.web.lists.getByTitle("ProjectApprovals").items.getById(approvalItem.Id).update(updateData);
+              }
+            }
+            await updateApprovalHierarchyStatus(allApprovals);
+          }
+
+          const shouldProceed = (currentCriteria === "Everyone" && allApproved) ||
+            (currentCriteria === "Anyone");
+
+          if (shouldProceed) {
+            await handleNextApprovers();
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error in addMultipleApproval:", error);
+      throw error;
+    }
+  };
+
+  const updateDeliverableStatus = async (status: string) => {
+    if (!selectedProjectTask) return;
+
+    await sp.web.lists.getByTitle("DeliverablesDetails")
+      .items.getById(selectedProjectTask.DeliverableId!)
+      .update({ Status: status });
+  };
+
+  const updateApprovalHierarchyStatus = async (allApprovals: any[]) => {
+    if (!selectedProjectTask) return;
+
+    try {
+      const currentRole = selectedProjectTask.ApprovalRole;
+      const currentCriteria = selectedProjectTask.ApprovalCriteria;
+
+      const currentApprovals = allApprovals.filter(x =>
+        x.ApproverRole === currentRole &&
+        x.ProjectCreationListIDId === selectedProjectTask.ProjectId &&
+        x.DeliverablesDetailsIdId === selectedProjectTask.DeliverableId
+      );
+
+      if (currentApprovals.length === 0) return;
+
+      const allApproved = currentApprovals.every(item => item.Status === "Approved");
+      let newStatus = "";
+
+      if (currentCriteria === "Anyone") {
+        newStatus = "Approved";
+      } else if (currentCriteria === "Everyone") {
+        newStatus = allApproved ? "Approved" : "In Progress";
+      }
+
+      const currentHierarchy = projectHierarchy.find(x =>
+        x.approverRole === currentRole &&
+        x.id &&
+        x.id === selectedProjectTask!.deliverableId
+      );
+
+      if (currentHierarchy && currentHierarchy.id && newStatus !== "") {
+        await sp.web.lists.getByTitle("ApprovalHierarchy")
+          .items.getById(currentHierarchy.id)
+          .update({ Status: newStatus });
+      }
+    } catch (error) {
+      console.error("Error in updateApprovalHierarchyStatus:", error);
+    }
+  };
+
+  // Handle next approvers
+  const handleNextApprovers = async () => {
+    if (!selectedProjectTask) return;
+
+    const currentHierarchy = projectHierarchy.find(x =>
+      x.approverRole === selectedProjectTask.ApprovalRole &&
+      x.level === selectedProjectTask.CurrentApprovalLevel
+    );
+
+    const nextApprovers = currentHierarchy ?
+      projectHierarchy.filter(x => x.serialNumber === (currentHierarchy.serialNumber! + 1)) : [];
+
+    if (!nextApprovers || nextApprovers.length === 0) {
+      // Final stage
+      if (selectedProjectTask.ApprovalRole !== "DCC") {
+        const approvalData = {
+          ProjectCreationListIDId: selectedProjectTask.ProjectId,
+          DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+          AssignedToId: dccId,
+          RequestedById: props.context.pageContext.legacyPageContext.userId,
+          RequestedDate: new Date(),
+          DocumentType: selectedProjectTask.DocType,
+          ApproverRole: "DCC",
+          ApprovalCriteria: "Anyone",
+          Status: 'Pending',
+          Level: `Level ${selectedProjectTask.ApprovalSN + 1}`,
+          SerialNumber: selectedProjectTask.ApprovalSN + 1,
+          RevisionNumber: selectedProjectTask.RevisionNumber,
+        };
+        await sp.web.lists.getByTitle("ProjectApprovals").items.add(approvalData);
+        await updateDeliverableStatus("Approved");
+      } else if (selectedProjectTask?.ApprovalRole === "DCC" && projectWantsToPublishInDossier !== "Select") {
+        await updateDeliverablePublishStatus(selectedProjectTask.DeliverableId!, projectWantsToPublishInDossier);
+      }
+    } else {
+      // Create approvals for next approvers
+      // for (const approvalItem of nextApprovers) {
+      //     if (approvalItem.assignedTo && approvalItem.assignedTo.length > 0) {
+      //         for (const user of approvalItem.assignedTo) {
+      //             const approvalData = {
+      //                 ProjectCreationListIDId: selectedProjectTask.ProjectId,
+      //                 DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+      //                 AssignedToId: user[0].ID,
+      //                 RequestedById: context.pageContext.legacyPageContext.userId,
+      //                 RequestedDate: new Date(),
+      //                 DocumentType: selectedProjectTask.DocType,
+      //                 ApproverRole: approvalItem.approverRole,
+      //                 ApprovalCriteria: approvalItem.approvalCriteria,
+      //                 Status: 'Pending',
+      //                 Level: approvalItem.level,
+      //                 SerialNumber: approvalItem.serialNumber,
+      //             };
+      //             await sp.web.lists.getByTitle("ProjectApprovals").items.add(approvalData);
+      //         }
+      //     }
+      // }
+
+      for (const approvalItem of nextApprovers) {
+        if (approvalItem.assignedTo && approvalItem.assignedTo.length > 0) {
+
+          // Flatten in case it's an array of arrays
+          const allUsers = ([] as any[]).concat.apply([], approvalItem.assignedTo);
+
+          for (const user of allUsers) {
+            const approvalData = {
+              ProjectCreationListIDId: selectedProjectTask.ProjectId,
+              DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+              AssignedToId: user.ID,
+              RequestedById: props.context.pageContext.legacyPageContext.userId,
+              RequestedDate: new Date(),
+              DocumentType: selectedProjectTask.DocType,
+              ApproverRole: approvalItem.approverRole,
+              ApprovalCriteria: approvalItem.approvalCriteria,
+              Status: 'Pending',
+              Level: approvalItem.level,
+              SerialNumber: approvalItem.serialNumber,
+              RevisionNumber: selectedProjectTask.RevisionNumber,
+            };
+
+            await sp.web.lists.getByTitle("ProjectApprovals").items.add(approvalData);
+          }
+        }
+      }
+
+    }
+  };
+
+
+  // Handle Rework action
+  const handleReworkAction = async () => {
+    if (!selectedProjectTask) return;
+
+    if (selectedProjectTask.ApprovalRole !== "Document Controller") {
+      const approvals = await getAllProjectApproval(selectedProjectTask.ProjectId!, selectedProjectTask.DeliverableId!);
+
+      // Update other pending approvals in current level to Rework
+      const pendingApprovals = approvals.filter(x =>
+        x.Level === selectedProjectTask?.CurrentApprovalLevel &&
+        x.ApproverRole === selectedProjectTask?.ApprovalRole &&
+        x.Id !== selectedProjectTask.Id &&
+        x.ProjectCreationListIDId === selectedProjectTask.ProjectId &&
+        x.DeliverablesDetailsIdId === selectedProjectTask.DeliverableId
+      );
+
+      for (const item of pendingApprovals) {
+        const data = {
+          Status: "Rework",
+          Remarks: "Auto Rework",
+          ApprovalDate: new Date(),
+        };
+        await sp.web.lists.getByTitle("ProjectApprovals").items.getById(item.Id).update(data);
+      }
+
+      // Create new approval for Document Controller
+      await createDocumentControllerApproval();
+      await updateApprovalHierarchyStatusForRework("Rework");
+
+    } else {
+      // Document Controller Rework logic
+      await updateDeliverableStatus("Pending");
+      await createVendorApproval();
+      // await sendEmail(); // Uncomment if you have email functionality
+    }
+  };
+
+
+  const createDocumentControllerApproval = async () => {
+    if (!selectedProjectTask) return;
+
+    //const documentControllerId = 6 // Implement this
+
+    const approvalData = {
+      ProjectCreationListIDId: selectedProjectTask.ProjectId,
+      DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+      AssignedToId: documentControllerId,
+      RequestedById: props.context.pageContext.legacyPageContext.userId,
+      RequestedDate: new Date(),
+      DocumentType: selectedProjectTask.DocType,
+      ApproverRole: "Document Controller",
+      ApprovalCriteria: "Everyone",
+      Doyouneedapproval: "Yes",
+      Status: 'Pending',
+      Level: "Level 1",
+      SerialNumber: 1,
+      RevisionNumber: selectedProjectTask.RevisionNumber,
+    };
+    await sp.web.lists.getByTitle("ProjectApprovals").items.add(approvalData);
+  };
+
+  const updateApprovalHierarchyStatusForRework = async (status: string) => {
+    if (!selectedProjectTask) return;
+
+    try {
+      const filterQuery = `ProjectCreationListIDId eq ${selectedProjectTask.ProjectId} and DeliverablesDetailsIdId eq ${selectedProjectTask.DeliverableId} and Level eq '${selectedProjectTask.CurrentApprovalLevel}'`;
+
+      const items = await sp.web.lists.getByTitle("ApprovalHierarchy")
+        .items.filter(filterQuery)();
+
+      if (items && items.length > 0) {
+        for (const item of items) {
+          await sp.web.lists.getByTitle("ApprovalHierarchy")
+            .items.getById(item.Id)
+            .update({ Status: status });
+        }
+      }
+    } catch (error) {
+      console.error("Error in updateApprovalHierarchyStatusForRework:", error);
+    }
+  };
+
+  const createVendorApproval = async () => {
+    if (!selectedProjectTask) return;
+
+    const vendorId = 6 // Implement this
+
+    const approvalData = {
+      ProjectCreationListIDId: selectedProjectTask.ProjectId,
+      DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
+      AssignedToId: selectedProjectTask.InitiatedBy,
+      RequestedById: props.context.pageContext.legacyPageContext.userId,
+      RequestedDate: new Date(),
+      DocumentType: selectedProjectTask.DocType,
+      ApproverRole: "Vendor",
+      ApprovalCriteria: "Anyone",
+      Status: 'pending',
+      Level: "Level 0",
+      SerialNumber: 0,
+      RevisionNumber: selectedProjectTask.RevisionNumber,
+    };
+    await sp.web.lists.getByTitle("ProjectApprovals").items.add(approvalData);
+  };
+
+
+  // Handle Rejected action
+  const handleRejectedAction = async () => {
+    if (!selectedProjectTask) return;
+
+    const approvals = await getAllProjectApproval(selectedProjectTask.ProjectId!, selectedProjectTask.DeliverableId!);
+
+    // Update other pending approvals in current level to Rejected
+    const pendingApprovals = approvals.filter(x =>
+      x.Level === selectedProjectTask?.CurrentApprovalLevel &&
+      x.ApproverRole === selectedProjectTask?.ApprovalRole &&
+      x.Id !== selectedProjectTask.Id &&
+      x.ProjectCreationListIDId === selectedProjectTask.ProjectId &&
+      x.DeliverablesDetailsIdId === selectedProjectTask.DeliverableId
+    );
+
+    for (const item of pendingApprovals) {
+      const data = {
+        Status: "Rejected",
+        Remarks: "Auto Reject",
+        ApprovalDate: new Date(),
+      };
+      await sp.web.lists.getByTitle("ProjectApprovals").items.getById(item.Id).update(data);
+    }
+
+    await updateDeliverableStatus("Rejected");
+    await updateApprovalHierarchyStatusForRework("Rejected");
+  };
+
+
+  const updateDeliverablePublishStatus = async (deliverableId: number, publishStatus: string): Promise<void> => {
+    try {
+      await sp.web.lists.getByTitle("DeliverablesDetails")
+        .items.getById(deliverableId)
+        .update({
+          IsPublished: publishStatus
+        });
+
+      console.log("Deliverable publish status updated successfully");
+    } catch (error) {
+      console.error("Error updating deliverable publish status:", error);
+      throw error;
+    }
+  };
+  // Project Approval Code ends here ----------------
 
   React.useEffect(() => {
     sessionStorage.removeItem("announcementId");
@@ -1047,9 +2080,11 @@ const MyApprovalContext = ({ props }: any) => {
     let MyApprovaldata = await getMyApproval(sp, status);
     let Automationdata1 = await getApprovalListsData(sp, status);
     let typedata = await getType(sp);
+    let ProjectWorkflowData = await getProjectWorkflowApprovals(status); // NEW
     let Automationdata: any;
     //setMyApprovalsData(MyApprovaldata);
     setMyApprovalsDataAll(MyApprovaldata);
+    setProjectWorkflowdata(ProjectWorkflowData); // NEW
     //}
     //else if(activeTab == "Automation"){
     // let Automationdata = Automationdata1.sort((a, b) => {
@@ -1095,39 +2130,52 @@ const MyApprovalContext = ({ props }: any) => {
       let MyApprovaldata = await getMyApproval(sp, value, actingfor);
       let Automationdata = await getApprovalListsData(sp, value, actingfor);
       // let MyDMSAPPROVALDATA:any = await MyDMSAPPROVALDATASTATUS(sp, value)
-      let MyDMSAPPROVALDATA: any = await getApprovalmasterTasklist(value, actingfor)
+      let MyDMSAPPROVALDATA: any = await getApprovalmasterTasklist(value, actingfor);
       console.log("MyDMSAPPROVALDATA", MyDMSAPPROVALDATA)
+
+      let ProjectWorkflowData = await getProjectWorkflowApprovals(value, actingfor); // NEW
+      console.log("ProjectWorkflowData", ProjectWorkflowData);
+      setProjectWorkflowdata(ProjectWorkflowData); // NEW
       setMyApprovalsDataAll(MyApprovaldata);
       setMyApprovalsDataAutomation(Automationdata);
       if (activeTab == "Intranet") {
         setMyApprovalsData(MyApprovaldata);
-        if(MyApprovaldata.length > 0){
+        if (MyApprovaldata.length > 0) {
           setTimeout(() => {
             setLoading(false);
           }, 5000);
-        }else{
+        } else {
           setLoading(false)
         }
       } else if (activeTab == "DMS") {
         // alert(value)
         setMyApprovalsData(MyDMSAPPROVALDATA);
-        if(MyDMSAPPROVALDATA.length > 0){
+        if (MyDMSAPPROVALDATA.length > 0) {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        }else{
+        } else {
           setLoading(false)
         }
       } else if (activeTab == "Automation") {
         setMyApprovalsData(Automationdata.sort((a, b) => b.Created - a.Created));
-        if(Automationdata.length > 0){
+        if (Automationdata.length > 0) {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        }else{
+        } else {
           setLoading(false)
         }
         console.log("Automationdata", Automationdata);
+      } else if (activeTab == "ProjectWorkflow") { // NEW
+        setMyApprovalsData(ProjectWorkflowData);
+        if (ProjectWorkflowData.length > 0) {
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+        } else {
+          setLoading(false)
+        }
       }
       setStatusChange(false);
       // else if (activeTab == "Automation") {
@@ -1137,7 +2185,7 @@ const MyApprovalContext = ({ props }: any) => {
       //   console.log("Automationdata", Automationdata);
       // }
     }
-    
+
     setLoading(false);
   };
   const handleFilterChange = (
@@ -1566,7 +2614,7 @@ const MyApprovalContext = ({ props }: any) => {
             <div className="row" style={{ paddingLeft: "0.5rem" }}>
               <div className="col-md-4">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp} />
 
               </div>
 
@@ -1700,6 +2748,22 @@ const MyApprovalContext = ({ props }: any) => {
                             </span>
                           </a>
                         </li>
+
+                        <li className="nav-item" role="presentation">
+                          <a
+                            onClick={() => handleTabClick("ProjectWorkflow")}
+                            className={`nav-link ${activeTab === "ProjectWorkflow" ? "active" : ""
+                              }`}
+                            aria-selected={activeTab === "ProjectWorkflow"}
+                            role="tab"
+                            tabIndex={-1}
+                          >
+                            <span className="lenbg1">Project Workflow </span>
+                            <span className="lenbg">
+                              {ProjectWorkflowdata.length}
+                            </span>
+                          </a>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -1709,7 +2773,8 @@ const MyApprovalContext = ({ props }: any) => {
             </div>
             {(activeTab === "Intranet" ||
               activeTab === "Automation" ||
-              activeTab === "DMS") && (
+              activeTab === "DMS" ||
+              activeTab === "ProjectWorkflow") && (
                 <div>
                   {!isActivedata && (
                     <div className="card cardCss mt-2">
@@ -1721,7 +2786,7 @@ const MyApprovalContext = ({ props }: any) => {
 
                               <>
                                 <table
-                                  className="mtbalenew mt-0 table-centered table-nowrap table-borderless mb-0"
+                                  className="mtbalenew mt-0 table-centered table-nowrap table-borderless respot mb-0"
                                   style={{ position: "relative" }}
                                 >
                                   <thead>
@@ -2229,10 +3294,6 @@ const MyApprovalContext = ({ props }: any) => {
                                                   }
 
                                                   style={{
-                                                    minWidth: "20px",
-
-                                                    maxWidth: "20px",
-
                                                     marginLeft: "0px",
 
                                                     cursor: "pointer",
@@ -2353,7 +3414,7 @@ const MyApprovalContext = ({ props }: any) => {
                                 {!showNestedDMSTable ? (
                                   <div>
                                     <table
-                                      className="mtbalenew mt-0 table-centered table-nowrap table-borderless mb-0"
+                                      className="mtbalenew mt-0 table-centered table-nowrap table-borderless respot mb-0"
                                       style={{ position: "relative" }}
                                     >
                                       <thead>
@@ -2886,9 +3947,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                   <Edit
                                                     onClick={(e) => { getTaskItemsbyID(e, item?.FileUID?.FileUID, item?.FileUID?.Processname); handleShowNestedDMSTable() }}
                                                     style={{
-                                                      minWidth: "20px",
 
-                                                      maxWidth: "20px",
 
                                                       marginLeft: "15px",
 
@@ -3033,6 +4092,1076 @@ const MyApprovalContext = ({ props }: any) => {
                                       </>
                                     )}
 
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {/* {activeTab === "ProjectWorkflow" && (
+                              <div>
+                                <table className="mtbalenew mt-0 table-centered table-nowrap table-borderless respot mb-0">
+                                  <thead>
+                                    <tr>
+                                      <th style={{ borderBottomLeftRadius: "0px", minWidth: "40px", maxWidth: "40px", borderTopLeftRadius: "0px" }}>
+                                        <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                          <span>S.No.</span>
+                                          <span onClick={() => handleSortChange("SNo")}>
+                                            <FontAwesomeIcon icon={faSort} />
+                                          </span>
+                                        </div>
+                                        <div className="bd-highlight">
+                                          <input
+                                            type="text"
+                                            placeholder="index"
+                                            onChange={(e) => handleFilterChange(e, "SNo")}
+                                            onKeyDown={(e) => {
+                                              if (e.key === 'Enter' && !e.shiftKey) {
+                                                e.preventDefault();
+                                              }
+                                            }}
+                                            className="inputcss"
+                                            style={{ width: "100%" }}
+                                          />
+                                        </div>
+                                      </th>
+
+                                      <th style={{ minWidth: "80px", maxWidth: "80px" }}>
+                                        <div className="d-flex flex-column bd-highlight ">
+                                          <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                            <span>Request ID</span>
+                                            <span onClick={() => handleSortChange("RequestID")}>
+                                              <FontAwesomeIcon icon={faSort} />
+                                            </span>
+                                          </div>
+                                          <div className="bd-highlight">
+                                            <input
+                                              type="text"
+                                              placeholder="Filter by Request ID"
+                                              onChange={(e) => handleFilterChange(e, "RequestID")}
+                                              onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                  e.preventDefault();
+                                                }
+                                              }}
+                                              className="inputcss"
+                                              style={{ width: "100%" }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </th>
+
+                                      <th style={{ minWidth: "120px", maxWidth: "120px" }}>
+                                        <div className="d-flex flex-column bd-highlight ">
+                                          <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                            <span>Project Name</span>
+                                            <span onClick={() => handleSortChange("Title")}>
+                                              <FontAwesomeIcon icon={faSort} />
+                                            </span>
+                                          </div>
+                                          <div className="bd-highlight">
+                                            <input
+                                              type="text"
+                                              placeholder="Filter by Project Name"
+                                              onChange={(e) => handleFilterChange(e, "Title")}
+                                              onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                  e.preventDefault();
+                                                }
+                                              }}
+                                              className="inputcss"
+                                              style={{ width: "100%" }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </th>
+
+                                      <th style={{ minWidth: "120px", maxWidth: "120px" }}>
+                                        <div className="d-flex flex-column bd-highlight ">
+                                          <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                            <span>Process Name</span>
+                                            <span onClick={() => handleSortChange("ProcessName")}>
+                                              <FontAwesomeIcon icon={faSort} />
+                                            </span>
+                                          </div>
+                                          <div className="bd-highlight">
+                                            <input
+                                              type="text"
+                                              placeholder="Filter by Process Name"
+                                              onChange={(e) => handleFilterChange(e, "ProcessName")}
+                                              onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                  e.preventDefault();
+                                                }
+                                              }}
+                                              className="inputcss"
+                                              style={{ width: "100%" }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </th>
+
+                                      <th style={{ minWidth: "100px", maxWidth: "100px" }}>
+                                        <div className="d-flex flex-column bd-highlight ">
+                                          <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                            <span>Requested By</span>
+                                            <span onClick={() => handleSortChange("RequestedBy")}>
+                                              <FontAwesomeIcon icon={faSort} />
+                                            </span>
+                                          </div>
+                                          <div className="bd-highlight">
+                                            <input
+                                              type="text"
+                                              placeholder="Filter by Requested By"
+                                              onChange={(e) => handleFilterChange(e, "RequestedBy")}
+                                              onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                  e.preventDefault();
+                                                }
+                                              }}
+                                              className="inputcss"
+                                              style={{ width: "100%" }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </th>
+
+                                      <th style={{ minWidth: "130px", maxWidth: "130px" }}>
+                                        <div className="d-flex flex-column bd-highlight ">
+                                          <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                            <span>Requested Date</span>
+                                          </div>
+                                          <div className="bd-highlight">
+                                            <input
+                                              type="text"
+                                              placeholder="Filter by Requested Date"
+                                              onChange={(e) => handleFilterChange(e, "RequestedDate")}
+                                              onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                  e.preventDefault();
+                                                }
+                                              }}
+                                              className="inputcss"
+                                              style={{ width: "100%" }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </th>
+
+                                      <th style={{ minWidth: "80px", maxWidth: "80px" }}>
+                                        <div className="d-flex flex-column bd-highlight ">
+                                          <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                            <span>Status</span>
+                                          </div>
+                                          <div className="bd-highlight">
+                                            <input
+                                              type="text"
+                                              placeholder="Filter by Status"
+                                              onChange={(e) => handleFilterChange(e, "Status")}
+                                              onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                  e.preventDefault();
+                                                }
+                                              }}
+                                              className="inputcss"
+                                              style={{ width: "100%" }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </th>
+
+                                      <th style={{ minWidth: "50px", maxWidth: "50px", borderBottomRightRadius: "0px", borderTopRightRadius: "0px", textAlign: "center", verticalAlign: "top" }}>
+                                        <div className="d-flex flex-column bd-highlight ">
+                                          <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                            <span>Action</span>
+                                          </div>
+                                        </div>
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {((loading && currentData?.length == 0) || (StatusChange)) && (
+                                      <div className="loadernewadd">
+                                        <div>
+                                          <img
+                                            src={require("../../../CustomAsset/birdloader.gif")}
+                                            className="alignrightl"
+                                            alt="Loading..."
+                                          />
+                                        </div>
+                                        <div className="loadnewarg">
+                                          <span>Loading </span>{" "}
+                                          <span>
+                                            <img
+                                              src={require("../../corporateDirectory/assets/argloader.gif")}
+                                              className="alignrightbird"
+                                              alt="Loading..."
+                                            />
+                                          </span>
+                                        </div>
+                                      </div>
+                                    )}
+                                    {!loading && currentData?.length === 0 ? (
+                                      <div className="no-results card card-body align-items-center annusvg text-center" style={{ display: "flex", justifyContent: "center", position: 'relative', marginTop: '10px', height: '500px' }}>
+                                        <svg style={{ top: '0%' }} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                        <p className="font-14 text-muted text-center">No Project Approvals found</p>
+                                      </div>
+                                    ) : (
+                                      !StatusChange && currentData?.map((item: any, index: number) => (
+                                        <tr key={index}>
+                                          <td style={{ minWidth: "40px", maxWidth: "40px" }}>
+                                            <div style={{ marginLeft: "0px" }} className="indexdesign">
+                                              {startIndex + index + 1}
+                                            </div>
+                                          </td>
+                                          <td style={{ minWidth: "80px", maxWidth: "80px", textAlign: 'center', textTransform: "capitalize" }} title={item.RequestID}>
+                                            {item.RequestID}
+                                          </td>
+                                          <td style={{ minWidth: "120px", maxWidth: "120px" }} title={item.ProjectName}>
+                                            {item.ProjectName}
+                                          </td>
+                                          <td style={{ minWidth: "120px", maxWidth: "120px", textAlign: 'center' }}>
+                                            <span className="badge font-12 bg-info">{item.ProcessName}</span>
+                                          </td>
+                                          <td style={{ minWidth: "100px", maxWidth: "100px" }} title={item.Requester?.Title}>
+                                            {item.Requester?.Title}
+                                          </td>
+                                          <td style={{ minWidth: "130px", maxWidth: "130px", textAlign: 'center' }}>
+                                            <div className="btn btn-light1">
+                                              {new Date(item.Created).toLocaleString('en-US', {
+                                                month: '2-digit',
+                                                day: '2-digit',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                hour12: true
+                                              })}
+                                            </div>
+                                          </td>
+                                          <td style={{ minWidth: "80px", maxWidth: "80px", textAlign: 'center' }}>
+                                            <div className="btn btn-status">
+                                              {item.Status}
+                                            </div>
+                                          </td>
+                                          <td style={{ minWidth: "50px", maxWidth: "50px", textAlign: 'center' }} className="fe-eye font-18">
+                                            {item.Status.toLowerCase() == "approved" || item.Status.toLowerCase() == "rejected" || item.Status.toLowerCase() == "completed" ?
+                                              <Eye onClick={(e) => handleProjectWorkflowAction(e, item, "view")} style={{ minWidth: "20px", maxWidth: "20px", cursor: "pointer" }} />
+                                              :
+                                              <Edit onClick={(e) => handleProjectWorkflowAction(e, item, "approval")} style={{ marginLeft: "0px", cursor: "pointer" }} />
+                                            }
+                                          </td>
+                                        </tr>
+                                      ))
+                                    )}
+                                  </tbody>
+                                </table>
+
+                                {currentData?.length > 0 ? (
+                                  <nav className="pagination-container">
+                                    <ul className="pagination">
+                                      <li className={`prevPage page-item ${currentGroup === 1 ? "disabled" : ""}`} onClick={() => handleGroupChange("prev")}>
+                                        <a className="page-link" aria-label="Previous">«</a>
+                                      </li>
+                                      {Array.from({ length: endPage - startPage + 1 }, (_, num) => {
+                                        const pageNum = startPage + num;
+                                        return (
+                                          <li key={pageNum} className={`page-item ${currentPage === pageNum ? "active" : ""}`}>
+                                            <a className="page-link" onClick={() => handlePageChange(pageNum)}>{pageNum}</a>
+                                          </li>
+                                        );
+                                      })}
+                                      <li className={`nextPage page-item ${currentGroup === totalGroups ? "disabled" : ""}`} onClick={() => handleGroupChange("next")}>
+                                        <a className="page-link" onClick={() => handlePageChange(currentPage + 1)} aria-label="Next">»</a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                                ) : (
+                                  <></>
+                                )}
+                              </div>
+                            )} */}
+
+                            {activeTab === "ProjectWorkflow" && (
+                              <div>
+                                {!showProjectForm ? (
+                                  // TABLE VIEW
+                                  <div className="card cardCss mt-2">
+                                    <div className="card-body">
+                                      <div id="cardCollpase4" className="collapse show">
+                                        <div className="table-responsive pt-0">
+                                          <table className="mtbalenew mt-0 table-centered table-nowrap table-borderless respot mb-0" style={{ position: "relative" }}>
+                                            <thead>
+                                              <tr>
+                                                <th style={{ borderBottomLeftRadius: "0px", minWidth: "40px", maxWidth: "40px", borderTopLeftRadius: "0px" }}>
+                                                  <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                    <span>S.No.</span>
+                                                    <span onClick={() => handleSortChange("SNo")}>
+                                                      <FontAwesomeIcon icon={faSort} />
+                                                    </span>
+                                                  </div>
+                                                  <div className="bd-highlight">
+                                                    <input
+                                                      type="text"
+                                                      placeholder="index"
+                                                      onChange={(e) => handleFilterChange(e, "SNo")}
+                                                      onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                                          e.preventDefault();
+                                                        }
+                                                      }}
+                                                      className="inputcss"
+                                                      style={{ width: "100%" }}
+                                                    />
+                                                  </div>
+                                                </th>
+
+                                                <th style={{ minWidth: "80px", maxWidth: "80px" }}>
+                                                  <div className="d-flex flex-column bd-highlight ">
+                                                    <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                      <span>Request ID</span>
+                                                      <span onClick={() => handleSortChange("RequestID")}>
+                                                        <FontAwesomeIcon icon={faSort} />
+                                                      </span>
+                                                    </div>
+                                                    <div className="bd-highlight">
+                                                      <input
+                                                        type="text"
+                                                        placeholder="Filter by Request ID"
+                                                        onChange={(e) => handleFilterChange(e, "RequestID")}
+                                                        onKeyDown={(e) => {
+                                                          if (e.key === 'Enter' && !e.shiftKey) {
+                                                            e.preventDefault();
+                                                          }
+                                                        }}
+                                                        className="inputcss"
+                                                        style={{ width: "100%" }}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </th>
+
+                                                <th style={{ minWidth: "120px", maxWidth: "120px" }}>
+                                                  <div className="d-flex flex-column bd-highlight ">
+                                                    <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                      <span>Project Name</span>
+                                                      <span onClick={() => handleSortChange("Title")}>
+                                                        <FontAwesomeIcon icon={faSort} />
+                                                      </span>
+                                                    </div>
+                                                    <div className="bd-highlight">
+                                                      <input
+                                                        type="text"
+                                                        placeholder="Filter by Project Name"
+                                                        onChange={(e) => handleFilterChange(e, "Title")}
+                                                        onKeyDown={(e) => {
+                                                          if (e.key === 'Enter' && !e.shiftKey) {
+                                                            e.preventDefault();
+                                                          }
+                                                        }}
+                                                        className="inputcss"
+                                                        style={{ width: "100%" }}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </th>
+
+                                                <th style={{ minWidth: "120px", maxWidth: "120px" }}>
+                                                  <div className="d-flex flex-column bd-highlight ">
+                                                    <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                      <span>Process Name</span>
+                                                      <span onClick={() => handleSortChange("ProcessName")}>
+                                                        <FontAwesomeIcon icon={faSort} />
+                                                      </span>
+                                                    </div>
+                                                    <div className="bd-highlight">
+                                                      <input
+                                                        type="text"
+                                                        placeholder="Filter by Process Name"
+                                                        onChange={(e) => handleFilterChange(e, "ProcessName")}
+                                                        onKeyDown={(e) => {
+                                                          if (e.key === 'Enter' && !e.shiftKey) {
+                                                            e.preventDefault();
+                                                          }
+                                                        }}
+                                                        className="inputcss"
+                                                        style={{ width: "100%" }}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </th>
+
+                                                <th style={{ minWidth: "100px", maxWidth: "100px" }}>
+                                                  <div className="d-flex flex-column bd-highlight ">
+                                                    <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                      <span>Requested By</span>
+                                                      <span onClick={() => handleSortChange("RequestedBy")}>
+                                                        <FontAwesomeIcon icon={faSort} />
+                                                      </span>
+                                                    </div>
+                                                    <div className="bd-highlight">
+                                                      <input
+                                                        type="text"
+                                                        placeholder="Filter by Requested By"
+                                                        onChange={(e) => handleFilterChange(e, "RequestedBy")}
+                                                        onKeyDown={(e) => {
+                                                          if (e.key === 'Enter' && !e.shiftKey) {
+                                                            e.preventDefault();
+                                                          }
+                                                        }}
+                                                        className="inputcss"
+                                                        style={{ width: "100%" }}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </th>
+
+                                                <th style={{ minWidth: "130px", maxWidth: "130px" }}>
+                                                  <div className="d-flex flex-column bd-highlight ">
+                                                    <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                      <span>Requested Date</span>
+                                                    </div>
+                                                    <div className="bd-highlight">
+                                                      <input
+                                                        type="text"
+                                                        placeholder="Filter by Requested Date"
+                                                        onChange={(e) => handleFilterChange(e, "RequestedDate")}
+                                                        onKeyDown={(e) => {
+                                                          if (e.key === 'Enter' && !e.shiftKey) {
+                                                            e.preventDefault();
+                                                          }
+                                                        }}
+                                                        className="inputcss"
+                                                        style={{ width: "100%" }}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </th>
+
+                                                <th style={{ minWidth: "80px", maxWidth: "80px" }}>
+                                                  <div className="d-flex flex-column bd-highlight ">
+                                                    <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                      <span>Status</span>
+                                                    </div>
+                                                    <div className="bd-highlight">
+                                                      <input
+                                                        type="text"
+                                                        placeholder="Filter by Status"
+                                                        onChange={(e) => handleFilterChange(e, "Status")}
+                                                        onKeyDown={(e) => {
+                                                          if (e.key === 'Enter' && !e.shiftKey) {
+                                                            e.preventDefault();
+                                                          }
+                                                        }}
+                                                        className="inputcss"
+                                                        style={{ width: "100%" }}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </th>
+
+                                                <th style={{
+                                                  minWidth: "50px",
+                                                  maxWidth: "50px",
+                                                  borderBottomRightRadius: "0px",
+                                                  borderTopRightRadius: "0px",
+                                                  textAlign: "center",
+                                                  verticalAlign: "top"
+                                                }}>
+                                                  <div className="d-flex flex-column bd-highlight ">
+                                                    <div className="d-flex pb-2" style={{ justifyContent: "space-evenly" }}>
+                                                      <span>Action</span>
+                                                    </div>
+                                                  </div>
+                                                </th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {((loading && currentData?.length == 0) || (StatusChange)) && (
+                                                <div className="loadernewadd">
+                                                  <div>
+                                                    <img
+                                                      src={require("../../../CustomAsset/birdloader.gif")}
+                                                      className="alignrightl"
+                                                      alt="Loading..."
+                                                    />
+                                                  </div>
+                                                  <div className="loadnewarg">
+                                                    <span>Loading </span>{" "}
+                                                    <span>
+                                                      <img
+                                                        src={require("../../corporateDirectory/assets/argloader.gif")}
+                                                        className="alignrightbird"
+                                                        alt="Loading..."
+                                                      />
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              )}
+                                              {!loading && currentData?.length === 0 ? (
+                                                <div className="no-results card card-body align-items-center annusvg text-center" style={{
+                                                  display: "flex",
+                                                  justifyContent: "center",
+                                                  position: 'relative',
+                                                  marginTop: '10px',
+                                                  height: '500px'
+                                                }}>
+                                                  <svg style={{ top: '0%' }} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                                  </svg>
+                                                  <p className="font-14 text-muted text-center">No Project Approvals found</p>
+                                                </div>
+                                              ) : (
+                                                !StatusChange && currentData?.map((item: any, index: number) => (
+                                                  <tr key={index}>
+                                                    <td style={{ minWidth: "40px", maxWidth: "40px" }}>
+                                                      <div style={{ marginLeft: "0px" }} className="indexdesign">
+                                                        {startIndex + index + 1}
+                                                      </div>
+                                                    </td>
+                                                    <td style={{
+                                                      minWidth: "80px",
+                                                      maxWidth: "80px",
+                                                      textAlign: 'center',
+                                                      textTransform: "capitalize"
+                                                    }} title={item.RequestID}>
+                                                      {item.RequestID}
+                                                    </td>
+                                                    <td style={{ minWidth: "120px", maxWidth: "120px" }} title={item.ProjectName || item.Title}>
+                                                      {item.ProjectName || item.Title}
+                                                    </td>
+                                                    <td style={{ minWidth: "120px", maxWidth: "120px", textAlign: 'center' }}>
+                                                      <span className="badge font-12 bg-info">{item.ProcessName}</span>
+                                                    </td>
+                                                    <td style={{ minWidth: "100px", maxWidth: "100px" }} title={item.Requester?.Title}>
+                                                      {item.Requester?.Title}
+                                                    </td>
+                                                    <td style={{ minWidth: "130px", maxWidth: "130px", textAlign: 'center' }}>
+                                                      <div className="btn btn-light1">
+                                                        {new Date(item.Created).toLocaleString('en-US', {
+                                                          month: '2-digit',
+                                                          day: '2-digit',
+                                                          year: 'numeric',
+                                                          hour: '2-digit',
+                                                          minute: '2-digit',
+                                                          hour12: true
+                                                        })}
+                                                      </div>
+                                                    </td>
+                                                    <td style={{ minWidth: "80px", maxWidth: "80px", textAlign: 'center' }}>
+                                                      <div className="btn btn-status">
+                                                        {item.Status}
+                                                      </div>
+                                                    </td>
+                                                    <td style={{ minWidth: "50px", maxWidth: "50px", textAlign: 'center' }} className="fe-eye font-18">
+                                                      <Edit
+                                                        onClick={(e) => handleProjectWorkflowAction(e, item, "view")}
+                                                        style={{ cursor: "pointer" }}
+                                                      />
+                                                    </td>
+                                                  </tr>
+                                                ))
+                                              )}
+                                            </tbody>
+                                          </table>
+
+                                          {currentData?.length > 0 ? (
+                                            <nav className="pagination-container">
+                                              <ul className="pagination">
+                                                <li className={`prevPage page-item ${currentGroup === 1 ? "disabled" : ""}`} onClick={() => handleGroupChange("prev")}>
+                                                  <a className="page-link" aria-label="Previous">«</a>
+                                                </li>
+                                                {Array.from({ length: endPage - startPage + 1 }, (_, num) => {
+                                                  const pageNum = startPage + num;
+                                                  return (
+                                                    <li key={pageNum} className={`page-item ${currentPage === pageNum ? "active" : ""}`}>
+                                                      <a className="page-link" onClick={() => handlePageChange(pageNum)}>{pageNum}</a>
+                                                    </li>
+                                                  );
+                                                })}
+                                                <li className={`nextPage page-item ${currentGroup === totalGroups ? "disabled" : ""}`} onClick={() => handleGroupChange("next")}>
+                                                  <a className="page-link" onClick={() => handlePageChange(currentPage + 1)} aria-label="Next">»</a>
+                                                </li>
+                                              </ul>
+                                            </nav>
+                                          ) : (
+                                            <></>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  // FORM VIEW - This is where your form goes
+                                  <div className="card cardCss mt-2">
+                                    <div className="card-body">
+                                      <div className="form-header d-flex justify-content-between align-items-center mb-3">
+                                        <h4>Project Approval Details</h4>
+                                        <button
+                                          className="btn btn-secondary"
+                                          onClick={handleProjectBackClick}
+                                        >
+                                          Back
+                                        </button>
+                                      </div>
+
+                                      <div className="row">
+                                        <div className="col-md-6">
+                                          {/* <div className="mb-3">
+                                            <label className="form-label"><strong>Request ID:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.RequestID || ''}
+                                              disabled
+                                            />
+                                          </div> */}
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Project Name:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.ProjectName || selectedProjectTask?.Title || ''}
+                                              disabled
+                                            />
+                                          </div>
+                                          {/* <div className="mb-3">
+                                            <label className="form-label"><strong>Process Name:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.ProcessName || ''}
+                                              disabled
+                                            />
+                                          </div> */}
+                                          {/* <div className="mb-3">
+                                            <label className="form-label"><strong>Requested By:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.Requester?.Title || ''}
+                                              disabled
+                                            />
+                                          </div> */}
+                                        </div>
+                                        <div className="col-md-6">
+                                          {/* <div className="mb-3">
+                                            <label className="form-label"><strong>Requested Date:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={new Date(selectedProjectTask?.Created).toLocaleString() || ''}
+                                              disabled
+                                            />
+                                          </div> */}
+                                          {/* <div className="mb-3">
+                                            <label className="form-label"><strong>Status:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.Status || ''}
+                                              disabled
+                                            />
+                                          </div> */}
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Project Type:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.ProjectType || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Deliverable:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.Deliverable || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Additional fields from your data */}
+                                      <div className="row">
+                                        <div className="col-md-6">
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Document Type:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.DocType || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Document Number:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.DocNumber || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Area:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.Area || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Organization:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.Org || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Client and Prepared By fields */}
+                                      <div className="row">
+                                        <div className="col-md-6">
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Client Name:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.ClientName || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Prepared By:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.PreparedBy || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Approval Role and Revision Number */}
+                                      <div className="row">
+                                        {/* <div className="col-md-6">
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Approval Role:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.ApprovalRole || 'N/A'}
+                                              disabled
+                                            />
+                                          </div>
+                                        </div> */}
+                                        <div className="col-md-6">
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Revision Number:</strong></label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              value={selectedProjectTask?.RevisionNumber || '0'}
+                                              disabled
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Document section */}
+                                      {projectDocumentInfo?.documentUrl && (
+                                        <div className="row">
+                                          <div className="col-12">
+                                            <div className="mb-3">
+                                              <label className="form-label"><strong>Document:</strong></label>
+                                              <div className="document-container">
+                                                {projectDocumentInfo ? (
+                                                  <div
+                                                    className="document-link-container p-3 border rounded bg-light"
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={handleProjectOpenDocument}
+                                                    title="Click to open document"
+                                                  >
+                                                    <div className="d-flex align-items-center">
+                                                      <span className="document-icon me-2" style={{ fontSize: '1.5rem' }}>📄</span>
+                                                      <div>
+                                                        <div className="document-name fw-bold">
+                                                          {projectDocumentInfo.fileName || projectDocumentInfo.fileLeafRef}
+                                                        </div>
+                                                        <div className="document-hint text-muted small">
+                                                          Click to open document in new tab
+                                                          {projectDocumentInfo.sharedLink && (
+                                                            <span className="ms-2">🔗 Shared Link Available</span>
+                                                          )}
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                ) : projectDocumentInfo?.documentUrl ? (
+                                                  <div
+                                                    className="document-link-container p-3 border rounded bg-light"
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => {
+                                                      if (projectDocumentInfo?.documentUrl) {
+                                                        window.open(projectDocumentInfo?.documentUrl, '_blank', 'noopener,noreferrer');
+                                                      }
+                                                    }}
+                                                    title="Click to open document"
+                                                  >
+                                                    <div className="d-flex align-items-center">
+                                                      <span className="document-icon me-2" style={{ fontSize: '1.5rem' }}>📄</span>
+                                                      <div>
+                                                        <div className="document-name fw-bold">Document Available</div>
+                                                        <div className="document-hint text-muted small">Click to open document</div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                ) : (
+                                                  <div className="alert alert-info mb-0">
+                                                    <small>No document available for this deliverable</small>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* Remarks field (if available) */}
+                                      {selectedProjectTask?.Remarks && (
+                                        <div className="row">
+                                          <div className="col-12">
+                                            <div className="mb-3">
+                                              <label className="form-label"><strong>Remarks:</strong></label>
+                                              <textarea
+                                                className="form-control"
+                                                value={selectedProjectTask?.Remarks || ''}
+                                                disabled
+                                                rows={3}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* <div className="row mt-4">
+                                        <div className="col-12 text-center">
+                                          <p className="text-muted">
+                                            <em>Approval actions will be implemented in the next phase</em>
+                                          </p>
+                                        </div>
+                                      </div> */}
+                                      {/* Conditional Fields based on Approver Role */}
+                                      <div className="row">
+                                        <div className="col-12">
+                                          {selectedProjectTask?.ApprovalRole === "Document Controller" && (
+                                            <div className="mb-3">
+                                              <label className="form-label"><strong>Do you need further approval?</strong></label>
+                                              <select
+                                                value={projectNeedsFurtherApproval}
+                                                onChange={(e) => setProjectNeedsFurtherApproval(e.target.value)}
+                                                className="form-select"
+                                              >
+                                                <option value="Select" disabled>Select</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                              </select>
+                                            </div>
+                                          )}
+
+                                          {selectedProjectTask?.ApprovalRole === "DCC" && (
+                                            <div className="mb-3">
+                                              <label className="form-label"><strong>Want to publish in Dossier?</strong></label>
+                                              <select
+                                                value={projectWantsToPublishInDossier}
+                                                onChange={(e) => setProjectWantsToPublishInDossier(e.target.value)}
+                                                className="form-select"
+                                              >
+                                                <option value="Select" disabled>Select</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                              </select>
+                                            </div>
+                                          )}
+
+                                          <div className="mb-3">
+                                            <label className="form-label"><strong>Remarks</strong></label>
+                                            <textarea
+                                              value={projectRemarks}
+                                              onChange={(e) => setProjectRemarks(e.target.value)}
+                                              placeholder="Enter your remarks here..."
+                                              rows={4}
+                                              className="form-control"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Dynamic Approval Hierarchy Table */}
+                                      {selectedProjectTask?.ApprovalRole === "Document Controller" && (
+                                        <div className="approval-projectHierarchy mt-4">
+                                          <div className="d-flex justify-content-between align-items-center mb-3">
+                                            <h5>Approval Hierarchy</h5>
+                                            <button
+                                              className="btn btn-primary btn-sm"
+                                              onClick={() => addNewProjectApprovalRow()}
+                                            >
+                                              + Add New Row
+                                            </button>
+                                          </div>
+                                          <div className="table-responsive">
+                                            <table className="table table-bordered">
+                                              <thead className="table-light">
+                                                <tr>
+                                                  <th style={{ width: '15%' }}>Level</th>
+                                                  <th style={{ width: '25%' }}>Approver Role</th>
+                                                  <th style={{ width: '30%' }}>Approver</th>
+                                                  <th style={{ width: '20%' }}>Approval Criteria</th>
+                                                  <th style={{ width: '10%' }}>Action</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                {projectHierarchy.map((row, index) => (
+                                                  <tr key={index}>
+                                                    <td>
+                                                      <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        value={row.level}
+                                                        disabled
+                                                      />
+                                                    </td>
+                                                    <td>
+                                                      <select
+                                                        value={row.approverRole}
+                                                        onChange={(e) => updateProjectApprovalRow(index, 'approverRole', e.target.value)}
+                                                        className="form-select"
+                                                      >
+                                                        <option value="" disabled>Select Role</option>
+                                                        <option value="Project Coordinator">Project Coordinator</option>
+                                                        <option value="Project Team">Project Team</option>
+                                                        <option value="Project Manager">Project Manager</option>
+                                                      </select>
+                                                    </td>
+                                                    <td>
+                                                      <Select
+                                                        isMulti
+                                                        options={users}
+                                                        value={row.assignedTo ? users.filter(user =>
+                                                          row.assignedTo?.some((assigned: any) => {
+                                                            const assignedId = assigned.ID ? assigned.ID.toString() : assigned.toString();
+                                                            return assignedId === user.value;
+                                                          })
+                                                        ) : []}
+                                                        onChange={(selectedOptions: any) => handleProjectApproverChange(index, selectedOptions)}
+                                                        placeholder="Select Approver(s)"
+                                                        className="people-picker"
+                                                        classNamePrefix="react-select"
+                                                        closeMenuOnSelect={false}
+                                                        isClearable={false}
+                                                      />
+                                                    </td>
+                                                    <td>
+                                                      <select
+                                                        value={row.approvalCriteria}
+                                                        onChange={(e) => updateProjectApprovalRow(index, 'approvalCriteria', e.target.value)}
+                                                        className="form-select"
+                                                      >
+                                                        <option value="" disabled>Select Criteria</option>
+                                                        <option value="Everyone">Everyone</option>
+                                                        <option value="Anyone">Anyone</option>
+                                                      </select>
+                                                    </td>
+                                                    <td className="text-center">
+                                                      <button
+                                                        className="btn btn-outline-danger btn-sm"
+                                                        onClick={() => deleteProjectApprovalRow(index)}
+                                                        title="Delete Row"
+                                                      >
+                                                        🗑️
+                                                      </button>
+                                                    </td>
+                                                  </tr>
+                                                ))}
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* Approval Action Buttons */}
+                                      <div className="row mt-4">
+                                        <div className="col-12">
+                                          <div className="d-flex justify-content-center gap-3">
+                                            {selectedProjectTask?.Status === "Pending" && (
+                                              <>
+                                                {selectedProjectTask?.ApprovalRole === "DCC" ? (
+                                                  <>
+                                                    <button
+                                                      className="btn btn-success"
+                                                      onClick={() => handleProjectApprovalAction("Approved")}
+                                                    >
+                                                      Submit
+                                                    </button>
+                                                    <button
+                                                      className="btn btn-secondary"
+                                                      onClick={handleProjectBackClick}
+                                                    >
+                                                      Cancel
+                                                    </button>
+                                                  </>
+                                                ) : (
+                                                  <>
+                                                    <button
+                                                      className="btn btn-success"
+                                                      onClick={() => handleProjectApprovalAction("Approved")}
+                                                    >
+                                                      Approve
+                                                    </button>
+                                                    <button
+                                                      className="btn btn-danger"
+                                                      onClick={() => handleProjectApprovalAction("Rejected")}
+                                                    >
+                                                      Reject
+                                                    </button>
+                                                    <button
+                                                      className="btn btn-warning"
+                                                      onClick={() => handleProjectApprovalAction("Rework")}
+                                                    >
+                                                      Rework
+                                                    </button>
+                                                    <button
+                                                      className="btn btn-secondary"
+                                                      onClick={handleProjectBackClick}
+                                                    >
+                                                      Cancel
+                                                    </button>
+                                                  </>
+                                                )}
+                                              </>
+                                            )}
+
+                                            {(selectedProjectTask?.Status === "Approved" ||
+                                              selectedProjectTask?.Status === "Rejected" ||
+                                              selectedProjectTask?.Status === "Rework") && (
+                                                <button className="btn btn-secondary" onClick={handleProjectBackClick}>
+                                                  Back
+                                                </button>
+                                              )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 )}
                               </div>

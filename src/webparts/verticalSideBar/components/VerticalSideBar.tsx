@@ -27,10 +27,13 @@ interface NavItem {
   ID: number;
 }
 let siteID: any;
-let response: any; 
+let response: any;
 
-const VerticalContext = ({ _context , component }: any) => {
-  console.log(_context);
+
+let biglogoimage: any
+let smalllogoimage: any
+const VerticalContext = ({ _context, component }: any) => {
+  console.log(_context, "_context");
   // alert(component + "component");
   // const graph = graphfi(...);
   const sp: SPFI = getSP();
@@ -39,6 +42,12 @@ const VerticalContext = ({ _context , component }: any) => {
   const imgBigLogo = require("../assets/logoImgsm.png")
   // const imgLogo = require("../../../Assets/ExtraImage/logosm.png");
   const imgSMLogo = require("../assets/logoImgsm.png");
+
+
+  // const essasmalllogo = require("../assets/logo-sm-1.png");
+  // const essabiglogo = require("../assets/logo-dark-2.png");
+  const essasmalllogo = require("../assets/logoImgsm.png");
+  const essabiglogo = require("../assets/logodarkBig.png");
   // const useimg = require("../assets/useimg.png");
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
   const [isDarkMode, setIsDarkMode] = React.useState(false);
@@ -77,7 +86,7 @@ const VerticalContext = ({ _context , component }: any) => {
   const handleWindowResize = () => {
     setIsMobile(window.innerWidth < 768);
   };
-  
+
   const fetchNavItems = async () => {
     if (localStorage.getItem("NavId") != null && localStorage.getItem("NavId") != undefined && localStorage.getItem("NavId") != "") {
       setuseActive(Number(localStorage.getItem("NavId")))
@@ -86,13 +95,181 @@ const VerticalContext = ({ _context , component }: any) => {
       setCurrentUser(res.Title)
       console.log(res, "currentuser");
     })
-    
-    const siteUrl = "https://alrostamanigroupae.sharepoint.com/sites/Intranet";
+
+    // this is for intranet demos site and prod intranet
+    const fetchImages = async () => {
+      try {
+        debugger
+        const siteProps = await _context.site.select("*", "Url", "Id")();
+        const rootUrl = siteProps.Url.split('/').slice(0, 3).join('/');
+
+        debugger
+
+        console.log(JSON.stringify(siteProps) + "siteProps all");
+        //  const rootUrl = await _context.site.absoluteUrl
+        //             .split('/').slice(0, 3).join('/');
+        console.log("rootUrl", rootUrl);
+        debugger
+
+        console.log("Current Site URL:", siteProps.Url);
+        // Step 1: Get the list item
+        const [settingsItem] = await _context.web.lists
+          .getByTitle("UtilitySettings")
+          .items
+          .select("LogoImage", "SmallLogo", "ID")
+          .getAll();
+
+        if (!settingsItem) {
+          console.error("Item not found!");
+          return { logoUrl: null, smallLogoUrl: null };
+        }
+
+        console.log('Retrieved item:', settingsItem);
+        console.log('Retrieved item:LogoImage', settingsItem.LogoImage);
+        console.log('Retrieved item:SmallLogo', settingsItem.SmallLogo);
+        // console.log('Retrieved item:bigimag', settingsItem.bigimag);
+
+        // Step 2: Extract file names from the JSON strings
+        const getFileName = (imageJson: string) => {
+          if (!imageJson) return null;
+          try {
+            const { fileName } = JSON.parse(imageJson);
+            return fileName;
+          } catch (error) {
+            console.error("JSON parse error:", error);
+            return null;
+          }
+        };
+
+        const logoFileName = getFileName(settingsItem.LogoImage);
+        const smallLogoFileName = getFileName(settingsItem.SmallLogo);
+        // const bigImageFileName = getFileName(settingsItem.bigimag);
+
+        console.log('File names:', {
+          logoFileName,
+          smallLogoFileName,
+          // bigImageFileName
+        });
+
+        // Step 3: Construct URLs based on SharePoint's reserved attachment path
+        // This is the standard pattern for SharePoint's reserved image attachments
+        const constructAttachmentUrl = (fileName: string) => {
+          if (!fileName) return null;
+          return `${siteProps.Url}/_layouts/15/getpreview.ashx?resolution=0&clientMode=modernWebPart&path=${encodeURIComponent(
+            `${siteProps.ServerRelativeUrl}/Lists/UtilitySettings/Attachments/${settingsItem.ID}/${fileName}`
+          )}`;
+        };
+
+        // Alternative direct URL construction (may work better in some cases)
+        const constructDirectUrl = (fileName: string) => {
+          if (!fileName) return null;
+          return `${siteProps.Url}/Lists/UtilitySettings/Attachments/${settingsItem.ID}/${fileName}`;
+        };
+
+        return {
+          logoUrl: constructAttachmentUrl(logoFileName) || constructDirectUrl(logoFileName),
+          smallLogoUrl: constructAttachmentUrl(smallLogoFileName) || constructDirectUrl(smallLogoFileName),
+          // bigImageUrl: constructAttachmentUrl(bigImageFileName) || constructDirectUrl(bigImageFileName)
+        };
+      } catch (error) {
+        console.error("API error:", error);
+        return { logoUrl: null, smallLogoUrl: null };
+      }
+    };
+
+    // Usage
+    const { logoUrl, smallLogoUrl } = await fetchImages();
+    smalllogoimage = smallLogoUrl
+    biglogoimage = logoUrl
+    console.log("Logo URL:", logoUrl);
+    console.log("Small Logo URL:", smallLogoUrl);
+    // console.log("Big Image URL:", bigImageUrl);
+
+    // this is for intranet demos site and prod intranet
+
+
+    //  this is for apfx2 and UAT site
+    //      const utilitySettings = await _context.web.lists
+    //     .getByTitle("UtilitySettings")
+    //     .items
+    //     .select("LogoImage", "SmallLogo" ) // Only fetch needed columns
+    //     .getAll();
+
+    // if (utilitySettings.length === 0) {
+    //     console.error("No items found in UtilitySettings list!");
+    //     // alert('error')
+
+    //     return;
+    // }
+
+    // const settingsItem = utilitySettings[0]; // Get the first (and likely only) item
+    //  console.log(settingsItem + "settingsItem")
+    // console.log("Raw LogoImage:", settingsItem.LogoImage);
+    // console.log("Raw SmallLogo:", settingsItem.SmallLogo);
+    // // console.log("Raw bigimag:", settingsItem.bigimag);
+
+    // const getImageUrl = (imageJsonString: string | null | undefined) => {
+    //     if (!imageJsonString) return null; // Handle null/undefined
+
+    //     try {
+    //         const imageData = JSON.parse(imageJsonString);
+    //         if (imageData?.serverUrl && imageData?.serverRelativeUrl) {
+    //             return `${imageData.serverUrl}${imageData.serverRelativeUrl}`;
+    //         }
+    //     } catch (error) {
+    //         console.error("Failed to parse image JSON:", error);
+    //     }
+    //     return null;
+    // };
+
+    // // Get URLs for both images
+    // const logoImageUrl = getImageUrl(settingsItem.LogoImage);
+    // const smallLogoUrl1 = getImageUrl(settingsItem.SmallLogo);
+    // // const smallLogoUrl2 = getImageUrl(settingsItem.bigimag);
+    // smalllogoimage = smallLogoUrl1
+    // biglogoimage = logoImageUrl
+    // console.log("Logo Image URL:", logoImageUrl);
+    // console.log("Small Logo URL:", smallLogoUrl1);
+    // // console.log("big Logo URL:", smallLogoUrl2);
+
+    //  this is for apfx2 and UAT site
+
+
+    const siteProps = await _context.site.select("Url", "Id")();
+    const rootUrl = siteProps.Url.split('/').slice(0, 3).join('/');
+
+    debugger
+    //  const rootUrl = await _context.site.absoluteUrl
+    //             .split('/').slice(0, 3).join('/');
+    console.log("rootUrl", rootUrl);
+    debugger
+
+    console.log("Current Site URL:", siteProps.Url);
+    console.log("Current Site URL: type", typeof (siteProps.Url));
+    console.log("Current Site ID:", siteProps.Id);
+    console.log("Current Site ID: type", typeof (siteProps.Id));
+
+    let response = await _context.web.lists.getByTitle('UtilitySettings').select('Id')();
+    console.log(response, 'response');
+    console.log(response.Id, 'response');
+    //  alert(JSON.stringify(response.Id + 'response.id'))
+    await _context.web.lists.getByTitle("UtilitySettings").items.getAll().then((res: any) => {
+      console.log(res, 'res');
+      const ImageUrl = res[0].LogoImage == undefined || res[0].LogoImage == null ? "" : JSON.parse(res[0].LogoImage);
+      console.log(ImageUrl.serverUrl + ImageUrl.serverRelativeUrl, 'imgBigLogo2');
+      // biglogoimage = ImageUrl.serverUrl + ImageUrl.serverRelativeUrl
+      const imageData = res[0].SmallLogo == undefined || res[0].SmallLogo == null ? "" : JSON.parse(res[0].SmallLogo);
+      console.log(imageData.serverUrl + imageData.serverRelativeUrl + "SmallLogo2")
+      //  smalllogoimage = imageData.serverUrl + imageData.serverRelativeUrl
+      let imgnew = imageData && imageData.fileName ? `${siteProps.Url}/_api/v2.1/sites('${siteProps.Id}')/lists('${response.Id}')/items('${res[0].ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
+      // alert(imgnew + 'imgnew' )
+    });
+    const siteUrl = "https://officeindia.sharepoint.com/sites/Intranetdemos";
     let listTitle = 'UtilitySettings'
     let CurrentsiteID = "a505b4c0-aec7-4fef-96d6-b0f11e787e0d";
     siteID = CurrentsiteID;
     response = await _context.web.lists.getByTitle(listTitle).select('Id')();
-    console.log("resp",response);
+    console.log("resp", response);
     //setCurrentUser(await getCurrentUserName(_context))
     // if (localStorage.getItem("bigLogo") != null && localStorage.getItem("bigLogo") != undefined && localStorage.getItem("bigLogo") != "" || localStorage.getItem("SmallLogo") != null
     //   && localStorage.getItem("SmallLogo") != undefined && localStorage.getItem("SmallLogo") != "") {
@@ -108,17 +285,19 @@ const VerticalContext = ({ _context , component }: any) => {
       let siteId = siteID;
       let listID = response && response.Id;
       let img1 = imageData && imageData.fileName ? `${siteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${res[0].ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
-      let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
+      let img = imageData && imageData.serverRelativeUrl ? `https://officeindia.sharepoint.com${imageData.serverRelativeUrl}` : img1
       const imageUrl = imageData
         //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
         //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`
         ? img
         : require("../assets/useimg.png");
-      setBigLogo(imageUrl)
+      setBigLogo(imageUrl);
+      setBigLogo(essabiglogo);
       const ImagesmUrl = res[0].SmallLogo == undefined || res[0].SmallLogo == null ? "" : JSON.parse(res[0].SmallLogo);
       console.log(ImagesmUrl.serverUrl + ImagesmUrl.serverRelativeUrl, 'imgBigLogo');
       //setSmallLogo(ImagesmUrl.serverUrl + ImagesmUrl.serverRelativeUrl)
-      setSmallLogo(imgSMLogo);
+      //setSmallLogo(imgSMLogo);
+      setSmallLogo(essasmalllogo);
       // localStorage.setItem("bigLogo", ImageUrl.serverUrl + ImageUrl.serverRelativeUrl)
       // localStorage.setItem("SmallLogo", ImagesmUrl.serverUrl + ImagesmUrl.serverRelativeUrl)
     });
@@ -152,7 +331,7 @@ const VerticalContext = ({ _context , component }: any) => {
     //     ID: item.ID
     //   };
     // });
-    if(component === "DashboardProd") {  
+    if (component === "DashboardProd") {
       await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title , IsActive").expand("Audience").orderBy("Order0", true).getAll().then((res: any) => {
         console.log('%c res', "background-color:red", res);
         const items: NavItem[] = res.map((item: any) => {
@@ -170,12 +349,12 @@ const VerticalContext = ({ _context , component }: any) => {
           return (!nav.EnableAudienceTargeting || (nav.EnableAudienceTargeting && nav.Audience && nav.Audience.some((nv1: any) => { return grptitle.includes(nv1.Title.toLowerCase()); })))
         }
         )
-  
+
         // setNavItems(res);
         setNavItems(securednavitems);
         return items;
       });
-    }else {
+    } else {
       await _context.web.lists.getByTitle("ARGSidebarNavigation").items.select("Title,Url,Icon,ParentId,ID,EnableAudienceTargeting,Audience/Title , IsActive").expand("Audience").filter("IsActive eq 1").orderBy("Order0", true).getAll().then((res: any) => {
         console.log('%c res', "background-color:red", res);
         const items: NavItem[] = res.map((item: any) => {
@@ -193,13 +372,13 @@ const VerticalContext = ({ _context , component }: any) => {
           return (!nav.EnableAudienceTargeting || (nav.EnableAudienceTargeting && nav.Audience && nav.Audience.some((nv1: any) => { return grptitle.includes(nv1.Title.toLowerCase()); })))
         }
         )
-  
+
         // setNavItems(res);
         setNavItems(securednavitems);
         return items;
       });
     }
-  
+
     // }
   };
   console.log(currentUser);
@@ -297,7 +476,7 @@ const VerticalContext = ({ _context , component }: any) => {
     if (matches) {
       const pageName = matches[1]; // Get the matched page name
       //  alert(pageName); // Alert the matched page name
-      
+
       if (pageName === 'workbench') {
         // alert("set workbench");
         localStorage.setItem("NavId", String(24));
@@ -502,7 +681,7 @@ const VerticalContext = ({ _context , component }: any) => {
   };
 
   const getIcon = (iconName: string) => {
-    
+
     const iconMap: { [key: string]: any } = {
       home: Airplay,
       calendar: Calendar,
@@ -624,7 +803,9 @@ const VerticalContext = ({ _context , component }: any) => {
             <li className="item mt-1 mb-0 pt-0">
               <div className="logo_item">
                 <span>
-                  <img src={useHide ? smaalLogo != undefined && smaalLogo != "" && smaalLogo != null ? smaalLogo : imgSMLogo : bigLogo != undefined && bigLogo != "" && bigLogo != null ? bigLogo : imgBigLogo} alt="Logo" style={{ objectFit: 'cover', width: '100%' }} />
+                  {/* <img src={useHide ? smaalLogo != undefined && smaalLogo != "" && smaalLogo != null ? smaalLogo : imgSMLogo : bigLogo != undefined && bigLogo != "" && bigLogo != null ? bigLogo : imgBigLogo} alt="Logo" style={{ objectFit: 'cover', width: '100%' }} />
+                   */}
+                  <img className={useHide ? 'smalllogostyle' : 'largelogostyle'} src={useHide ? smalllogoimage : biglogoimage} />
                 </span>
               </div>
             </li>
@@ -703,11 +884,11 @@ const VerticalContext = ({ _context , component }: any) => {
 };
 
 
-const VerticalSideBar = ({ _context ,  component  }: any) => {
+const VerticalSideBar = ({ _context, component }: any) => {
   return (
     // <UserContext.Provider value={{ setHide: () => { }, useHide: true }}>
     <VerticalContext _context={_context} component={component} />
     // </UserContext.Provider>
   );
 };
-export default VerticalSideBar;
+export default React.memo(VerticalSideBar);

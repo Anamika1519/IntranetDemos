@@ -143,7 +143,7 @@ const HelloWorldContext = ({ props }: any) => {
           <div className="container-fluid paddb">
             <div className="row" >
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
             </div>
             <div className="row mt-2">

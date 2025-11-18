@@ -64,7 +64,7 @@ export const WorkflowAuditHistory = (props: IWorkflowAuditHistoryProps) => {
   React.useEffect(() => {
 
     // if (props.ContentItemId && AuditHistoryRows.length == 0 && !IsHistoryData) {
-      const externalWebUrl = "https://alrostamanigroupae.sharepoint.com/sites/DigitalServices";
+      const externalWebUrl = "https://officeindia.sharepoint.com/sites/DigitalServices";
 
       const externalSp: SPFI = spfi(externalWebUrl).using(SPFx(props.ctx));
       if(externalSp){
@@ -80,7 +80,7 @@ export const WorkflowAuditHistory = (props: IWorkflowAuditHistoryProps) => {
   },[])
 
   const getAllAPI = async () => {
-    const externalWebUrl = "https://alrostamanigroupae.sharepoint.com/sites/DigitalServices";
+    const externalWebUrl = "https://officeindia.sharepoint.com/sites/DigitalServices";
 
       const externalSp: SPFI = spfi(externalWebUrl).using(SPFx(props.ctx));
       console.log("externalSp", externalSp);

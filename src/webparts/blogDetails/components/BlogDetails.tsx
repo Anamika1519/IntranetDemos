@@ -627,7 +627,7 @@ const BlogDetailsContext = ({ props }: any) => {
               <div className="col-lg-8">
                 <div className="row " >
                   <div className="col-lg-3">
-                    <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                     <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
                   </div>
                 </div>
                 {ArrDetails.length > 0
@@ -696,7 +696,7 @@ const BlogDetailsContext = ({ props }: any) => {
                                       title="Screenshot-1"
                                     >
                                       <img
-                                        src={`https://alrostamanigroupae.sharepoint.com${res.fileUrl}`}
+                                        src={`https://officeindia.sharepoint.com${res.fileUrl}`}
                                         className="img-fluid imgcssscustom"
                                         alt="work-thumbnail"
                                         data-themekey="#"

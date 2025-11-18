@@ -408,7 +408,7 @@ const EntityMastercontext = ({ props }: any) => {
               {" "}
               {/* Edit by amjad */}
               <div className="col-lg-3">
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="col-lg-9">
                 <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">

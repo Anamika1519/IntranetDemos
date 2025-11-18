@@ -30,6 +30,8 @@ import { CONTENTTYPE_Media, LIST_TITLE_MediaGallery, LIST_TITLE_EventMaster } fr
 let siteID: any;
 let response: any;
 let videoRef: any;
+const doctype =["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/msword", "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation"]
+
 const HelloWorldContext = ({ props }: any) => {
   const sp: SPFI = getSP();
   // console.log(sp, "sp");
@@ -155,12 +157,16 @@ const HelloWorldContext = ({ props }: any) => {
   const handleImageClick = async (item: any) => {
     //setCurrentImageIndex(index);
     const getknowledgecenterdata = await fetchARGKnowledgeCenterInsideData(sp, Number(item.ID));
+    const fileType = getknowledgecenterdata[0].fileType;
+      if (fileType.startsWith("image/") || fileType.startsWith("video/")) {
+     
     setMediaData(getknowledgecenterdata);
     console.log("getknowledgecenterdata", getknowledgecenterdata)
     setShowModal(true);
     if (videoRef) {
       videoRef.pause(); // Pause the video
     }
+  }
   };
   const visibleCategories = mediagallerycategory.slice(0, 5);
   const overflowCategories = mediagallerycategory.slice(5);
@@ -189,6 +195,34 @@ const HelloWorldContext = ({ props }: any) => {
     videoRef = ele;
     //ele.pause();
   }
+
+  const OpenFile = (obj: any, sts: string) => {
+
+    const fileUrl = `${videositeurl}${obj.fileUrl}`;
+
+    if (sts == "Open") {
+        if (/\.(doc|docx|xls|xlsx|ppt|pptx|csv|docs)$/i.test(fileUrl)) {
+
+            window.open(`${videositeurl}/sites/Intranetdemos/_layouts/15/WopiFrame.aspx?sourcedoc=${encodeURIComponent(obj.fileUrl)}&action=default`, "_blank");
+        } else {
+            window.open(fileUrl, "_blank"); // Open PDF and other files normally
+        }
+
+    }
+    else if (sts == "Download") {
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.setAttribute("download", obj.FileLeafRef); // Suggests a filename for download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    }
+
+
+
+}
+
   return (
     <div id="wrapper" ref={elementRef}>
       <div
@@ -203,7 +237,7 @@ const HelloWorldContext = ({ props }: any) => {
             <div className="row">
               <div className="col-lg-4">
 
-                <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
               </div>
               {/* <div className="col-lg-8">
@@ -343,7 +377,7 @@ const HelloWorldContext = ({ props }: any) => {
                   let siteId = siteID;
                   let listID = response.Id;
                   let img1 = imageData && imageData.fileName ? `${siteUrl}/_api/v2.1/sites('${siteId}')/lists('${listID}')/items('${item.ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content?prefer=noredirect%2Cclosestavailablesize` : ""
-                  let img = imageData && imageData.serverRelativeUrl ? `https://alrostamanigroupae.sharepoint.com${imageData.serverRelativeUrl}` : img1
+                  let img = imageData && imageData.serverRelativeUrl ? `https://officeindia.sharepoint.com${imageData.serverRelativeUrl}` : img1
                   const imageUrl = imageData
                     //? `${siteUrl}/SiteAssets/Lists/ea596702-57db-4833-8023-5dcd2bba46e3/${imageData.fileName}`
                     //? `${imageData.serverUrl}${imageData.serverRelativeUrl}`
@@ -366,16 +400,65 @@ const HelloWorldContext = ({ props }: any) => {
                           className="image-popup" style={{}}
                           title={`Screenshot of ${item.Title || "Untitled"}`}
                         >
-                          {arrjson.length > 0 && arrjson[0].fileType.startsWith('video/') ?
-                            <video muted={true} id='Backendvideo' ref={getvideo} style={{ maxWidth: "100%", height: "100%", width: "100%", borderRadius: "13px", objectFit: "fill" }} className="img-fluid" controls={true}>
-                              <source src={(videositeurl + arrjson[0].fileUrl) + "#t=5"} type="video/mp4"></source>
-                            </video> :
+                            {arrjson.length > 0 && doctype.includes(arrjson[0].fileType) ? (
+                            //  <a href={`${videositeurl}${arrjson[0].fileUrl}`} target="_blank" style={{cursor:'pointer'}}>
                             <img
-                              src={arrjson != null && arrjson[0]?.fileUrl ? arrjson[0]?.fileUrl : require("../../../Assets/ExtraImage/NoDataFound.png")}
+                             onClick={() => OpenFile(arrjson[0], "Open")} src={
+                                arrjson[0]?.fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                ? require("../assets/excel.png")
+                                : arrjson[0]?.fileType === "application/pdf"
+                                ? require("../assets/pdf.png")
+                                : arrjson[0]?.fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                ? require("../assets/Word.png")
+                                : (arrjson[0]?.fileType === "application/vnd.ms-powerpoint" || arrjson[0]?.fileType === "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+                                ? require("../assets/ppt.png")
+                                : require("../../../Assets/ExtraImage/NoDataFound.png")
+                              }
                               alt="media"
-                              style={{ maxWidth: "100%", height: "100%", width: "100%", borderRadius: "13px", objectFit: "cover" }}
-                            />
-                          }
+                              style={{
+                                maxWidth: "100%",
+                                height: "100%",
+                                width: "100%",
+                                borderRadius: "13px",
+                                objectFit: "cover",
+                              }}
+                              />
+                              // </a>
+                            ) : arrjson.length > 0 && arrjson[0].fileType.startsWith("video/") ? (
+                              <video
+                              muted={true}
+                              id="Backendvideo"
+                              ref={getvideo}
+                              style={{
+                                maxWidth: "100%",
+                                height: "100%",
+                                width: "100%",
+                                borderRadius: "13px",
+                                objectFit: "fill",
+                              }}
+                              className="img-fluid"
+                              controls={true}
+                              >
+                              <source
+                                src={(videositeurl + arrjson[0].fileUrl) + "#t=5"}
+                                type="video/mp4"
+                              ></source>
+                              </video>
+                            ) : (
+                              <img
+                              src={arrjson != null && arrjson[0]?.fileUrl ? arrjson[0]?.fileUrl : require("../../../Assets/ExtraImage/NoDataFound.png")}
+
+                              // src={require("../../../Assets/ExtraImage/NoDataFound.png")}
+                              alt="media"
+                              style={{
+                                maxWidth: "100%",
+                                height: "100%",
+                                width: "100%",
+                                borderRadius: "13px",
+                                objectFit: "cover",
+                              }}
+                              />
+                            )}
                         </a>
                         <div className="gall-info">
                           <h4 className="font-16 twolinewrap hovertext mb-0 text-dark fw-bold mt-0">
@@ -428,7 +511,33 @@ const HelloWorldContext = ({ props }: any) => {
             {/* {mediaData != null && mediaData.length > 0 && mediaData.map((item: any, index: number) => { */}
 
 
-            {mediaData.length > 0 && mediaData[0].fileType.startsWith('video/') ?
+            { mediaData.length > 0 && doctype.includes(mediaData[0].fileType) ? (
+                             <a href={`${videositeurl}${mediaData[0].fileUrl}`} target="_blank" style={{cursor:'pointer'}}><img
+                              src={
+                                mediaData[0]?.fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                ? require("../assets/excel.png")
+                                : mediaData[0]?.fileType === "application/pdf"
+                                ? require("../assets/pdf.png")
+                                : mediaData[0]?.fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                ? require("../assets/Word.png")
+                                : (mediaData[0]?.fileType === "application/vnd.ms-powerpoint" || mediaData[0]?.fileType === "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+                                ? require("../assets/ppt.png")
+                                : require("../../../Assets/ExtraImage/NoDataFound.png")
+                              }
+                              alt="media"
+                              style={{
+                                maxWidth: "100%",
+                                height: "100%",
+                                width: "100%",
+                                borderRadius: "13px",
+                                objectFit: "cover",
+                              }}
+                              /></a>
+                            ) :
+           
+           
+           
+            mediaData.length > 0 && mediaData[0].fileType.startsWith('video/') ?
               <video muted={true} id='Backendvideo' ref={getvideo} style={{ width: "100%", height: '100%', objectFit: 'fill' }} className="img-fluid" controls={true}>
                 <source src={videositeurl + mediaData[0].fileUrl} type="video/mp4"></source>
               </video> :

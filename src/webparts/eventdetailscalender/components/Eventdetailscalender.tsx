@@ -671,7 +671,7 @@ const EventdetailscalenderContext = ({ props }: any) => {
 
                 <div className="row " >
                   <div className="col-lg-3">
-                    <CustomBreadcrumb Breadcrumb={Breadcrumb} />
+                     <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
                   </div>
                 </div>
                 {console.log(ArrDetails, "ArrDetails events details", CurrentUser)}

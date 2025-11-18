@@ -8,7 +8,7 @@ export const getKnowledgeCenter = async (_sp, isSuperAdmin) => {
         .items.select("*,Author/EMail,Author/Title,Author/ID").expand("Author")
         .orderBy("Created", false).getAll()
         .then((res) => {
-          console.log(res);
+          console.log("Resknow",res);
   
           //res.filter(x=>x.Category?.Category==str)
           arr = res;

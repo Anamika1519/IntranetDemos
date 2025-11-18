@@ -222,7 +222,8 @@ export const getRequestListsData = async (_sp, status) => {
                   Status: resData[j].Status,
                   TaskID: "",
                   AppID: "",
-                  RedirectionLink: resData[j].RedirectionLink
+                  //RedirectionLink: resData[j].RedirectionLink
+                  RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}${resData[j].RedirectionLink}`
                 })
                 //AllRequestArr.push(resData[j])
               }
@@ -263,7 +264,7 @@ export const getMyRequestsdata = async (_sp, listName, status, portal, SiteBaseU
       return [];
     });
   if (!currentUser) return arr; // Return empty array if user fetch failed
-  apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail&$expand=Author&$filter=${`Author/EMail eq '${currentUser}' and Status eq '${FinalStatus}'`}`;
+  apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail,EmployeeName/Title,EmployeeName/ID,EmployeeName/EMail&$expand=Author,EmployeeName&$filter=${`EmployeeName/EMail eq '${currentUser}' and Status eq '${FinalStatus}'`}`;
 
 
   try {

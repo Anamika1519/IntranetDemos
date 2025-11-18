@@ -56,7 +56,7 @@ export const BusinessAppsComponent = ({ data }: any) => {
       }, []);
     
     return <div>
-        <iframe id="listIframe" src={`https://alrostamanigroupae.sharepoint.com/sites/Intranet/Lists/ARGBusinessApps?viewpath=%2Fsites%2FIntranet%2FLists%2FARGBusinessApps`}  width="100%"
+        <iframe id="listIframe" src={`https://officeindia.sharepoint.com/sites/Intranetdemos/Lists/ARGBusinessApps?viewpath=%2Fsites%2FIntranet%2FLists%2FARGBusinessApps`}  width="100%"
       height="600px"
       style={{ border: 'none' }} />
     </div>;

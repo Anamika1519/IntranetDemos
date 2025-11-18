@@ -599,18 +599,18 @@ font-size: 42px; font-weight: 400;color: #fff;  margin-top: 10px;
 .tile ul li:hover{margin-top: -10px;transition:  0.5s;}
 //For Production 
 .logo img{
-    position: absolute;
-    left: 32px;
-    top: 23px;
-    // top: 60px;
+   position: absolute;
+   left: 32px;
+   top: 23px;
+    
 }
 
-/* For UAT 
-.logo img{
-    position: absolute;
-    left: 32px;
-    top: 60px;
-} */
+// For UAT 
+// .logo img{
+//     position: absolute;
+//    left: 32px;
+//     top: 60px;
+// } 
 
 
 #s4-workspace{overflow-y:hidden !important;}

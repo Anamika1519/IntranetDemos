@@ -1023,7 +1023,7 @@ export const getMyApprovalsdata = async (_sp, listName, status, Actingfor, porta
   //   FinalStatus = "Approved"
   // }
   if (Actingfor != null && Actingfor != undefined && Actingfor != "") {
-    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail&$expand=Author,AssignedTo&$filter=${`AssignedTo/EMail eq '${Actingfor}' and Status eq '${FinalStatus}'`}`;
+    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail,RequestedBy/Title,RequestedBy/EMail,RequestedBy/ID&$expand=Author,AssignedTo,RequestedBy&$filter=${`AssignedTo/EMail eq '${Actingfor}' and Status eq '${FinalStatus}'`}`;
   } else {
     let currentUser;
     await _sp.web.currentUser()
@@ -1037,7 +1037,7 @@ export const getMyApprovalsdata = async (_sp, listName, status, Actingfor, porta
       });
 
     if (!currentUser) return arr; // Return empty array if user fetch failed
-    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail&$expand=Author,AssignedTo&$filter=${`AssignedTo/EMail eq '${currentUser}' and Status eq '${FinalStatus}'`}`;
+    apiUrl = `${SiteBaseURL}/_api/web/lists/getbytitle('${listName}')/items?$select=*,Author/ID,Author/Title,Author/EMail,AssignedTo/ID,AssignedTo/Title,AssignedTo/EMail,RequestedBy/Title,RequestedBy/EMail,RequestedBy/ID&$expand=Author,AssignedTo,RequestedBy&$filter=${`AssignedTo/EMail eq '${currentUser}' and Status eq '${FinalStatus}'`}`;
   }
   try {
     console.log("apiUrlapiUrl", apiUrl);
@@ -1383,13 +1383,14 @@ export const getApprovalListsData = async (_sp, status, Actingfor) => {
                     ID: resData[j].ID,
                     RequestID: resData[j].RequestID,
                     ApprovalTitle: resData[j].ApprovalTitle,
-                    Author: resData[j].Author,
+                    Author: resData[j].RequestedBy,
                     ProcessName: resData[j].ProcessName,
                     Created: new Date(resData[j].Created),
                     Status: resData[j].Status,
                     TaskID: "",
                     AppID: "",
-                    RedirectionLink: resData[j].RedirectionLink
+                    //RedirectionLink: resData[j].RedirectionLink
+                     RedirectionLink: `https://apps.powerapps.com/apps/${res[i].AppId}${resData[j].RedirectionLink}`
                   })
                 }
               }

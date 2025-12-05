@@ -977,7 +977,7 @@ const SocialFeedContext = ({ props }: any) => {
 
                   <>
 
-                    <div className="card cardcss" style={{ borderRadius: '20px' }}>
+                    <div className="card">
 
                       <div className="post-form">
 
@@ -1121,7 +1121,7 @@ const SocialFeedContext = ({ props }: any) => {
                                       )}
                                     </div>
                                     <p style={{ color: 'red', fontSize: '14px', marginTop: '10px' }}>{errorMessage}</p>
-                                    <button type="submit" className="btn btn-sm btn-success primary1  font-121" disabled={!IsEdit}>
+                                    <button type="submit" className="btn btn-sm btn-priamry primary1  font-121" disabled={!IsEdit}>
 
                                     <FontAwesomeIcon style={{float:'left',margin:"7px 6px 0px 0px"}} icon={faPaperPlane} /> Post
 

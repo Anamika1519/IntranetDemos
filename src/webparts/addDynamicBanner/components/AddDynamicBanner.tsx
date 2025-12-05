@@ -596,11 +596,50 @@ debugger
         <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}` }}>
           <div className="container-fluid  paddb">
-            <div className="row">
+          <div className="card mt-2">
+          <div className="card-body">
+          <div className="row">
               <div className="col-lg-3">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
+
+              <div className="col-lg-9">
+                <div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
+                  <div className="d-flex gap-4 flex-wrap align-items-center justify-content-start">
+                    
+                  <a onClick={handleCancel}>
+                  <span className="mt-2 mb-1" data-tooltip='Back'>
+                  <img
+                src={require("../../../CustomAsset/backicon.png")}
+              
+              /></span>
+              </a>
+              <a href={``}>
+              <span className="mt-2 mb-1" data-tooltip='Delete'>
+                  <img
+                src={require("../../../CustomAsset/deleteiocn.png")}
+              
+              /> </span>
+              </a>
+              <a href={`${siteUrl}/SitePages/BannerForm.aspx`}>
+                        <span className="mt-2 mb-1" data-tooltip='Add'>
+                  <img src={require("../../../CustomAsset/addicon.png")}
+              
+              /></span>
+              </a>
+                   
+                    
+                  
+                  
+                  </div>
+                </div>
+              </div>
             </div>
+
+          </div>  </div>
+
+           
+
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row mt-2">
@@ -716,21 +755,20 @@ debugger
                       </div> */}
                       {/* {BnnerImagepostArr!=undefined&&BnnerImagepostArr.length>0?
                     (<><div>{BnnerImagepostArr[0].fileName}</div><img src={BnnerImagepostArr[0].fileName} /></>):""} */}
-                      <div className="text-center butncss">
+                      <div className="d-flex align-items-center justify-content-center  text-center butncss">
                         {InputDisabled == false && (
 
-                          <div className="btn btn-success waves-effect waves-light m-1" style={{ width: '100px' }} onClick={handleFormSubmit}>
+                          <div className="btn-circle1 waves-effect waves-light m-1" onClick={handleFormSubmit}>
                             <div className='d-flex' style={{ justifyContent: 'center' }}>
-                              <img src={require('../../../Assets/ExtraImage/checkcircle.svg')} style={{ width: '1rem' }} alt="Check" /> Submit
-                            </div>
+                            <span className="mt-2 mb-1" data-tooltip='Submit'> <img src={require('../../../CustomAsset/ssubmit.png')} style={{  marginRight: '3px' }} alt="Check" /> </span>                             </div>
                           </div>
 
 
                         )}
-                        <button type="button" className="btn cancel-btn waves-effect waves-light m-1" style={{ width: '100px' }} onClick={handleCancel}>
-                          <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }}
-                            className='me-1' alt="x" />
-                          Cancel
+                        <button style={{minWidth:'auto',border:'0px solid #ccc', background:'transparent'}} type="button" className="btn-circle1 waves-effect waves-light m-1"  onClick={handleCancel}>
+                        <span className="mt-2 mb-1" data-tooltip='Cancel'> <img src={require('../../../CustomAsset/canceli.png')} 
+                   alt="x" />
+                  </span>
                         </button>
                       </div>
                     </form>

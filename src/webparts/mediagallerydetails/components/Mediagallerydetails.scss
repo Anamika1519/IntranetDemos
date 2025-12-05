@@ -1,9 +1,9 @@
 .gal-box {
     // margin-bottom: 15px;
     height: 225px;
-    border-radius: 15px;
+    border-radius: 0px;
     position: relative;
-    border: 1px solid #54ade0;
+    border: 0px solid #54ade0;
     float: left; width: 100%;
     overflow: hidden;
 }
@@ -17,8 +17,8 @@
     vertical-align: middle;
 }
 
-.modal-dialog {min-width: 80% !important; border-radius: 20px !important;}
-.modal-content {min-width: 80% !important; border-radius: 20px !important;}
+.modal-dialog {min-width: 80% !important; border-radius: 0px !important;}
+.modal-content {min-width: 80% !important; border-radius: 0px !important;}
 .modal-dialog .carousel-item{height: 500px;}
 .mediagallery .modal-header{
     padding: 0px !important; border: 0px !important;
@@ -42,7 +42,7 @@
       position: absolute;
   
   }
-.modal-dialog .carousel-item img,.modal-dialog .carousel-item video{border-radius: 15px; width: 100% ; height: 100% !important; object-fit: cover !important;}
+.modal-dialog .carousel-item img,.modal-dialog .carousel-item video{border-radius: 5px; width: 100% ; height: 100% !important; object-fit: cover !important;}
 .carousel-indicators {
     bottom: 0;
     /* display: flex; */

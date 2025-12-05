@@ -842,11 +842,11 @@ try {
                        
                      </div>
                     </div>
-                    <div className="" style={{ backgroundColor: 'white', border:'1px solid #54ade0', marginTop:'10px', borderRadius:'20px', padding: '15px'}}>
+                    <div className="" style={{ backgroundColor: 'white',  marginTop:'10px', borderRadius:'5px', padding: '15px'}}>
                       <h3 className="text-dark font-16 mb-1">Basic Information</h3>
                       <div id="dynamicDetailsContainer"></div>
                     </div>
-                    <div className="" style={{ backgroundColor: 'white', border:'1px solid #54ade0', marginTop:'18px', borderRadius:'20px', padding: '15px'}}>
+                    <div className="" style={{ backgroundColor: 'white',  marginTop:'18px', borderRadius:'5px', padding: '15px'}}>
                       <div >
                       <h3 className="text-dark font-16 mb-2">File Preview</h3>
                       <div id="spinner" style={{display: "none"}}>Loading...</div>
@@ -854,7 +854,7 @@ try {
                       </div>
                     </div>
                   {toggleLog && (
-                                <div className="" style={{ backgroundColor: 'white', border:'1px solid #54ade0', marginTop:'20px', borderRadius:'20px', padding: '15px'}}>
+                                <div className="" style={{ backgroundColor: 'white',  marginTop:'20px', borderRadius:'5px', padding: '15px'}}>
  <iframe id="filePreview" width="100%" height="400"></iframe>
                          <div className="mt-3">
                           <div className="">
@@ -929,7 +929,7 @@ try {
                           <div>
                           <div className="DMSMasterContainer">
                               {/* <h4 className="page-title fw-bold mb-1 font-20">Settings</h4> */}
-                              <div className="" style={{ backgroundColor: 'white', border:'1px solid #54ade0', marginTop:'20px', borderRadius:'20px', padding: '15px'}}>
+                              <div className="" style={{ backgroundColor: 'white',  marginTop:'20px', borderRadius:'5px', padding: '15px'}}>
                                   <table className="mtbalenew newtabo">
                                     <thead >
                                       <tr>

@@ -425,9 +425,93 @@ const SocialFeedContext = ({ props }: any) => {
   //   }
 
   // };
+  const postbtnclicked = async (e:any) => {
+    //alert("ghghghgh")
+    debugger
+    if (!Contentpost.trim() && SocialFeedImagesJson.length === 0) {
+      // Validation message when both fields are empty
+      setValidationMessage("Please type something or upload an image.");
+      setTimeout(() => setValidationMessage(""), 3000); // Clear message after 3 seconds
+      return;
+    }
 
+    setLoading(true);
+    try {
+      let ImagesIdss: any[] = [];
+      setIsSubmitting(true); // Start submitting
+      let newPostss: any;
+
+      const newPost = {
+        Contentpost,
+        SocialFeedImagesJson,
+        Created: new Date().toLocaleTimeString(),
+        userName: currentUsername,
+        userAvatar: `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${currentEmail}`,
+        likecount: 0,
+        commentcount: 0,
+        shares: 0,
+      };
+      ImagesIdss = ImagesIdss.concat(
+        SocialFeedImagesJson.map((item: any) => item.ID)
+      );
+      setImageIds(ImagesIdss);
+      try {
+        await sp.web.lists
+          .getByTitle("ARGSocialFeed")
+          .items.add({
+            Contentpost,
+            SocialFeedImagesJson: JSON.stringify(SocialFeedImagesJson),
+            UserName: currentUsername,
+            userAvatar: `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${currentEmail}`,
+            likecount: 0,
+            commentcount: 0,
+            SocialFeedImagesId: ImagesIdss,
+          })
+          .then(async (ele: any) => {
+            newPostss = {
+              Contentpost,
+              SocialFeedImagesJson,
+              Created: new Date().toLocaleTimeString(),
+              userName: currentUsername,
+              userAvatar: `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${currentEmail}`,
+              likecount: 0,
+              commentcount: 0,
+              shares: 0,
+              Id: ele.data.Id,
+            };
+
+            const updatedPosts = [newPostss, ...posts];
+            await addActivityLeaderboard(sp, "Post By User");
+            setPosts(updatedPosts);
+            localStorage.setItem("posts", JSON.stringify(updatedPosts));
+            fetchPosts();
+            const notifiedArr = {
+              ContentId: ele.data.Id,
+              NotifiedUserId: ele.data.AuthorId,
+              ContentType0: "Post By User",
+              ContentName: truncateText(ele.data.Contentpost, 250),
+              ActionUserId: CurrentUser.Id,
+              DeatilPage: "SocialFeed",
+              ReadStatus: false,
+            };
+            await addNotification(notifiedArr, sp);
+          });
+
+        // Clear fields
+        setContent("");
+        setImages([]);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error adding post to SharePoint: ", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error("Error toggling Reply:", error);
+    }
+  }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent form default behavior
+    //e.preventDefault(); // Prevent form default behavior
     debugger;
 
     if (!Contentpost.trim() && SocialFeedImagesJson.length === 0) {
@@ -1122,7 +1206,7 @@ const SocialFeedContext = ({ props }: any) => {
 
               <div className="col-lg-3">
 
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+                <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp} />
 
               </div>
 
@@ -1274,7 +1358,7 @@ const SocialFeedContext = ({ props }: any) => {
 
                   <>
 
-                    <div className="card cardcss" style={{ borderRadius: '20px' }}>
+                    <div className="card cardcss">
 
                       <div className="post-form">
 
@@ -1302,7 +1386,9 @@ const SocialFeedContext = ({ props }: any) => {
 
                               <div className="border rounded">
 
-                                <form onSubmit={handleSubmit} className="comment-area-box">
+                                <form
+                                  //onSubmit={handleSubmit} 
+                                  className="comment-area-box">
 
                                   <textarea
 
@@ -1391,7 +1477,7 @@ const SocialFeedContext = ({ props }: any) => {
                                       )}
                                     </div>
 
-                                    <button type="button" className="btn btn-sm btn-primary primary1 font-121" disabled={Loading}>
+                                    <button type="button" className="btn btn-sm btn-primary primary1 font-121" disabled={Loading} onClick={(e) => postbtnclicked (e)}>
 
                                       <FontAwesomeIcon style={{ float: 'left', margin: "7px 6px 0px 0px" }} icon={faPaperPlane} /> Post
 
@@ -1400,6 +1486,7 @@ const SocialFeedContext = ({ props }: any) => {
                                   </div>
 
                                 </form>
+                                
                                 {validationMessage && <p className="validation-message">{validationMessage}</p>}
                               </div>
 

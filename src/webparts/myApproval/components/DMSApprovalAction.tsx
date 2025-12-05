@@ -2326,11 +2326,11 @@ declare global {
                 <div className="row">
                   <div className="col-12">
   
-                    <div className="" style={{ backgroundColor: 'white', border: '1px solid #54ade0', marginTop: '20px', borderRadius: '20px', padding: '15px' }}>
+                    <div className="" style={{ backgroundColor: 'white',  marginTop: '20px', borderRadius: '5px', padding: '15px' }}>
                       <h3 className="text-dark font-16 mb-1">Basic Information</h3>
                       <div id="dynamicDetailsContainer"></div>
                     </div>
-                    <div className="" style={{ backgroundColor: 'white', border: '1px solid #54ade0', marginTop: '20px', borderRadius: '20px', padding: '15px' }}>
+                    <div className="" style={{ backgroundColor: 'white',  marginTop: '20px', borderRadius: '5px', padding: '15px' }}>
                     <div style={{display:'flex',gap:'5px', justifyContent:'end', marginBottom:'5px'}}>         <button
         type="button"
         style={{
@@ -2395,7 +2395,7 @@ declare global {
       ></iframe>
                     </div>
                     {toggleLog && (
-                      <div className="" style={{ backgroundColor: 'white', border: '1px solid #54ade0', marginTop: '20px', borderRadius: '20px', padding: '15px' }}>
+                      <div className="" style={{ backgroundColor: 'white',  marginTop: '20px', borderRadius: '5px', padding: '15px' }}>
                         
                         <div className="">
                           <div className="">
@@ -2470,7 +2470,7 @@ declare global {
                     <div>
                       <div className="DMSMasterContainer">
                         {/* <h4 className="page-title fw-bold mb-1 font-20">Settings</h4> */}
-                        <div className="" style={{ backgroundColor: 'white', border: '1px solid #54ade0', marginTop: '20px', borderRadius: '20px', padding: '15px' }}>
+                        <div className="" style={{ backgroundColor: 'white',  marginTop: '20px', borderRadius: '5px', padding: '15px' }}>
                           <table className="mtbalenew">
                             <thead >
                               <tr>

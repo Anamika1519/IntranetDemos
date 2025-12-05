@@ -1742,12 +1742,55 @@ const closeModal = () => {
         <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}`, marginTop: '0rem' }}>
           <div className="container-fluid  paddb">
-            <div className="row">
-              <div className="col-lg-5">
+          <div className="card mt-2">
+          <div className="card-body">
+          <div className="row align-items-center ">
+              <div className="col-lg-4">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
+              <div className="col-lg-8">
+
+<div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
+
+  <div className="d-flex gap-4 flex-wrap align-items-center justify-content-start">
+
+<a onClick={handleFormSubmit}>
+                <span className="mt-2 mb-1" data-tooltip='Back'>
+                <img
+              src={require("../../../CustomAsset/backicon.png")}
+            
+            /></span>
+            </a>
+            <a href={``}>
+            <span className="mt-2 mb-1" data-tooltip='Delete'>
+                <img
+              src={require("../../../CustomAsset/deleteiocn.png")}
+            
+            /> </span>
+            </a>
+            <a href={`${siteUrl}/SitePages/AddAnnouncement.aspx`}>
+                      <span className="mt-2 mb-1" data-tooltip='Add'>
+                <img src={require("../../../CustomAsset/addicon.png")}
+            
+            /></span>
+            </a>
+                 
+                 
+    
+
+  
+
+  </div>
+
+</div>
+
+</div>
+
             </div>
-            <div className="card mt-3" >
+
+            </div>
+            </div>
+            <div className="card mt-2" >
               <div className="card-body">
                 <div className="row mt-2">
                   {Loading ?
@@ -2072,8 +2115,8 @@ const closeModal = () => {
               rows != null && rows.length > 0 && !ApprovalMode ?
                 (
                   <div className="mt-2">
-                    <div className="card cardborder p-4">
-                    <div className="">
+                    <div className="card cardborder">
+                    <div className="card-body">
 
 <strong className='font-16 mb-1'>Approval Hierarchy</strong>
 <p className='font-14 text-muted mb-3 mt-1'>Define Approaval Hierarchy for the documents.</p>
@@ -2191,27 +2234,28 @@ const closeModal = () => {
             }
               {
                       !InputDisabled ?
-                        (<div className="text-center" style={{ marginTop: '2rem',marginBottom: '2rem'  }}>
-                          <div className="btn btn-success waves-effect waves-light m-1" style={{width:'145px' }} onClick={handleSaveAsDraft}>
+                        (<div className="text-center d-flex gap-4 text-center justify-content-center" style={{ marginTop: '2rem',marginBottom: '2rem'  }}>
+                          <div className=" btn-circle1 waves-effect waves-light m-1"  onClick={handleSaveAsDraft}>
                             <div className='d-flex' style={{ justifyContent: 'center' }}>
-                              <img src={require('../../../Assets/ExtraImage/checkcircle.svg')} style={{ width: '1rem' }} className='me-1' alt="Check" /> Save As Draft
+                            <span className="mt-2 mb-1" data-tooltip='Save As Draft'> <img src={require('../../../CustomAsset/saveas.png')}  alt="Check" /></span>
+                            
                             </div>
                           </div>
-                          <div className="btn btn-success waves-effect waves-light m-1" style={{ width:'145px' }} onClick={handleFormSubmit}>
+                          <div className="btn-circle1 waves-effect waves-light m-1" onClick={handleFormSubmit}>
                             <div className='d-flex' style={{ justifyContent: 'center'}}>
-                              <img src={require('../../../Assets/ExtraImage/checkcircle.svg')} style={{ width: '1rem' }} className='me-1' alt="Check" /> Submit
+                            <span className="mt-2 mb-1" data-tooltip='Submit'> <img src={require('../../../CustomAsset/ssubmit.png')}  alt="Check" /> </span> 
                             </div>
                           </div>
-                          <button type="button" className="btn cancel-btn waves-effect waves-light m-1" style={{width:'145px' }} onClick={handleCancel}>
-                            <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }}
-                              className='me-1' alt="x" />
-                            Cancel
+                          <button type="button" className="btn-circle1 waves-effect waves-light m-1" style={{minWidth:'auto',border:'0px solid #ccc', background:'transparent'}} onClick={handleCancel}>
+                          <span className="mt-2 mb-1" data-tooltip='Cancel'> <img src={require('../../../CustomAsset/canceli.png')} 
+                    alt="x" />
+                  </span>
                           </button>
                         </div>) :
-                        (modeValue == 'view') && (<div className="text-center" style={{ marginTop: '2rem' }}><button type="button" className="btn cancel-btn waves-effect waves-light m-1" style={{ width:'145px' }} onClick={handleCancel}>
-                          <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }}
-                            className='me-1' alt="x" />
-                          Cancel
+                        (modeValue == 'view') && (<div className="text-center" style={{ marginTop: '2rem' }}><button type="button" className="btn-circle1 waves-effect waves-light m-1" style={{minWidth:'auto',border:'0px solid #ccc', background:'transparent'}}  onClick={handleCancel}>
+                           <span className="mt-2 mb-1" data-tooltip='Cancel'>  <img src={require('../../../CustomAsset/canceli.png')} 
+                   alt="x" />
+                 </span>
                         </button></div>)
                     }
             {formData.title != "" &&

@@ -1943,533 +1943,21 @@ const GroupandTeamcontext = ({ props }: any) => {
 
           <div className="container-fluid  paddb">
 
-            <div className="row">
+            
 
-              <div className="col-lg-3">
-
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
-
-              </div>
-
-              <div className="col-lg-9">
-
-                <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
-
-                  {/* Button to trigger modal */}
-
-                  <button
-
-                    type="button"
-
-                    data-bs-toggle="modal"
-
-                    data-bs-target="#discussionModal"
-
-                    className="btn btn-secondary font-14 waves-effect waves-light"
-
-                  >
-
-                    <i className="fe-plus-circle"></i> Create New Group
-
-                  </button>
-
-                </div>
-
-
-
-                {/* Bootstrap Modal */}
-
-                <div
-
-                  className="modal fade bd-example-modal-lg"
-
-                  id="discussionModal"
-
-                  tabIndex={-1}
-
-                  aria-labelledby="exampleModalLabel"
-
-                  aria-hidden="true"
-
-                  data-target=".bd-example-modal-lg"
-
-                >
-
-                  <div className="modal-dialog modal-lg ">
-
-                    <div className="modal-content">
-
-                      <div className="modal-header">
-
-                        <h5 className="modal-title m-0" id="exampleModalLabel">
-
-                          Create New Group
-
-                        </h5>
-
-                        <button
-
-                          type="button"
-
-                          className="btn-close"
-
-                          data-bs-dismiss="modal"
-
-                          aria-label="Close"
-
-                        ></button>
-
-                      </div>
-
-                      <div className="modal-body">
-
-                        <form className="row">
-                          {/* <div className="col-lg-6">
-                            <div className="mb-3">
-
-                              <div className="d-flex justify-content-between align-items-center">
-
-                                <div>
-
-                                  <label
-
-                                    htmlFor="discussionThumbnail"
-
-                                    className="form-label"
-
-                                  >
-
-                                    Upload a Docs{" "}
-
-                                 
-
-                                  </label>
-
-                                </div>
-
-                                <div className="d-flex align-items-center">
-
-                                  <FontAwesomeIcon
-
-                                    icon={faCloudArrowUp}
-
-                                    className="me-2"
-
-                                  />
-
-                                  {(DocumentpostArr1.length > 0 &&
-
-                                    DocumentpostArr1.length === 1 && (
-
-                                      <a
-
-                                        onClick={() =>
-
-                                          setShowModalFunc(true, "docs")
-
-                                        }
-
-                                        style={{ fontSize: "0.875rem" }}
-
-                                      >
-
-                                        <FontAwesomeIcon icon={faPaperclip} />{" "}
-
-                                        {DocumentpostArr1.length} file Attached
-
-                                      </a>
-
-                                    )) ||
-
-                                    (DocumentpostArr1.length > 0 &&
-
-                                      DocumentpostArr1.length > 1 && (
-
-                                        <a
-
-                                          onClick={() =>
-
-                                            setShowModalFunc(true, "docs")
-
-                                          }
-
-                                          style={{ fontSize: "0.875rem" }}
-
-                                        >
-
-                                          <FontAwesomeIcon icon={faPaperclip} />{" "}
-
-                                          {DocumentpostArr1.length} files
-
-                                          Attached
-
-                                        </a>
-
-                                      ))}
-
-                                </div>
-
-                              </div>
-
-                              <input
-
-                                type="file"
-
-                                id="groupteamThumbnail"
-
-                                name="groupteamThumbnail"
-
-                                className="form-control inputcss"
-
-                                multiple
-
-                                onChange={(e) =>
-
-                                  onFileChange(e, "Docs", "GroupTeamsDocs")
-
-                                }
-
-                              />
-
-                            </div>
-                          </div> */}
-
-
-
-                          <div className="col-lg-6">
-
-                            <div className="mb-3">
-
-                              <label htmlFor="topic" className="form-label">
-
-                                Group Name{" "}
-
-                                <span className="text-danger">*</span>
-
-                              </label>
-
-                              <input
-
-                                type="text"
-
-                                id="GroupName"
-
-                                name="GroupName"
-                                maxLength={100}
-                                placeholder="Enter Group Name"
-
-                                className="form-control"
-
-                                value={formData.GroupName}
-
-                                onChange={(e) =>
-
-                                  onChange(e.target.name, e.target.value)
-
-                                }
-
-                              />
-
-                            </div>
-
-                          </div>
-
-                          <div className="col-lg-6">
-
-                            <div className="mb-3">
-
-                              <label htmlFor="Type" className="form-label">
-                                Visible to  {" "}
-
-
-                              </label>
-
-                              <select
-
-                                className="form-select"
-
-                                id="Type"
-
-                                name="GroupType"
-
-                                value={formData.GroupType}
-
-                                onChange={(e) =>
-
-                                  onChange(e.target.name, e.target.value)
-
-                                }
-
-                              >
-
-                                <option>Select</option>
-
-                                {GrouTypeData.map((item, index) => {
-
-                                  console.log("item-->>", item);
-
-                                  return (
-
-                                    <option key={index} value={item}>
-
-                                      {item}
-
-                                    </option>
-
-                                  );
-
-                                })}
-
-                              </select>
-
-                            </div>
-
-                          </div>
-
-                          {/* <div className="col-lg-6">
-
-                            <div className="mb-3">
-
-                              <label htmlFor="entity" className="form-label">
-
-                                Department{" "}
-
-             
-
-                              </label>
-
-                              <select
-
-                                className="form-select inputcss"
-
-                                id="entity"
-
-                                name="entity"
-
-                                value={formData.entity}
-
-                                onChange={(e) =>
-
-                                  onChange(e.target.name, e.target.value)
-
-                                }
-
-                              >
-
-                                <option value="">Select</option>
-
-                                {EnityData.map((item, index) => (
-
-                                  <option key={index} value={item.id}>
-
-                                    {item.name}
-
-                                  </option>
-
-                                ))}
-
-                              </select>
-
-                            </div>
-
-                          </div> */}
-
-                          {IsinvideHide && (
-
-                            <div className="col-lg-12">
-
-                              <div className="mb-3">
-
-                                <label
-
-                                  htmlFor="invitemembers"
-
-                                  className="form-label"
-
-                                >
-                                  Select Members{" "}
-                                  <span className="text-danger">*</span>
-
-                                </label>
-
-                                {/* <Multiselect
-
-                                  options={options}
-
-                                  selectedValues={selectedValue}
-
-                                  onSelect={onSelect}
-
-                                  onRemove={onRemove}
-
-                                  displayValue="name"
-
-                                /> */}
-                                <Multiselect
-                                  options={options}
-                                  selectedValues={selectedValue}
-                                  onSelect={onSelect}
-                                  onRemove={onRemove}
-                                  displayValue="name"
-                                  // showCheckbox={true}
-                                  placeholder={placeholder} // Change the placeholder text
-                                  avoidHighlightFirstOption={true} // Option to avoid highlighting the first option by default
-                                  customCloseIcon={<span>&times;</span>} // Custom icon for removing selected items
-                                  closeIcon="cancel" // Close icon for clearing selections
-                                />
-
-                              </div>
-
-                            </div>
-
-                          )}
-
-
-
-                          <div className="col-lg-12">
-
-                            <div className="mb-3">
-
-                              <label
-
-                                htmlFor="GroupDescription"
-
-                                className="form-label"
-
-                              >
-                                Group Objective{" "}
-
-                              </label>
-
-                              <textarea
-
-                                className="form-control"
-
-                                id="GroupDescription"
-
-                                placeholder="Enter Description"
-
-                                name="GroupDescription"
-
-                                rows={3}
-
-                                style={{ height: '120px' }}
-
-                                value={formData.GroupDescription}
-
-                                onChange={(e) =>
-
-                                  onChange(e.target.name, e.target.value)
-
-                                }
-
-                              ></textarea>
-
-                            </div>
-
-                          </div>
-
-                          <div className="text-center butncss">
-
-                            <div  style={{
-
-justifyContent: "center",
-
-width: "105px",
-
-}}
-
-                              className="btn btn-success waves-effect waves-light m-1"
-
-                              
-
-                              onClick={handleFormSubmit}
-
-                            >
-
-                              <div
-
-                                className="d-flex"
-
-                                style={{
-
-                                  justifyContent: "center",
-
-                                 
-
-                                }}
-
-                              >
-
-                                <img
-
-                                  src={require("../../../Assets/ExtraImage/checkcircle.svg")}
-
-                                  style={{ width: "1rem", marginRight:'3px' }}
-
-                                  alt="Check"
-
-                                />{" "}
-
-                                Create
-
-                              </div>
-
-                            </div>
-
-                            <button style={{width:'100px', justifyContent:'center'}}
-
-                              type="button"
-
-                              className="btn cancel-btn waves-effect waves-light m-1"
-
-                              
-
-                              data-bs-dismiss="modal"
-
-                            // onClick={handleCancel}
-
-                            >
-
-                              <img
-
-                                src={require("../../../Assets/ExtraImage/xIcon.svg")}
-
-                                style={{ width: "1rem",marginRight:'3px' }}
-
-                                
-
-                                alt="x"
-
-                              />
-
-                              Cancel
-
-                            </button>
-
-                          </div>
-
-                        </form>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div className="col-12 mt-3">
+            <div className="col-12 mt-2">
               <div className="card mb-0">
                 <div className="card-body">
                   <div className="row justify-content-between">
-                    <div className="col-md-12">
-                      <div className="d-flex flex-wrap align-items-center justify-content-center">
-                        <ul className="nav nav-pills navtab-bg float-end justify-content-center" role="tablist">
+                  <div className="col-md-4">
+                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+
+                  </div>
+
+                    
+                    <div className="col-md-8">
+                      <div className="d-flex flex-wrap align-items-center justify-content-end mt-2">
+                        <ul className="nav nav-pills navtab-bg float-end justify-content-end me-3" role="tablist">
                           <li className="nav-item" role="presentation">
                             <a onClick={() => handleTabClick("allgroups")}
                               className={`nav-link ${activeTab === "allgroups" ? "active" : ""
@@ -2489,6 +1977,512 @@ width: "105px",
                               aria-selected={activeTab === "groupsyoufollow"} role="tab" tabIndex={-1}>Groups You Follow</a>
                           </li>
                         </ul>
+                        
+                <div className="d-flex flex-wrap align-items-center justify-content-end ">
+
+{/* Button to trigger modal */}
+
+<button
+
+  type="button"
+
+  data-bs-toggle="modal"
+
+  data-bs-target="#discussionModal"
+
+  className="btn btn-secondary font-14 waves-effect waves-light"
+
+>
+
+  <i className="fe-plus-circle"></i> Create New Group
+
+</button>
+
+</div>
+
+
+
+{/* Bootstrap Modal */}
+
+<div
+
+className="modal fade bd-example-modal-lg"
+
+id="discussionModal"
+
+tabIndex={-1}
+
+aria-labelledby="exampleModalLabel"
+
+aria-hidden="true"
+
+data-target=".bd-example-modal-lg"
+
+>
+
+<div className="modal-dialog modal-lg ">
+
+  <div className="modal-content">
+
+    <div className="modal-header">
+
+      <h5 className="modal-title m-0" id="exampleModalLabel">
+
+        Create New Group
+
+      </h5>
+
+      <button
+
+        type="button"
+
+        className="btn-close"
+
+        data-bs-dismiss="modal"
+
+        aria-label="Close"
+
+      ></button>
+
+    </div>
+
+    <div className="modal-body">
+
+      <form className="row">
+        {/* <div className="col-lg-6">
+          <div className="mb-3">
+
+            <div className="d-flex justify-content-between align-items-center">
+
+              <div>
+
+                <label
+
+                  htmlFor="discussionThumbnail"
+
+                  className="form-label"
+
+                >
+
+                  Upload a Docs{" "}
+
+               
+
+                </label>
+
+              </div>
+
+              <div className="d-flex align-items-center">
+
+                <FontAwesomeIcon
+
+                  icon={faCloudArrowUp}
+
+                  className="me-2"
+
+                />
+
+                {(DocumentpostArr1.length > 0 &&
+
+                  DocumentpostArr1.length === 1 && (
+
+                    <a
+
+                      onClick={() =>
+
+                        setShowModalFunc(true, "docs")
+
+                      }
+
+                      style={{ fontSize: "0.875rem" }}
+
+                    >
+
+                      <FontAwesomeIcon icon={faPaperclip} />{" "}
+
+                      {DocumentpostArr1.length} file Attached
+
+                    </a>
+
+                  )) ||
+
+                  (DocumentpostArr1.length > 0 &&
+
+                    DocumentpostArr1.length > 1 && (
+
+                      <a
+
+                        onClick={() =>
+
+                          setShowModalFunc(true, "docs")
+
+                        }
+
+                        style={{ fontSize: "0.875rem" }}
+
+                      >
+
+                        <FontAwesomeIcon icon={faPaperclip} />{" "}
+
+                        {DocumentpostArr1.length} files
+
+                        Attached
+
+                      </a>
+
+                    ))}
+
+              </div>
+
+            </div>
+
+            <input
+
+              type="file"
+
+              id="groupteamThumbnail"
+
+              name="groupteamThumbnail"
+
+              className="form-control inputcss"
+
+              multiple
+
+              onChange={(e) =>
+
+                onFileChange(e, "Docs", "GroupTeamsDocs")
+
+              }
+
+            />
+
+          </div>
+        </div> */}
+
+
+
+        <div className="col-lg-6">
+
+          <div className="mb-3">
+
+            <label htmlFor="topic" className="form-label">
+
+              Group Name{" "}
+
+              <span className="text-danger">*</span>
+
+            </label>
+
+            <input
+
+              type="text"
+
+              id="GroupName"
+
+              name="GroupName"
+              maxLength={100}
+              placeholder="Enter Group Name"
+
+              className="form-control"
+
+              value={formData.GroupName}
+
+              onChange={(e) =>
+
+                onChange(e.target.name, e.target.value)
+
+              }
+
+            />
+
+          </div>
+
+        </div>
+
+        <div className="col-lg-6">
+
+          <div className="mb-3">
+
+            <label htmlFor="Type" className="form-label">
+              Visible to  {" "}
+
+
+            </label>
+
+            <select
+
+              className="form-select"
+
+              id="Type"
+
+              name="GroupType"
+
+              value={formData.GroupType}
+
+              onChange={(e) =>
+
+                onChange(e.target.name, e.target.value)
+
+              }
+
+            >
+
+              <option>Select</option>
+
+              {GrouTypeData.map((item, index) => {
+
+                console.log("item-->>", item);
+
+                return (
+
+                  <option key={index} value={item}>
+
+                    {item}
+
+                  </option>
+
+                );
+
+              })}
+
+            </select>
+
+          </div>
+
+        </div>
+
+        {/* <div className="col-lg-6">
+
+          <div className="mb-3">
+
+            <label htmlFor="entity" className="form-label">
+
+              Department{" "}
+
+
+
+            </label>
+
+            <select
+
+              className="form-select inputcss"
+
+              id="entity"
+
+              name="entity"
+
+              value={formData.entity}
+
+              onChange={(e) =>
+
+                onChange(e.target.name, e.target.value)
+
+              }
+
+            >
+
+              <option value="">Select</option>
+
+              {EnityData.map((item, index) => (
+
+                <option key={index} value={item.id}>
+
+                  {item.name}
+
+                </option>
+
+              ))}
+
+            </select>
+
+          </div>
+
+        </div> */}
+
+        {IsinvideHide && (
+
+          <div className="col-lg-12">
+
+            <div className="mb-3">
+
+              <label
+
+                htmlFor="invitemembers"
+
+                className="form-label"
+
+              >
+                Select Members{" "}
+                <span className="text-danger">*</span>
+
+              </label>
+
+              {/* <Multiselect
+
+                options={options}
+
+                selectedValues={selectedValue}
+
+                onSelect={onSelect}
+
+                onRemove={onRemove}
+
+                displayValue="name"
+
+              /> */}
+              <Multiselect
+                options={options}
+                selectedValues={selectedValue}
+                onSelect={onSelect}
+                onRemove={onRemove}
+                displayValue="name"
+                // showCheckbox={true}
+                placeholder={placeholder} // Change the placeholder text
+                avoidHighlightFirstOption={true} // Option to avoid highlighting the first option by default
+                customCloseIcon={<span>&times;</span>} // Custom icon for removing selected items
+                closeIcon="cancel" // Close icon for clearing selections
+              />
+
+            </div>
+
+          </div>
+
+        )}
+
+
+
+        <div className="col-lg-12">
+
+          <div className="mb-3">
+
+            <label
+
+              htmlFor="GroupDescription"
+
+              className="form-label"
+
+            >
+              Group Objective{" "}
+
+            </label>
+
+            <textarea
+
+              className="form-control"
+
+              id="GroupDescription"
+
+              placeholder="Enter Description"
+
+              name="GroupDescription"
+
+              rows={3}
+
+              style={{ height: '120px' }}
+
+              value={formData.GroupDescription}
+
+              onChange={(e) =>
+
+                onChange(e.target.name, e.target.value)
+
+              }
+
+            ></textarea>
+
+          </div>
+
+        </div>
+
+        <div className="text-center butncss">
+
+          <div  style={{
+
+justifyContent: "center",
+
+width: "105px",
+
+}}
+
+            className="btn btn-primary waves-effect waves-light m-1"
+
+            
+
+            onClick={handleFormSubmit}
+
+          >
+
+            <div
+
+              className="d-flex"
+
+              style={{
+
+                justifyContent: "center",
+
+               
+
+              }}
+
+            >
+
+              <img
+
+                src={require("../../../Assets/ExtraImage/checkcircle.svg")}
+
+                style={{ width: "1rem", marginRight:'3px' }}
+
+                alt="Check"
+
+              />{" "}
+
+              Create
+
+            </div>
+
+          </div>
+
+          <button style={{width:'100px', justifyContent:'center'}}
+
+            type="button"
+
+            className="btn cancel-btn waves-effect waves-light m-1"
+
+            
+
+            data-bs-dismiss="modal"
+
+          // onClick={handleCancel}
+
+          >
+
+            <img
+
+              src={require("../../../Assets/ExtraImage/xIcon.svg")}
+
+              style={{ width: "1rem",marginRight:'3px' }}
+
+              
+
+              alt="x"
+
+            />
+
+            Cancel
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
                       </div>
                     </div>
                   </div>
@@ -2498,7 +2492,7 @@ width: "105px",
 
 
             {activeTab === "allgroups" && (
-              <div className="row mt-4">
+              <div className="row mt-2">
                 {!loading && groupsData.length == 0 &&
                   <div
 
@@ -2550,7 +2544,7 @@ width: "105px",
 
                     <div
 
-                      style={{ background: "#12a8de", color: "#fff" }}
+                     
 
                       className="card heightcard newhoverzom"
 
@@ -2670,7 +2664,7 @@ width: "105px",
             )}
 
             {activeTab === "groupsyoucreated" && (
-              <div className="row mt-4">
+              <div className="row mt-2">
                
                 {loading ? 
                 (<div className="loadernewadd">
@@ -2844,7 +2838,7 @@ width: "105px",
             )}
 
             {activeTab === "groupsyoufollow" && (
-              <div className="row mt-4">
+              <div className="row mt-2">
                
                 {loading ? (<div className="loadernewadd">
                   <div>
@@ -2994,6 +2988,7 @@ width: "105px",
     </div>
 
   );
+
 
 };
 

@@ -234,35 +234,20 @@ const HelloWorldContext = ({ props }: any) => {
         <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}`, marginTop: '0rem' }}>
           <div style={{ paddingTop: '12px' }} className="container-fluid paddb">
-            <div className="row">
-              <div className="col-lg-4">
+           
 
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
-
-              </div>
-              {/* <div className="col-lg-8">
-                  <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
-                    <form className="d-flex align-items-center justify-content-start">
-                      <input
-                        type="search"
-                        className="form-control my-1 my-md-0"
-                        id="searchInput"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                      />
-                    </form>
-                  </div>
-                </div> */}
-            </div>
-
-            <div className="row mt-3">
+            <div className="row mt-2">
               <div className="col-12">
                 <div className="card">
                   <div className="card-body">
                     <div className="row">
-                      <div className="col-md-12">
-                        <div className="text-center filter-menu d-flex justify-content-center w-100">
+                    <div className="col-lg-4">
+
+<CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+
+</div>
+                      <div className="col-md-8">                   
+                             <div className="text-center filter-menu d-flex justify-content-end w-100">
                           {/* Main tabs */}
                           <a
                             style={{ textDecoration: 'unset' }}
@@ -419,7 +404,7 @@ const HelloWorldContext = ({ props }: any) => {
                                 maxWidth: "100%",
                                 height: "100%",
                                 width: "100%",
-                                borderRadius: "13px",
+                                borderRadius: "5px",
                                 objectFit: "cover",
                               }}
                               />
@@ -433,7 +418,7 @@ const HelloWorldContext = ({ props }: any) => {
                                 maxWidth: "100%",
                                 height: "100%",
                                 width: "100%",
-                                borderRadius: "13px",
+                                borderRadius: "5px",
                                 objectFit: "fill",
                               }}
                               className="img-fluid"
@@ -454,7 +439,7 @@ const HelloWorldContext = ({ props }: any) => {
                                 maxWidth: "100%",
                                 height: "100%",
                                 width: "100%",
-                                borderRadius: "13px",
+                                borderRadius: "5px",
                                 objectFit: "cover",
                               }}
                               />
@@ -465,7 +450,7 @@ const HelloWorldContext = ({ props }: any) => {
                             {item.Title || "Untitled"}
                           </h4>
                           <div className="mb-1 mt-1 row">
-                            <span className="font-14" style={{ borderRadius: "4px", color: '#1fb0e5', fontWeight: '600' }}>
+                            <span className="font-14" style={{color: '#1fb0e5', fontWeight: '600' }}>
                               {item.MediaGalleryCategory?.CategoryName}
                             </span>
                           </div>

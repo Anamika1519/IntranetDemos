@@ -1179,7 +1179,7 @@ const deleteLocalFile = (index, filArray, name) => {
    
    
     return (
-        <><div className="row mt-3">
+        <><div className="row mt-2">
             {blogData.length > 0 ?
                 // blogData.filter(x => x.Status == "Published").slice(0, 1).map(item => {
                     blogData.filter(x => x.Status == "Approved").slice(0, 1).map(item => {
@@ -1230,7 +1230,7 @@ const deleteLocalFile = (index, filArray, name) => {
                             </div></>)
                 }) : null}
         </div>
-            <div className="row mt-4">
+            <div className="row mt-0">
                 <div className="col-12">
                     <div className="card mb-0 cardcsss">
                         <div className="card-body">

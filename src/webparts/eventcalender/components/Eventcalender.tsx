@@ -168,10 +168,10 @@ const EventcalenderContext = ({ props }: any) => {
 
   const gotoNewsDetails = (valurArr: any) => {
     debugger;
-    localStorage.setItem("EventId", valurArr.Id);
+    localStorage.setItem("EventId", valurArr.ID);
     localStorage.setItem("EventArr", JSON.stringify(valurArr));
     setTimeout(() => {
-      window.location.href = `${SiteUrl}/SitePages/EventDetailsCalendar.aspx?${valurArr.Id}`;
+      window.location.href = `${SiteUrl}/SitePages/EventDetailsCalendar.aspx?${valurArr.ID}`;
     }, 1000);
   };
 
@@ -245,37 +245,7 @@ const EventcalenderContext = ({ props }: any) => {
 
   const [currentmonth, SetCurrentmonth] = useState<any>("");
   const [currentmonthevents, SetCurrentmonthevents] = useState<any>([]);
-  useEffect(() => {
-
-    const currentDate = new Date();
-
-    const monthNumber = currentDate.getMonth() + 1;
-
-    const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    const monthName = monthNames[currentDate.getMonth()];
-    SetCurrentmonth(monthName)
-    console.log("Current Month Number:", monthNumber);
-    console.log("Current Month Name:", monthName);
-
-    async function eventthismonth() {
-      const eventofthismonth = await sp.web.lists.getByTitle("ARGEventMaster").items.select("*")()
-      console.log(eventofthismonth, "eventofthismonth")
-      const filteredData = eventofthismonth.filter((item: any) => {
-        if (item.EventDate) {
-          const eventDate = new Date(item.EventDate);
-          return eventDate.getMonth() + 1 === currentmonth; // getMonth() returns 0-based month, so add 1
-
-        }
-        return false;
-      });
-      SetCurrentmonthevents(filteredData)
-      console.log(filteredData, "filteredData")
-    }
-    eventthismonth()
-  })
+  // Removed unused useEffect that was causing API throttling
   return (
     <div id="wrapper" ref={elementRef}>
       <div
@@ -288,9 +258,7 @@ const EventcalenderContext = ({ props }: any) => {
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}`, marginTop: '0rem' }}>
           <div className="container-fluid  paddb">
             <div className="row">
-              <div className="col-lg-4">
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
-              </div>
+             
               {/* <div className="col-lg-8">
                 <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
                   <label htmlFor="search" className="visually-hidden">
@@ -340,13 +308,16 @@ const EventcalenderContext = ({ props }: any) => {
                 </div>
               </div> */}
             </div>
-            <div className="row mt-3">
+            <div className="row mt-2">
               <div className="col-12">
                 <div className="card mb-0">
                   <div className="card-body">
-                    <div className="row justify-content-between">
-                      <div className="col-md-12">
-                        <div className="d-flex flex-wrap align-items-center justify-content-center">
+                    <div className="row">
+                    <div className="col-lg-4">
+                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+              </div>
+                      <div className="col-md-8">
+                        <div className="d-flex flex-wrap align-items-center justify-content-end mt-2">
                           <ul
                             className="nav nav-pills navtab-bg float-end"
                             role="tablist"
@@ -396,7 +367,7 @@ const EventcalenderContext = ({ props }: any) => {
                 </div>
               </div>
             } */}
-            <div className="row mt-3">
+            <div className="row mt-2">
               {/* Tab content */}
               <div className="tab-content mt-0">
                 <div
@@ -421,7 +392,7 @@ const EventcalenderContext = ({ props }: any) => {
                       }
                     );
                     return (
-                      <div className="card mb-3">
+                      <div className="card mb-2">
                         <div className="card-body">
                           <div className="row align-items-start">
                             <div className="col-sm-2">
@@ -646,7 +617,11 @@ const EventcalenderContext = ({ props }: any) => {
 
                     }}
                   >
-                    <div className="row backwhite" style={{ display: "flex" }}>
+                    <div className="card">
+                      <div className="card-body">
+
+                      
+                    <div className="row">
                       <div
                         className="col-md-3"
                       // style={{ border: "1px solid green" }}
@@ -853,6 +828,8 @@ const EventcalenderContext = ({ props }: any) => {
                       </div>
                     </div>
                   </div>
+                </div>
+                </div>
                 </div>
               </div>
             </div>

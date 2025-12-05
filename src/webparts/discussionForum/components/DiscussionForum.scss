@@ -22,7 +22,7 @@ table th .inputcss {
   width: 100%;
 }
 .nav-pills .nav-link.active{
-  background:#1fb0e5;
+  background:var(--primary-color) !important;
 }
 #cardCollpase4 .inputcss {
 
@@ -41,7 +41,7 @@ table td {
 }
 
 #cardCollpase4 tr {
-  border-radius: 0px !important; border-bottom: 1px solid #eee !important;
+  border-radius: 0px !important; border-bottom: 1px solid var(--light-color) !important;
 }
 #cardCollpase4 tbody tr:hover{
   box-shadow: 0 0 8px #ccc !important;
@@ -61,9 +61,10 @@ table td {
     border-radius: 1000px;
     margin-right: 4px;
 }
-.indexdesign{   background: #d2effa !important;
+.indexdesign{    background: var(--light-circle) !important;
+  color: var(--primary-color) !important;
   border: none;
-  color: #1fb0e5 !important;
+  color: var(--primary-color) !important;
   display: flex
 ;
   font-size: 16px !important;

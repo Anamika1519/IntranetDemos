@@ -1,17 +1,13 @@
 /* General card styling */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    
+    border-radius: 0px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     overflow: hidden;
 }
 .navtab-bgs{padding: 0px !important;}
-.cardcsss
-{
-    border: 1px solid #54ade0;
-    border-radius: 20px !important;
-}
+
 .dropdown {
     display: inline-masonry !important;
 }
@@ -108,7 +104,7 @@
     position: relative;
 }
 .footer{z-index: 9;}
-#searchInput{padding: .385rem .85rem !important;}
+#searchInput{padding: .44rem .85rem !important; border-radius: 0px;}
 .btn-primary1{
     background:#efefef !important; color: #000 !important;
 }
@@ -152,7 +148,7 @@
     font-weight: bold;
     border-radius: 50%;
 }
-.MuiAvatar-root{cursor: auto !important;  background-color: #1fb0e5; font-weight: bold !important; margin: auto !important;}
+.MuiAvatar-root{cursor: auto !important;  background-color: var(--primary-color); font-weight: bold !important; margin: auto !important;}
 .alignrightl{width: 100px; margin-bottom: 0px; margin-top: 5px;}
 .product-price-tag {
     display: inline-block;
@@ -282,7 +278,7 @@ img[title="Badges"] {
     display: flex;
 }
 a.nav-linkss.active {
-    background: #1fb0e5 !important;
+    background: var(--primary-color) !important;
     color: #fff !important;
     text-decoration: unset;
     border-radius: 0.5rem;
@@ -291,7 +287,7 @@ a.nav-linkss.active {
 a.nav-linkss {
     
     background: #fff !important;
-    border: 1px solid #54ade0;
+    border: 1px solid var(--light-color);
     border-radius: 3px !important;
     color: #000;
     font-size: 14px;

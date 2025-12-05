@@ -404,48 +404,85 @@ const EntityMastercontext = ({ props }: any) => {
           {" "}
           {/* Edit by amjad */}
           <div className="container-fluid  paddb">
-            <div className="row ">
+            <div className="card mt-2">
+            <div className="card-body">
+            <div className="row align-items-center">
               {" "}
               {/* Edit by amjad */}
               <div className="col-lg-3">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="col-lg-9">
-                <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
-                  <div className="d-flex flex-wrap align-items-center justify-content-start">
-                    <a href={`${siteUrl}/SitePages/settings.aspx`}>
+                <div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
+                  <div className="d-flex flex-wrap align-items-center gap-4 justify-content-start">
+                  <a href={`${siteUrl}/SitePages/settings.aspx`}>
+                  <span className="mt-2 mb-1" data-tooltip='Back'>
+                  <img
+                src={require("../../../CustomAsset/backicon.png")}
+              
+              /></span>
+              </a>
+              <a href={``}>
+              <span className="mt-2 mb-1" data-tooltip='Delete'>
+                  <img
+                src={require("../../../CustomAsset/deleteiocn.png")}
+              
+              /> </span>
+              </a>
+              <a href={`${siteUrl}/SitePages/EventMasterForm.aspx`}
+                      onClick={() => goToAddForm()}>
+                        <span className="mt-2 mb-1" data-tooltip='Add'>
+                  <img src={require("../../../CustomAsset/addicon.png")}
+              
+              /></span>
+              </a>
+                    {/* <a href={`${siteUrl}/SitePages/settings.aspx`}>
+                
                       <button
                         type="button"
                         className="btn btn-secondary me-1 waves-effect waves-light"
                       >
                         <FontAwesomeIcon icon={faArrowLeft} className="me-1" />
-                        Back
+                        
                       </button>
-                    </a>
-                    <a
+                    </a> */}
+                    {/* <a
                       href={`${siteUrl}/SitePages/EventMasterForm.aspx`}
                       onClick={() => goToAddForm()}
                     >
                       <button
                         type="button"
                         className="btn btn-primary waves-effect waves-light"
-                        style={{ background: "#1fb0e5" }}
+                       
                       >
                         <FontAwesomeIcon icon={faPlusCircle} className="me-1" />
-                        Add
+                      
                       </button>
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="card cardCss mt-4">
+              </div>
+            </div>
+            
+            <div className="card  mt-2">
               <div className="card-body">
                 <div id="cardCollpase4" className="collapse show">
                   <div className="table-responsive pt-0">
                     <table className="mtbalenew table-centered table-nowrap table-borderless mb-0">
                       <thead>
                         <tr>
+                        <th
+                            style={{
+                              borderBottomLeftRadius: "0px",
+                              minWidth: "30px",
+                              maxWidth: "30px",
+                              borderTopLeftRadius: "0px",
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </th>
                           <th
                             style={{
                               borderBottomLeftRadius: "0px",
@@ -694,6 +731,16 @@ const EntityMastercontext = ({ props }: any) => {
                         ) : (
                           currentData.map((item, index) => (
                             <tr key={index}>
+                               <td
+                            style={{
+                             
+                              minWidth: "30px", textAlign:'center',
+                              maxWidth: "30px",
+                            
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </td>
                               <td
                                 style={{ minWidth: "50px", maxWidth: "50px" }}
                               >
@@ -758,7 +805,7 @@ const EntityMastercontext = ({ props }: any) => {
                                     <div>
                                      <span>
                                         <a
-                                          className={`action-icon`}
+                                          className={`action-icon me-1`}
                                           onClick={ () => EditBanner(item.ID ,'True')}
                                        
                                           style={{
@@ -790,7 +837,7 @@ const EntityMastercontext = ({ props }: any) => {
                                     <div>
                                       <span>
                                         <a
-                                          className={`action-icon ${
+                                          className={`action-icon me-1 ${
                                             item.Status === "Save as draft"
                                               ? "text-primary"
                                               : "text-muted"

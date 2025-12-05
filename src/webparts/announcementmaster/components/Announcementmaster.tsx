@@ -604,1056 +604,1101 @@ const Announcementmastercontext = ({ props }: any) => {
 
           <div className="container-fluid paddb">
 
-            <div className="row">  {/* Edit by amjad */}
+          <div className="card mt-2">
+          <div className="card-body">
+          <div className="row align-items-center ">  {/* Edit by amjad */}
 
-              <div className="col-lg-6">
+<div className="col-lg-4">
 
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+   <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
-              </div>
+</div>
 
-              <div className="col-lg-6">
+<div className="col-lg-8">
 
-                <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
+  <div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
 
-                  <div className="d-flex flex-wrap align-items-center justify-content-start">
+    <div className="d-flex gap-4 flex-wrap align-items-center justify-content-start marginr0">
+  
+<a href={`${siteUrl}/SitePages/settings.aspx`}>
+                  <span className="mt-2 mb-1" data-tooltip='Back'>
+                  <img
+                src={require("../../../CustomAsset/backicon.png")}
+              
+              /></span>
+              </a>
+              <a href={``}>
+              <span className="mt-2 mb-1" data-tooltip='Delete'>
+                  <img
+                src={require("../../../CustomAsset/deleteiocn.png")}
+              
+              /> </span>
+              </a>
+              <a onClick={() => GotoAdd(`${siteUrl}/SitePages/AddAnnouncement.aspx`)}>
+                        <span className="mt-2 mb-1" data-tooltip='Add'>
+                  <img src={require("../../../CustomAsset/addicon.png")}
+              
+              /></span>
+              </a>
+                   
+                   
+      
 
-                    <a href={`${siteUrl}/SitePages/settings.aspx`}>
+    
 
-                      <div style={{ width: '80px' }} className="btn btn-secondary me-1 waves-effect waves-light">
+    </div>
 
-                        <FontAwesomeIcon icon={faArrowLeft} className="me-1" />
+  </div>
 
-                        Back
+</div>
 
-                      </div>
+</div>
+            
+             </div>
+             </div>
+          
+             <Tabs
 
-                    </a>
+defaultActiveKey="Announcement"
 
-                    <a onClick={() => GotoAdd(`${siteUrl}/SitePages/AddAnnouncement.aspx`)}>
+id="uncontrolled-tab-example"
 
-                      <div className="btn btn-primary waves-effect waves-light" style={{ background: '#1fb0e5', width: '80px' }}>
+className="mb-3 mt-4"
+onSelect={() => tabclicked(CurrentTabs == "Announcement" ? "News" : "Announcement")}
+>
 
-                        <FontAwesomeIcon icon={faPlusCircle} className="me-1" />
+<Tab eventKey="Announcement" title="Announcement" >
 
-                        Add
+  <div className="card  mt-0">
 
-                      </div>
+    <div className="card-body">
 
-                    </a>
+
+      <div id="cardCollpase4" className="collapse show">
+
+        <div className="table-responsive pt-0">
+
+
+          <table className="mtbalenew mt-0 table-centered table-nowrap table-borderless mb-0" style={{ position: 'relative' }}>
+
+
+            <thead>
+
+              <tr>
+              <th
+                            style={{
+                              borderBottomLeftRadius: "0px",
+                              minWidth: "30px",
+                              maxWidth: "30px",
+                              borderTopLeftRadius: "0px",
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </th>
+
+                <th style={{ borderBottomLeftRadius: '0px', minWidth: '50px', maxWidth: '50px', borderTopLeftRadius: '0px' }}>
+
+                  <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
+
+                    <span>S.No.</span>
+
+                    <span onClick={() => handleSortChange('SNo')}>
+
+                      <FontAwesomeIcon icon={faSort} />
+
+                    </span>
 
                   </div>
 
-                </div>
+                  <div className="bd-highlight">
 
-              </div>
+                    <input
 
-            </div>
+                      type="text"
 
+                      placeholder="index"
 
-            <Tabs
+                      onChange={(e) => handleFilterChange(e, 'SNo')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }}
+                      className="inputcss"
 
-              defaultActiveKey="Announcement"
+                      style={{ width: '100%' }}
 
-              id="uncontrolled-tab-example"
+                    />
 
-              className="mb-3 mt-4"
-              onSelect={() => tabclicked(CurrentTabs == "Announcement" ? "News" : "Announcement")}
-            >
+                  </div>
 
-              <Tab eventKey="Announcement" title="Announcement" >
+                </th>
 
-                <div className="card cardCss mt-0">
+                <th>
 
-                  <div className="card-body">
+                  <div className="d-flex flex-column bd-highlight ">
 
+                    <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Title</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
 
-                    <div id="cardCollpase4" className="collapse show">
+                    <div className=" bd-highlight">
 
-                      <div className="table-responsive pt-0">
-
-
-                        <table className="mtbalenew mt-0 table-centered table-nowrap table-borderless mb-0" style={{ position: 'relative' }}>
-
-
-                          <thead>
-
-                            <tr>
-
-                              <th style={{ borderBottomLeftRadius: '0px', minWidth: '50px', maxWidth: '50px', borderTopLeftRadius: '0px' }}>
-
-                                <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
-
-                                  <span>S.No.</span>
-
-                                  <span onClick={() => handleSortChange('SNo')}>
-
-                                    <FontAwesomeIcon icon={faSort} />
-
-                                  </span>
-
-                                </div>
-
-                                <div className="bd-highlight">
-
-                                  <input
-
-                                    type="text"
-
-                                    placeholder="index"
-
-                                    onChange={(e) => handleFilterChange(e, 'SNo')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }}
-                                    className="inputcss"
-
-                                    style={{ width: '100%' }}
-
-                                  />
-
-                                </div>
-
-                              </th>
-
-                              <th>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Title</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">
-
-                                    <input type="text" placeholder="Filter by Title" onChange={(e) => handleFilterChange(e, 'Title')}
-                                      onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && !e.shiftKey) {
-                                          e.preventDefault(); // Prevents the new line in textarea
-                                        }
-                                      }}
-                                      className='inputcss' style={{ width: '100%' }} />
-
-                                  </div>
-
-                                </div>
-
-                              </th>
-
-                              {/* <th style={{ minWidth: '100px', maxWidth: '100px' }}>
-
-                                  <div className="d-flex flex-column bd-highlight ">
-
-                                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-between' }}>  <span >Overview</span>  <span onClick={() => handleSortChange('Overview')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                    <div className=" bd-highlight">  <input type="text" placeholder="Filter by Overview" onChange={(e) => handleFilterChange(e, 'Overview')} className='inputcss' style={{ width: '100%' }} /></div>
-
-                                  </div>
-
-                                </th> */}
-
-                              <th >
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Category</span>  <span onClick={() => handleSortChange('Category')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">  <input type="text" placeholder="Filter by Category" onChange={(e) => handleFilterChange(e, 'Category')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }} className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th >
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Type</span>  <span onClick={() => handleSortChange('Type')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">     <input type="text" placeholder="Filter by Type" onChange={(e) => handleFilterChange(e, 'Type')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }}
-                                    className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th style={{ minWidth: '100px', maxWidth: '100px' }}>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Status</span>  <span onClick={() => handleSortChange('Status')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">     <input type="text" placeholder="Filter by Status" onChange={(e) => handleFilterChange(e, 'Status')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }}
-                                    className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th style={{ minWidth: '100px', maxWidth: '100px' }}>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Submitted Date</span>  <span onClick={() => handleSortChange('SubmittedDate')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">     <input type="text" placeholder="Filter by Submitted Date" onChange={(e) => handleFilterChange(e, 'SubmittedDate')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }}
-                                    className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th style={{ textAlign: 'center', minWidth: '80px', maxWidth: '80px', borderBottomRightRadius: '0px', borderTopRightRadius: '0px' }}> <div className="d-flex flex-column bd-highlight pb-2">
-
-                                <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Action</span> <div className="dropdown">
-
-                                  <FontAwesomeIcon style={{ top: '4px' }} icon={faEllipsisV} onClick={toggleDropdown} size='xl' />
-
-                                </div>
-
-                                </div>
-
-                                {/* <div className=" bd-highlight">   <div id="myDropdown" className={`dropdown-content ${isOpen ? 'show' : ''}`}>
-
-                                  <div onClick={handleExportClick} className="" >
-
-                                    <FontAwesomeIcon style={{top:'4px'}} icon={faFileExport} />  Export
-
-                                  </div>
-
-                                </div></div> */}
-
-
-                              </div>
-
-                                <div style={{ height: '32px' }}></div>
-
-                              </th>
-
-                            </tr>
-
-                          </thead>
-
-                          <tbody>
-
-                            {currentData.length === 0 ? (
-
-                              <tr>
-
-                                <td colSpan={7} style={{ textAlign: "center" }}>
-
-                                  No results found
-
-                                </td>
-
-                              </tr>
-
-                            ) : (
-
-                              currentData.map((item: any, index: number) => (
-
-                                <tr key={index}>
-
-                                  <td style={{ minWidth: "50px", maxWidth: "50px" }}>
-                                    <div className='indexdesign'>  {startIndex + index + 1}</div>
-
-
-                                  </td>
-
-                                  <td>{item.Title}</td>
-
-                                  <td>{item?.Category?.Category}</td>
-
-                                  <td>{item?.AnnouncementandNewsTypeMaster?.TypeMaster}</td>
-
-                                  <td style={{ minWidth: "100px", maxWidth: "100px", textAlign: 'center' }}><div className='btn btn-status'>{item.Status} </div></td>
-
-                                  <td style={{ minWidth: "100px", maxWidth: "100px", textAlign: 'center' }}>
-
-
-                                    <div className='btn  btn-light'>
-                                      {moment(item.Created).format("L")}
-                                    </div>
-                                  </td>
-
-                                  <td style={{ minWidth: "80px", maxWidth: "80px", textAlign: 'center' }} className="ng-binding">
-
-                                    <div className="d-flex pb-0" style={{ justifyContent: "center" }}>
-
-                                      {/* Conditionally render the edit button based on status */}
-                                      {
-                                        isIntranetAdmin ? (
-                                          <div>
-                                            <span>
-
-                                              <a
-
-                                                className={`action-icon`}
-
-                                                onClick={() => EditAnnouncement(item.ID, 'True')}
-
-                                                style={{
-
-                                                  cursor: "pointer"
-
-                                                }}
-
-                                              >
-
-                                                {item?.Status == "Save as draft" ? <FontAwesomeIcon icon={faEdit} fontSize={18} /> :
-
-                                                  <img src={require('../../../CustomAsset/edit.png')} />
-                                                }
-                                              </a>
-
-                                            </span>
-
-
-
-                                            <span>
-
-                                              <a
-
-                                                className="action-icon text-danger"
-
-                                                onClick={() => DeleteAnnouncement(item.ID)}
-
-                                              >
-                                                <img src={require('../../../CustomAsset/del.png')} />
-
-
-                                              </a>
-
-                                            </span>
-                                          </div>
-                                        ) : (
-                                          <div>
-                                            <span>
-
-                                              <a
-
-                                                className={`action-icon ${item.Status === "Save as draft" ? "text-primary" : "text-muted"
-
-                                                  }`}
-
-                                                onClick={item.Status === "Save as draft" ? () => EditAnnouncement(item.ID, "False") : () => ViewFormReadOnly(item.ID)}
-
-                                                style={{
-
-                                                  cursor: item.Status === "Save as draft" ? "pointer" : "pointer"
-
-                                                }}
-
-                                              >
-
-                                                {item?.Status == "Save as draft" ? <FontAwesomeIcon icon={faEdit} fontSize={18} /> :
-                                                  // <FontAwesomeIcon icon={faEye} fontSize={18} />
-                                                  <img src={require('../../../CustomAsset/Eye.png')} />
-                                                }
-                                              </a>
-
-                                            </span>
-
-                                            {item.Status === "Save as draft" ? (
-
-                                              <span>
-
-                                                <a
-
-                                                  className="action-icon text-danger"
-
-                                                  onClick={() => DeleteAnnouncement(item.ID)}
-
-                                                >
-                                                  <img src={require('../../../CustomAsset/del.png')} />
-
-
-                                                </a>
-
-                                              </span>) : (<div></div>)}
-                                          </div>
-                                        )
-                                      }
-
-
-
-                                    </div>
-
-                                  </td>
-
-                                </tr>
-
-                              ))
-
-                            )}
-
-                          </tbody>
-
-                          {/* <div style={{position:'absolute'}}>
-
-                              <img src={require("../../../Assets/ExtraImage/NodataFound.png")}/>
-
-                            </div> */}
-
-                        </table>
-
-
-                      </div>
-
-                      {currentData.length > 0 ? <nav className="pagination-container">
-
-                        <ul className="pagination">
-
-                          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-
-                            <a
-
-                              className="page-link"
-
-                              onClick={() => handlePageChange(currentPage - 1)}
-
-                              aria-label="Previous"
-
-                            >
-
-                              «
-
-                            </a>
-
-                          </li>
-
-                          {Array.from({ length: totalPages }, (_, num) => (
-
-                            <li
-
-                              key={num}
-
-                              className={`page-item ${currentPage === num + 1 ? 'active' : ''}`}
-
-                            >
-
-                              <a
-
-                                className="page-link"
-
-                                onClick={() => handlePageChange(num + 1)}
-
-                              >
-
-                                {num + 1}
-
-                              </a>
-
-                            </li>
-
-                          ))}
-
-                          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-
-                            <a
-
-                              className="page-link"
-
-                              onClick={() => handlePageChange(currentPage + 1)}
-
-                              aria-label="Next"
-
-                            >
-
-                              »
-
-                            </a>
-
-                          </li>
-
-                        </ul>
-
-                      </nav> : <></>
-
-                      }
+                      <input type="text" placeholder="Filter by Title" onChange={(e) => handleFilterChange(e, 'Title')}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault(); // Prevents the new line in textarea
+                          }
+                        }}
+                        className='inputcss' style={{ width: '100%' }} />
 
                     </div>
 
                   </div>
 
+                </th>
+
+                {/* <th style={{ minWidth: '100px', maxWidth: '100px' }}>
+
+                    <div className="d-flex flex-column bd-highlight ">
+
+                      <div className="d-flex  pb-2" style={{ justifyContent: 'space-between' }}>  <span >Overview</span>  <span onClick={() => handleSortChange('Overview')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                      <div className=" bd-highlight">  <input type="text" placeholder="Filter by Overview" onChange={(e) => handleFilterChange(e, 'Overview')} className='inputcss' style={{ width: '100%' }} /></div>
+
+                    </div>
+
+                  </th> */}
+
+                <th >
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Category</span>  <span onClick={() => handleSortChange('Category')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">  <input type="text" placeholder="Filter by Category" onChange={(e) => handleFilterChange(e, 'Category')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }} className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th >
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Type</span>  <span onClick={() => handleSortChange('Type')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">     <input type="text" placeholder="Filter by Type" onChange={(e) => handleFilterChange(e, 'Type')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }}
+                      className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th style={{ minWidth: '100px', maxWidth: '100px' }}>
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Status</span>  <span onClick={() => handleSortChange('Status')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">     <input type="text" placeholder="Filter by Status" onChange={(e) => handleFilterChange(e, 'Status')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }}
+                      className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th style={{ minWidth: '100px', maxWidth: '100px' }}>
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Submitted Date</span>  <span onClick={() => handleSortChange('SubmittedDate')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">     <input type="text" placeholder="Filter by Submitted Date" onChange={(e) => handleFilterChange(e, 'SubmittedDate')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }}
+                      className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th style={{ textAlign: 'center', minWidth: '80px', maxWidth: '80px', borderBottomRightRadius: '0px', borderTopRightRadius: '0px' }}> <div className="d-flex flex-column bd-highlight pb-2">
+
+                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Action</span> <div className="dropdown">
+
+                    <FontAwesomeIcon style={{ top: '4px' }} icon={faEllipsisV} onClick={toggleDropdown} size='xl' />
+
+                  </div>
+
+                  </div>
+
+                  {/* <div className=" bd-highlight">   <div id="myDropdown" className={`dropdown-content ${isOpen ? 'show' : ''}`}>
+
+                    <div onClick={handleExportClick} className="" >
+
+                      <FontAwesomeIcon style={{top:'4px'}} icon={faFileExport} />  Export
+
+                    </div>
+
+                  </div></div> */}
+
+
                 </div>
 
-              </Tab>
+                  <div style={{ height: '32px' }}></div>
 
-              <Tab eventKey="News" title="News">
+                </th>
 
-                <div className="card cardCss mt-0">
+              </tr>
 
-                  <div className="card-body">
+            </thead>
 
-                    <div id="cardCollpase4" className="collapse show">
+            <tbody>
 
-                      <div className="table-responsive pt-0">
+              {currentData.length === 0 ? (
 
-                        <table className="mtbalenew mt-0 table-centered table-nowrap table-borderless mb-0" style={{ position: 'relative' }}>
+                <tr>
 
-                          <thead>
+                  <td colSpan={7} style={{ textAlign: "center" }}>
 
-                            <tr>
+                    No results found
 
-                              <th style={{ borderBottomLeftRadius: '0px', minWidth: '50px', maxWidth: '50px', borderTopLeftRadius: '0px' }}>
+                  </td>
 
-                                <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
+                </tr>
 
-                                  <span>S.No.</span>
+              ) : (
 
-                                  <span onClick={() => handleSortChange('SNo')}>
+                currentData.map((item: any, index: number) => (
 
-                                    <FontAwesomeIcon icon={faSort} />
+                  <tr key={index}>
+ <td
+                            style={{
+                              borderBottomLeftRadius: "0px",
+                              minWidth: "30px",
+                              maxWidth: "30px", textAlign:'center',
+                              borderTopLeftRadius: "0px",
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </td>
+                    <td style={{ minWidth: "50px", maxWidth: "50px" }}>
+                      <div className='indexdesign'>  {startIndex + index + 1}</div>
 
-                                  </span>
 
-                                </div>
+                    </td>
 
-                                <div className="bd-highlight">
+                    <td>{item.Title}</td>
 
-                                  <input
+                    <td>{item?.Category?.Category}</td>
 
-                                    type="text"
+                    <td>{item?.AnnouncementandNewsTypeMaster?.TypeMaster}</td>
 
-                                    placeholder="index"
+                    <td style={{ minWidth: "100px", maxWidth: "100px", textAlign: 'center' }}><div className='btn btn-status'>{item.Status} </div></td>
 
-                                    onChange={(e) => handleFilterChange(e, 'SNo')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }}
-                                    className="inputcss"
+                    <td style={{ minWidth: "100px", maxWidth: "100px", textAlign: 'center' }}>
 
-                                    style={{ width: '100%' }}
 
-                                  />
-
-                                </div>
-
-                              </th>
-
-                              <th>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Title</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">
-
-                                    <input type="text" placeholder="Filter by Title" onChange={(e) => handleFilterChange(e, 'Title')}
-                                      onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && !e.shiftKey) {
-                                          e.preventDefault(); // Prevents the new line in textarea
-                                        }
-                                      }}
-                                      className='inputcss' style={{ width: '100%' }} />
-
-                                  </div>
-
-                                </div>
-
-                              </th>
-
-                              {/* <th style={{ minWidth: '100px', maxWidth: '100px' }}>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-between' }}>  <span >Overview</span>  <span onClick={() => handleSortChange('Overview')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">  <input type="text" placeholder="Filter by Overview" onChange={(e) => handleFilterChange(e, 'Overview')} className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th> */}
-
-                              <th >
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Category</span>  <span onClick={() => handleSortChange('Category')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">  <input type="text" placeholder="Filter by Category"
-                                    onChange={(e) => handleFilterChange(e, 'Category')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }} className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Type</span>  <span onClick={() => handleSortChange('Type')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">     <input type="text" placeholder="Filter by Type" onChange={(e) => handleFilterChange(e, 'Type')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }}
-                                    className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th style={{ minWidth: '100px', maxWidth: '100px' }}>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Status</span>  <span onClick={() => handleSortChange('Status')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">     <input type="text" placeholder="Filter by Status" onChange={(e) => handleFilterChange(e, 'Status')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }}
-                                    className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th style={{ minWidth: '100px', maxWidth: '100px' }}>
-
-                                <div className="d-flex flex-column bd-highlight ">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Submitted Date</span>  <span onClick={() => handleSortChange('SubmittedDate')}><FontAwesomeIcon icon={faSort} /> </span></div>
-
-                                  <div className=" bd-highlight">     <input type="text" placeholder="Filter by Date" onChange={(e) => handleFilterChange(e, 'SubmittedDate')}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault(); // Prevents the new line in textarea
-                                      }
-                                    }} className='inputcss' style={{ width: '100%' }} /></div>
-
-                                </div>
-
-                              </th>
-
-                              <th style={{ minWidth: '80px', maxWidth: '80px', textAlign: 'center' }}>
-
-                                <div className="d-flex flex-column bd-highlight pb-2">
-
-                                  <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Action</span> <div className="dropdown">
-
-                                    <FontAwesomeIcon style={{ top: '4px' }} icon={faEllipsisV} onClick={toggleDropdownNews} fontSize={18} />
-
-                                  </div>
-
-                                  </div>
-
-                                  {/* <div className=" bd-highlight">   <div id="myDropdown" className={`dropdown-content ${isOpenNews ? 'showNews' : ''}`}>
-
-                                    <div onClick={handleNewsExportClick} className="" >
-
-                                      <FontAwesomeIcon icon={faFileExport} />  Export
-
-                                    </div>
-
-                                  </div></div> */}
-
-
-                                </div>
-
-                                <div style={{ height: '32px' }}></div>
-
-                              </th>
-
-                            </tr>
-
-                          </thead>
-
-                          <tbody>
-
-                            {newsCurrentData.length === 0 ? (
-
-                              <tr>
-
-                                <td colSpan={7} style={{ textAlign: "center" }}>
-
-                                  No results found
-
-                                </td>
-
-                              </tr>
-
-                            ) : (
-
-                              newsCurrentData.map(
-
-                                (item: any, index: number) => (
-
-                                  <tr key={index}>
-
-                                    <td
-
-                                      style={{
-
-                                        minWidth: "50px",
-
-                                        maxWidth: "50px",
-
-                                      }}
-
-                                    >
-
-                                      {startIndex + index + 1}
-
-                                    </td>
-
-                                    <td >{item.Title}</td>
-
-                                    <td>{item?.Category?.Category}</td>
-
-                                    <td>
-
-                                      {
-
-                                        item?.AnnouncementandNewsTypeMaster
-
-                                          ?.TypeMaster
-
-                                      }
-
-                                    </td>
-
-                                    <td
-
-                                      style={{
-
-                                        minWidth: "100px",
-
-                                        maxWidth: "100px",
-                                        textAlign: 'center'
-
-                                      }}
-
-                                    >
-
-                                      <div className='btn btn-status'>{item.Status} </div>
-
-                                    </td>
-
-                                    <td
-
-                                      style={{
-
-                                        minWidth: "100px",
-
-                                        maxWidth: "100px",
-                                        textAlign: 'center'
-
-                                      }}
-
-                                    >
-
-                                      <div className='btn  btn-light'>      {moment(item.Created).format("L")} </div>
-
-                                    </td>
-
-                                    <td
-
-                                      style={{
-
-                                        minWidth: "80px",
-
-                                        maxWidth: "80px",
-
-                                      }}
-
-                                      className="ng-binding"
-
-                                    >
-
-                                      <div
-
-                                        className="d-flex pb-0"
-
-                                        style={{
-
-                                          justifyContent: "center",
-
-                                        }}
-
-                                      >
-
-                                        {/* Conditionally render the edit button based on status */}
-
-                                        {
-                                          isIntranetAdmin ? (
-                                            <div>
-                                              <span>
-
-                                                <a
-
-                                                  className={`action-icon`}
-
-                                                  onClick={
-                                                    () =>
-                                                      EditAnnouncement(item.ID, 'True')
-
-
-
-                                                  }
-
-                                                  style={{
-
-                                                    cursor:
-
-
-                                                      "pointer"
-
-
-
-                                                  }}
-
-                                                >
-                                                  <img src={require('../../../CustomAsset/edit.png')} />
-
-
-                                                </a>
-
-                                              </span>
-
-                                              <span>
-
-
-
-                                                <a
-
-                                                  className="action-icon text-danger"
-
-                                                  onClick={() =>
-
-                                                    DeleteAnnouncement(item.ID)
-
-                                                  }
-
-                                                >
-
-                                                  <FontAwesomeIcon
-
-                                                    icon={faTrashAlt}
-
-                                                    fontSize={18}
-
-                                                  />
-
-                                                </a>
-
-                                              </span>
-                                            </div>
-                                          ) : (
-                                            <div>
-                                              <span>
-
-                                                <a
-
-                                                  className={`action-icon ${item.Status === "Save as draft"
-
-                                                    ? "text-primary"
-
-                                                    : "text-muted"
-
-                                                    }`}
-
-                                                  onClick={
-
-                                                    item.Status === "Save as draft"
-
-                                                      ? () =>
-
-                                                        EditAnnouncement(item.ID, 'False')
-
-                                                      : () => ViewFormReadOnly(item.ID)
-
-                                                  }
-
-                                                  style={{
-
-                                                    cursor:
-
-                                                      item.Status === "Save as draft"
-
-                                                        ? "pointer"
-
-                                                        : "not-allowed",
-
-                                                  }}
-
-                                                >
-                                                  <img src={require('../../../CustomAsset/edit.png')} />
-
-
-                                                </a>
-
-                                              </span>
-
-                                              <span>
-
-
-
-                                                {(item.Status === "Save as draft") ? (<a
-
-                                                  className="action-icon text-danger"
-
-                                                  onClick={() =>
-
-                                                    DeleteAnnouncement(item.ID)
-
-                                                  }
-
-                                                >
-
-                                                  <FontAwesomeIcon
-
-                                                    icon={faTrashAlt}
-
-                                                    fontSize={18}
-
-                                                  />
-
-                                                </a>) : (<div></div>)}
-
-                                              </span>
-                                            </div>
-                                          )}
-
-
-                                      </div>
-
-                                    </td>
-
-                                  </tr>
-
-                                )
-
-                              )
-
-                            )}
-
-                          </tbody>
-
-                          {/* <div style={{position:'absolute'}}>
-
-                              <img src={require("../../../Assets/ExtraImage/NodataFound.png")}/>
-
-                            </div> */}
-
-                        </table>
-
+                      <div className='btn  btn-light'>
+                        {moment(item.Created).format("L")}
                       </div>
+                    </td>
 
-                      {newsCurrentData.length > 0 ?
+                    <td style={{ minWidth: "80px", maxWidth: "80px", textAlign: 'center' }} className="ng-binding">
 
-                        <nav className="pagination-container">
+                      <div className="d-flex pb-0" style={{ justifyContent: "center" }}>
 
-                          <ul className="pagination">
-
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-
-                              <a
-
-                                className="page-link"
-
-                                onClick={() => handlePageChange(currentPage - 1)}
-
-                                aria-label="Previous"
-
-                              >
-
-                                «
-
-                              </a>
-
-                            </li>
-
-                            {Array.from({ length: totalPagesnews }, (_, num) => (
-
-                              <li
-
-                                key={num}
-
-                                className={`page-item ${currentPage === num + 1 ? 'active' : ''}`}
-
-                              >
+                        {/* Conditionally render the edit button based on status */}
+                        {
+                          isIntranetAdmin ? (
+                            <div>
+                              <span>
 
                                 <a
 
-                                  className="page-link"
+                                  className={`action-icon me-1`}
 
-                                  onClick={() => handlePageChange(num + 1)}
+                                  onClick={() => EditAnnouncement(item.ID, 'True')}
+
+                                  style={{
+
+                                    cursor: "pointer"
+
+                                  }}
 
                                 >
 
-                                  {num + 1}
+                                  {item?.Status == "Save as draft" ? <FontAwesomeIcon icon={faEdit} fontSize={18} /> :
+
+                                    <img src={require('../../../CustomAsset/edit.png')} />
+                                  }
+                                </a>
+
+                              </span>
+
+
+
+                              <span>
+
+                                <a
+
+                                  className="action-icon text-danger"
+
+                                  onClick={() => DeleteAnnouncement(item.ID)}
+
+                                >
+                                  <img src={require('../../../CustomAsset/del.png')} />
+
 
                                 </a>
 
-                              </li>
+                              </span>
+                            </div>
+                          ) : (
+                            <div>
+                              <span>
 
-                            ))}
+                                <a
 
-                            <li className={`page-item ${currentPage === totalPagesnews ? 'disabled' : ''}`}>
+                                  className={`action-icon ${item.Status === "Save as draft" ? "text-primary" : "text-muted"
 
-                              <a
+                                    }`}
 
-                                className="page-link"
+                                  onClick={item.Status === "Save as draft" ? () => EditAnnouncement(item.ID, "False") : () => ViewFormReadOnly(item.ID)}
 
-                                onClick={() => handlePageChange(currentPage + 1)}
+                                  style={{
 
-                                aria-label="Next"
+                                    cursor: item.Status === "Save as draft" ? "pointer" : "pointer"
 
-                              >
+                                  }}
 
-                                »
+                                >
 
-                              </a>
+                                  {item?.Status == "Save as draft" ? <FontAwesomeIcon icon={faEdit} fontSize={18} /> :
+                                    // <FontAwesomeIcon icon={faEye} fontSize={18} />
+                                    <img src={require('../../../CustomAsset/Eye.png')} />
+                                  }
+                                </a>
 
-                            </li>
+                              </span>
 
-                          </ul>
+                              {item.Status === "Save as draft" ? (
 
-                        </nav> : <></>}
+                                <span>
+
+                                  <a
+
+                                    className="action-icon text-danger"
+
+                                    onClick={() => DeleteAnnouncement(item.ID)}
+
+                                  >
+                                    <img src={require('../../../CustomAsset/del.png')} />
+
+
+                                  </a>
+
+                                </span>) : (<div></div>)}
+                            </div>
+                          )
+                        }
+
+
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                ))
+
+              )}
+
+            </tbody>
+
+            {/* <div style={{position:'absolute'}}>
+
+                <img src={require("../../../Assets/ExtraImage/NodataFound.png")}/>
+
+              </div> */}
+
+          </table>
+
+
+        </div>
+
+        {currentData.length > 0 ? <nav className="pagination-container">
+
+          <ul className="pagination">
+
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+
+              <a
+
+                className="page-link"
+
+                onClick={() => handlePageChange(currentPage - 1)}
+
+                aria-label="Previous"
+
+              >
+
+                «
+
+              </a>
+
+            </li>
+
+            {Array.from({ length: totalPages }, (_, num) => (
+
+              <li
+
+                key={num}
+
+                className={`page-item ${currentPage === num + 1 ? 'active' : ''}`}
+
+              >
+
+                <a
+
+                  className="page-link"
+
+                  onClick={() => handlePageChange(num + 1)}
+
+                >
+
+                  {num + 1}
+
+                </a>
+
+              </li>
+
+            ))}
+
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+
+              <a
+
+                className="page-link"
+
+                onClick={() => handlePageChange(currentPage + 1)}
+
+                aria-label="Next"
+
+              >
+
+                »
+
+              </a>
+
+            </li>
+
+          </ul>
+
+        </nav> : <></>
+
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+
+</Tab>
+
+<Tab eventKey="News" title="News">
+
+  <div className="card cardCss mt-0">
+
+    <div className="card-body">
+
+      <div id="cardCollpase4" className="collapse show">
+
+        <div className="table-responsive pt-0">
+
+          <table className="mtbalenew mt-0 table-centered table-nowrap table-borderless mb-0" style={{ position: 'relative' }}>
+
+            <thead>
+
+              <tr>
+              <th
+                            style={{
+                              borderBottomLeftRadius: "0px",
+                              minWidth: "30px",
+                              maxWidth: "30px",
+                              borderTopLeftRadius: "0px",
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </th>
+                <th style={{ borderBottomLeftRadius: '0px', minWidth: '50px', maxWidth: '50px', borderTopLeftRadius: '0px' }}>
+
+                  <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>
+
+                    <span>S.No.</span>
+
+                    <span onClick={() => handleSortChange('SNo')}>
+
+                      <FontAwesomeIcon icon={faSort} />
+
+                    </span>
+
+                  </div>
+
+                  <div className="bd-highlight">
+
+                    <input
+
+                      type="text"
+
+                      placeholder="index"
+
+                      onChange={(e) => handleFilterChange(e, 'SNo')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }}
+                      className="inputcss"
+
+                      style={{ width: '100%' }}
+
+                    />
+
+                  </div>
+
+                </th>
+
+                <th>
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Title</span>  <span onClick={() => handleSortChange('Title')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">
+
+                      <input type="text" placeholder="Filter by Title" onChange={(e) => handleFilterChange(e, 'Title')}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault(); // Prevents the new line in textarea
+                          }
+                        }}
+                        className='inputcss' style={{ width: '100%' }} />
 
                     </div>
 
                   </div>
 
-                </div>
+                </th>
 
-              </Tab>
+                {/* <th style={{ minWidth: '100px', maxWidth: '100px' }}>
 
-            </Tabs>
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-between' }}>  <span >Overview</span>  <span onClick={() => handleSortChange('Overview')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">  <input type="text" placeholder="Filter by Overview" onChange={(e) => handleFilterChange(e, 'Overview')} className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th> */}
+
+                <th >
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Category</span>  <span onClick={() => handleSortChange('Category')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">  <input type="text" placeholder="Filter by Category"
+                      onChange={(e) => handleFilterChange(e, 'Category')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }} className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th>
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Type</span>  <span onClick={() => handleSortChange('Type')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">     <input type="text" placeholder="Filter by Type" onChange={(e) => handleFilterChange(e, 'Type')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }}
+                      className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th style={{ minWidth: '100px', maxWidth: '100px' }}>
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Status</span>  <span onClick={() => handleSortChange('Status')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">     <input type="text" placeholder="Filter by Status" onChange={(e) => handleFilterChange(e, 'Status')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }}
+                      className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th style={{ minWidth: '100px', maxWidth: '100px' }}>
+
+                  <div className="d-flex flex-column bd-highlight ">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Submitted Date</span>  <span onClick={() => handleSortChange('SubmittedDate')}><FontAwesomeIcon icon={faSort} /> </span></div>
+
+                    <div className=" bd-highlight">     <input type="text" placeholder="Filter by Date" onChange={(e) => handleFilterChange(e, 'SubmittedDate')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // Prevents the new line in textarea
+                        }
+                      }} className='inputcss' style={{ width: '100%' }} /></div>
+
+                  </div>
+
+                </th>
+
+                <th style={{ minWidth: '80px', maxWidth: '80px', textAlign: 'center' }}>
+
+                  <div className="d-flex flex-column bd-highlight pb-2">
+
+                    <div className="d-flex  pb-2" style={{ justifyContent: 'space-evenly' }}>  <span >Action</span> <div className="dropdown">
+
+                      <FontAwesomeIcon style={{ top: '4px' }} icon={faEllipsisV} onClick={toggleDropdownNews} fontSize={18} />
+
+                    </div>
+
+                    </div>
+
+                    {/* <div className=" bd-highlight">   <div id="myDropdown" className={`dropdown-content ${isOpenNews ? 'showNews' : ''}`}>
+
+                      <div onClick={handleNewsExportClick} className="" >
+
+                        <FontAwesomeIcon icon={faFileExport} />  Export
+
+                      </div>
+
+                    </div></div> */}
+
+
+                  </div>
+
+                  <div style={{ height: '32px' }}></div>
+
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {newsCurrentData.length === 0 ? (
+
+                <tr>
+
+                  <td colSpan={7} style={{ textAlign: "center" }}>
+
+                    No results found
+
+                  </td>
+
+                </tr>
+
+              ) : (
+
+                newsCurrentData.map(
+
+                  (item: any, index: number) => (
+
+                    <tr key={index}>
+ <td
+                            style={{
+                              borderBottomLeftRadius: "0px",
+                              minWidth: "30px",
+                              maxWidth: "30px",textAlign:'center',
+                              borderTopLeftRadius: "0px",
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </td>
+                      <td
+
+                        style={{
+
+                          minWidth: "50px",
+
+                          maxWidth: "50px",
+
+                        }}
+
+                      >
+
+                        {startIndex + index + 1}
+
+                      </td>
+
+                      <td >{item.Title}</td>
+
+                      <td>{item?.Category?.Category}</td>
+
+                      <td>
+
+                        {
+
+                          item?.AnnouncementandNewsTypeMaster
+
+                            ?.TypeMaster
+
+                        }
+
+                      </td>
+
+                      <td
+
+                        style={{
+
+                          minWidth: "100px",
+
+                          maxWidth: "100px",
+                          textAlign: 'center'
+
+                        }}
+
+                      >
+
+                        <div className='btn btn-status'>{item.Status} </div>
+
+                      </td>
+
+                      <td
+
+                        style={{
+
+                          minWidth: "100px",
+
+                          maxWidth: "100px",
+                          textAlign: 'center'
+
+                        }}
+
+                      >
+
+                        <div className='btn  btn-light'>      {moment(item.Created).format("L")} </div>
+
+                      </td>
+
+                      <td
+
+                        style={{
+
+                          minWidth: "80px",
+
+                          maxWidth: "80px",
+
+                        }}
+
+                        className="ng-binding"
+
+                      >
+
+                        <div
+
+                          className="d-flex pb-0"
+
+                          style={{
+
+                            justifyContent: "center",
+
+                          }}
+
+                        >
+
+                          {/* Conditionally render the edit button based on status */}
+
+                          {
+                            isIntranetAdmin ? (
+                              <div>
+                                <span>
+
+                                  <a
+
+                                    className={`action-icon me-1`}
+
+                                    onClick={
+                                      () =>
+                                        EditAnnouncement(item.ID, 'True')
+
+
+
+                                    }
+
+                                    style={{
+
+                                      cursor:
+
+
+                                        "pointer"
+
+
+
+                                    }}
+
+                                  >
+                                    <img src={require('../../../CustomAsset/edit.png')} />
+
+
+                                  </a>
+
+                                </span>
+
+                                <span>
+
+
+
+                                  <a
+
+                                    className="action-icon text-danger"
+
+                                    onClick={() =>
+
+                                      DeleteAnnouncement(item.ID)
+
+                                    }
+
+                                  >
+
+                                    <FontAwesomeIcon
+
+                                      icon={faTrashAlt}
+
+                                      fontSize={18}
+
+                                    />
+
+                                  </a>
+
+                                </span>
+                              </div>
+                            ) : (
+                              <div>
+                                <span>
+
+                                  <a
+
+                                    className={`action-icon ${item.Status === "Save as draft"
+
+                                      ? "text-primary"
+
+                                      : "text-muted"
+
+                                      }`}
+
+                                    onClick={
+
+                                      item.Status === "Save as draft"
+
+                                        ? () =>
+
+                                          EditAnnouncement(item.ID, 'False')
+
+                                        : () => ViewFormReadOnly(item.ID)
+
+                                    }
+
+                                    style={{
+
+                                      cursor:
+
+                                        item.Status === "Save as draft"
+
+                                          ? "pointer"
+
+                                          : "not-allowed",
+
+                                    }}
+
+                                  >
+                                    <img src={require('../../../CustomAsset/edit.png')} />
+
+
+                                  </a>
+
+                                </span>
+
+                                <span>
+
+
+
+                                  {(item.Status === "Save as draft") ? (<a
+
+                                    className="action-icon text-danger"
+
+                                    onClick={() =>
+
+                                      DeleteAnnouncement(item.ID)
+
+                                    }
+
+                                  >
+
+                                    <FontAwesomeIcon
+
+                                      icon={faTrashAlt}
+
+                                      fontSize={18}
+
+                                    />
+
+                                  </a>) : (<div></div>)}
+
+                                </span>
+                              </div>
+                            )}
+
+
+                        </div>
+
+                      </td>
+
+                    </tr>
+
+                  )
+
+                )
+
+              )}
+
+            </tbody>
+
+            {/* <div style={{position:'absolute'}}>
+
+                <img src={require("../../../Assets/ExtraImage/NodataFound.png")}/>
+
+              </div> */}
+
+          </table>
+
+        </div>
+
+        {newsCurrentData.length > 0 ?
+
+          <nav className="pagination-container">
+
+            <ul className="pagination">
+
+              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+
+                <a
+
+                  className="page-link"
+
+                  onClick={() => handlePageChange(currentPage - 1)}
+
+                  aria-label="Previous"
+
+                >
+
+                  «
+
+                </a>
+
+              </li>
+
+              {Array.from({ length: totalPagesnews }, (_, num) => (
+
+                <li
+
+                  key={num}
+
+                  className={`page-item ${currentPage === num + 1 ? 'active' : ''}`}
+
+                >
+
+                  <a
+
+                    className="page-link"
+
+                    onClick={() => handlePageChange(num + 1)}
+
+                  >
+
+                    {num + 1}
+
+                  </a>
+
+                </li>
+
+              ))}
+
+              <li className={`page-item ${currentPage === totalPagesnews ? 'disabled' : ''}`}>
+
+                <a
+
+                  className="page-link"
+
+                  onClick={() => handlePageChange(currentPage + 1)}
+
+                  aria-label="Next"
+
+                >
+
+                  »
+
+                </a>
+
+              </li>
+
+            </ul>
+
+          </nav> : <></>}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</Tab>
+
+</Tabs>
+
+          
 
           </div>
 

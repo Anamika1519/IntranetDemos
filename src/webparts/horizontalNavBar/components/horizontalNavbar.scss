@@ -167,8 +167,8 @@ width: 450px;
 .dropdown-content a:hover {
   background-color: #fff !important;  
 }
-.link_name1:hover span{color: #1fb0e5 !important;}
-.newi:hover{color: #1fb0e5 !important; cursor: pointer !important;}
+.link_name1:hover span{color: var(--primary-color) !important;}
+.newi:hover{color: var(--primary-color) !important; cursor: pointer !important;}
 span.badge.bg-danger.noti-icon-badge {
   position: absolute;
   right: -4px; border-radius: 1000px;

@@ -93,9 +93,9 @@ textarea {
 
 .post-form {
   padding: 0;
-  background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  
+  border-radius: 0px;
+  
   // margin-bottom: 20px;
 }
 
@@ -276,14 +276,14 @@ ul.navcss {
 
 a.nav-linkcss.px-4.py-3.active {
   color: #000;
-  border-bottom: 2px solid #1fb0e5;
+  border-bottom: 2px solid var(--primary-color) !important;
 
   font-size: 16px;
   padding-bottom: 0.9rem !important;
 }
 
 a.nav-linkcss.px-4.py-3 {
-  color: #1fb0e5;
+  color:#000 !important;
  
   font-size: 16px;
 }
@@ -307,8 +307,8 @@ a.nav-linkcss.px-4.py-3 {
   // border-top-left-radius: 1rem !important;
   // border-bottom-right-radius: 1rem !important;
   // border-top-right-radius: 1rem !important;
-  border-radius: 20px;
-  border: 1px solid #1fb0e5 !important;
+  border-radius: 0px;
+  border: 0px solid #1fb0e5 !important;
 }
 
 .view-all {
@@ -470,7 +470,7 @@ outline: none !important;  box-shadow: none !important;border: none !important; 
     font-size: 16px !important;border-color: #008751 !important;
 }
 .btn-primary{
-  border-color: #1fb0e5 !important;
+  border-color: var(--primary-color) !important;
 }
 .btn-default{background: transparent !important;}
 .btn-default:hover{background-color: #959b95  !important; border-color: #959b95  !important;}
@@ -479,8 +479,8 @@ outline: none !important;  box-shadow: none !important;border: none !important; 
 .btn-default:hover svg{color: #fff;    width: 22px;
   height: 24px;}
 .btn-primary:hover{
-  background: #008751 !important;
-  border-color: #008751 !important;
+  background: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
 }
 @media(max-width:1920px)
 {

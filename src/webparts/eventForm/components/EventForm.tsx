@@ -1485,12 +1485,43 @@ const HelloWorldContext = ({ props }: any) => {
         <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}`, marginTop: '0.8rem' }}> {/* Edit by amjad */}
           <div className="container-fluid  paddb">
-            <div className="row">
-              <div className="col-lg-5">
+          <div className="card mt-2">
+          <div className="card-body">
+            <div className="row align-items-center">
+              <div className="col-lg-4">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
+              <div className="col-lg-8">
+                <div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
+                  <div className="d-flex flex-wrap gap-4 align-items-center  justify-content-start">
+                  <a  onClick={handleCancel}>
+                  <span className="mt-2 mb-1" data-tooltip='Back'>
+                  <img
+                src={require("../../../CustomAsset/backicon.png")}
+              
+              /></span>
+              </a>
+              <a href={``}>
+              <span className="mt-2 mb-1" data-tooltip='Delete'>
+                  <img
+                src={require("../../../CustomAsset/deleteiocn.png")}
+              
+              /> </span>
+              </a>
+              <a href={`${siteUrl}/SitePages/EventMasterForm.aspx`}>
+                        <span className="mt-2 mb-1" data-tooltip='Add'>
+                  <img src={require("../../../CustomAsset/addicon.png")}
+              
+              /></span>
+              </a>
+             
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="card mt-3">
+            </div>
+            </div>
+            <div className="card mt-2">
               <div className="card-body">
                 <div className="mt-0">
                   {Loading ?
@@ -1936,27 +1967,27 @@ const HelloWorldContext = ({ props }: any) => {
             }
 
             {
-              !InputDisabled ? (<div className="text-center butncss mb-4 pb-3">
-                <div className="btn btn-success waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleSaveAsDraft}>
+              !InputDisabled ? (<div className="d-flex gap-4 text-center justify-content-center butncss mb-4 pb-3">
+                <div className="btn-circle-light waves-effect waves-light m-1" onClick={handleSaveAsDraft}>
                   <div className='d-flex' style={{ justifyContent: 'center' }}>
-                    <img src={require('../../../Assets/ExtraImage/checkcircle.svg')} style={{ width: '1rem', marginRight: '3px' }} alt="Check" /> Save As Draft
+                  <span className="mt-2 mb-1" data-tooltip='Save As Draft'> <img src={require('../../../CustomAsset/saveas.png')} style={{  marginRight: '3px' }} alt="Check" /></span>
                   </div>
                 </div>
-                <div className="btn btn-success waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleFormSubmit}>
+                <div className="btn-circle-light waves-effect waves-light m-1" onClick={handleFormSubmit}>
                   <div className='d-flex' style={{ justifyContent: 'center' }}>
-                    <img src={require('../../../Assets/ExtraImage/checkcircle.svg')} style={{ width: '1rem', marginRight: '3px' }} alt="Check" /> Submit
+                  <span className="mt-2 mb-1" data-tooltip='Submit'> <img src={require('../../../CustomAsset/ssubmit.png')} style={{  marginRight: '3px' }} alt="Check" /> </span> 
                   </div>
                 </div>
-                <button type="button" className="btn cancel-btn waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleCancel}>
-                  <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem', marginRight: '3px' }}
-                    className='me-1' alt="x" />
-                  Cancel
+                <button style={{minWidth:'auto',border:'0px solid #ccc', background:'transparent'}} type="button" className="btn-circle-light waves-effect waves-light m-1"  onClick={handleCancel}>
+<span className="mt-2 mb-1" data-tooltip='Cancel'> <img src={require('../../../CustomAsset/canceli.png')} 
+                    alt="x" />
+                  </span>
                 </button>
               </div>) : (<div className="text-center butncss mb-4">
-                <button type="button" className="btn cancel-btn waves-effect waves-light m-1" onClick={handleCancel}>
-                  <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem', marginRight: '3px' }}
-                    className='me-1' alt="x" />
-                  Cancel
+                <button type="button" style={{minWidth:'auto',border:'0px solid #ccc', background:'transparent'}} className="btn-circle-light waves-effect waves-light m-1" onClick={handleCancel}>
+                <span className="mt-2 mb-1" data-tooltip='Cancel'>  <img src={require('../../../CustomAsset/canceli.png')} 
+                  alt="x" />
+                 </span>
                 </button>
               </div>)}
             {/* Modal to display uploaded files */}

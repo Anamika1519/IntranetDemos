@@ -28,7 +28,7 @@ const sp = getSP();
     return (
         <div className=''>
             <h4 className="page-title fw-bold mb-0 font-20">{Breadcrumb[1].ChildComponent}</h4>
-            <ol className="breadcrumb mb-2">
+            <ol className="breadcrumb mb-0">
                 <li className="breadcrumb-item"><a href={urlbreadcrumbhomeurl}>{Breadcrumb[0].MainComponent}</a></li>
                 <li className="breadcrumb-item pt-arr">
                     <FontAwesomeIcon

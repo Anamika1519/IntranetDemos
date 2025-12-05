@@ -10,7 +10,11 @@ import "@pnp/sp/files";
 import "@pnp/sp/files/web";
 import CustomPopup from '../../myProject/components/CustomPopup';
 import VerticalSideBar from "../../verticalSideBar/components/VerticalSideBar";
+import CustomBreadcrumb from '../../../CustomJSComponents/CustomBreadcrumb/CustomBreadcrumb';
 import UserContext from "../../../GlobalContext/context";
+import "../../../Assets/Figtree/Figtree-VariableFont_wght.ttf";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../../../CustomCss/mainCustom.scss";
 import HorizontalNavbar from "../../horizontalNavBar/components/HorizontalNavBar";
 import { SPFI } from "@pnp/sp/presets/all";
 import { getSP } from "../loc/pnpjsConfig";
@@ -617,10 +621,11 @@ const MyTask = ({ props }: any) => {
             marginTop: "0rem",
           }}
         >
+          <div className="container-fluid  paddb">
     <div className={styles.myTask}>
       {!showForm ? (
         <>
-          <h2 className='fw-bold text-dark header-title'>My Tasks</h2>
+          <h2 className='fw-bold text-dark header-title mt-2'>My Tasks</h2>
 
           {/* Tiles */}
           <div className={styles.tilesContainer}>
@@ -991,7 +996,7 @@ const MyTask = ({ props }: any) => {
         }}
       />
     </div>
-    </div>
+    </div></div>
           </div>
       </div>
   );

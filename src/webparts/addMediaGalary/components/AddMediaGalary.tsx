@@ -2673,16 +2673,54 @@ const closeModal = () => {
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}`, marginTop: '1.6rem' }}>
 
           <div className="container-fluid  paddb">
+            <div className="card mt-2">
+            <div className="card-body">
+            <div className="row align-items-center">
 
-            <div className="row ">
+<div className="col-lg-3">
 
-              <div className="col-lg-3 mt-0">
+   <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+</div>
 
+<div className="col-lg-9">
+                <div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
+                  <div className="d-flex gap-4 flex-wrap align-items-center justify-content-start">
+                    
+                  <a onClick={handleCancel}>
+                  <span className="mt-2 mb-1" data-tooltip='Back'>
+                  <img
+                src={require("../../../CustomAsset/backicon.png")}
+              
+              /></span>
+              </a>
+              <a href={``}>
+              <span className="mt-2 mb-1" data-tooltip='Delete'>
+                  <img
+                src={require("../../../CustomAsset/deleteiocn.png")}
+              
+              /> </span>
+              </a>
+              <a href={`${siteUrl}/SitePages/MediaGalleryForm.aspx`}>
+                        <span className="mt-2 mb-1" data-tooltip='Add'>
+                  <img src={require("../../../CustomAsset/addicon.png")}
+              
+              /></span>
+              </a>
+                   
+                    
+                   
+                
+                  </div>
+                </div>
               </div>
 
+</div>
+
+              </div>
             </div>
+
+         
 
             <div className="card mt-3">  {/* Edit by Amjad */}
 
@@ -3288,48 +3326,44 @@ const closeModal = () => {
               <WorkflowAuditHistory SiteBaseURL={''} listName={''} ContentItemId={editID} ContentType={CONTENTTYPE_Media} ctx={props.context} />
             }
 
-            {!InputDisabled ? (<div className="text-center butncss">
+            {!InputDisabled ? (<div className="d-flex align-items-center justify-content-center text-center butncss">
 
-              <div className="btn btn-success waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleSaveAsDraft}>
+              <div className="btn-circle1 waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleSaveAsDraft}>
 
-                <div className='d-flex' style={{ justifyContent: 'center' }}>
-
-                  <img src={require('../../../Assets/ExtraImage/checkcircle.svg')} style={{ width: '1rem', marginRight: '3px' }} alt="Check" /> Save As Draft
-
-                </div>
+              <div className='d-flex' style={{ justifyContent: 'center' }}>
+                  <span className="mt-2 mb-1" data-tooltip='Save As Draft'> <img src={require('../../../CustomAsset/saveas.png')} style={{  marginRight: '3px' }} alt="Check" /></span>
+                  </div>
 
               </div>
 
-              <div className="btn btn-success waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleFormSubmit}>
+              <div className="btn-circle1 waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleFormSubmit}>
 
-                <div className='d-flex' style={{ justifyContent: 'center' }}>
-
-                  <img src={require('../../../Assets/ExtraImage/checkcircle.svg')} style={{ width: '1rem', marginRight: '3px' }} alt="Check" /> Submit
-
-                </div>
+              <div className='d-flex' style={{ justifyContent: 'center' }}>
+                  <span className="mt-2 mb-1" data-tooltip='Submit'> <img src={require('../../../CustomAsset/ssubmit.png')} style={{  marginRight: '3px' }} alt="Check" /> </span> 
+                  </div>
 
               </div>
 
-              <div className="btn cancel-btn waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleCancel}>
+              <div className="btn-circle1 waves-effect waves-light m-1" style={{ width: '145px' }} onClick={handleCancel}>
 
                 <div className='d-flex' style={{ justifyContent: 'center' }}>
 
-                  <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem', marginRight: '3px' }} alt="x" />
-
-                  Cancel
+                <span className="mt-2 mb-1" data-tooltip='Cancel'>  <img src={require('../../../CustomAsset/canceli.png')} 
+                  alt="x" />
+                 </span>
 
                 </div>
 
               </div>
 
             </div>) : (modeValue == 'view') && (<div className="text-center butncss">
-              <div className="btn cancel-btn waves-effect waves-light m-1" style={{ fontSize: '0.875rem' }} onClick={handleCancel}>
+              <div className="btn-circle1 waves-effect waves-light m-1" style={{ fontSize: '0.875rem' }} onClick={handleCancel}>
 
                 <div className='d-flex' style={{ justifyContent: 'space-around', width: '70px' }}>
 
-                  <img src={require('../../../Assets/ExtraImage/xIcon.svg')} style={{ width: '1rem' }} className='me-1' alt="x" />
-
-                  Cancel
+                <span className="mt-2 mb-1" data-tooltip='Cancel'>  <img src={require('../../../CustomAsset/canceli.png')} 
+                    alt="x" />
+                 </span>
 
                 </div>
 

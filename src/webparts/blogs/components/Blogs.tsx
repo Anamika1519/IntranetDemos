@@ -1516,7 +1516,7 @@ const BlogsContext = ({ props }: any) => {
 
                                 <div className="text-center butncss mt-2">
                                   <div style={{ width: '140px', justifyContent: 'center', textAlign: 'center' }}
-                                    className="btn btn-success waves-effect waves-light m-1"
+                                    className="btn btn-info waves-effect waves-light m-1"
 
                                     onClick={handleFormSaevasDraft}
                                   >
@@ -1536,7 +1536,7 @@ const BlogsContext = ({ props }: any) => {
                                     </div>
                                   </div>
                                   <div style={{ width: '140px', justifyContent: 'center', textAlign: 'center' }}
-                                    className="btn btn-success waves-effect waves-light m-1"
+                                    className="btn btn-primary waves-effect waves-light m-1"
 
                                     onClick={handleFormSubmit}
                                   >

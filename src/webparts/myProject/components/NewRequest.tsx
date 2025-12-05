@@ -725,7 +725,7 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
 
     return (
         <div className={styles.newRequest}>
-            <h2>New Request</h2>
+            <h2 >New Request</h2>
 
             {/* Project Information Section */}
             <div className={styles.section}>

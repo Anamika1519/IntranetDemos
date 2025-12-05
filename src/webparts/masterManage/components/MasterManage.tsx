@@ -341,7 +341,7 @@ const settingsData = setsettingArray(
         <HorizontalNavbar _context={sp} siteUrl={SiteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}` }}>
           <div className="container-fluid  paddb">
-            <div className="row pt-2" style={{ paddingLeft: '0.5rem' }}>
+            <div className="row pt-0 mt-2" style={{ paddingLeft: '0.5rem' }}>
               <div className="col-lg-3">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
@@ -450,6 +450,7 @@ const settingsData = setsettingArray(
                               className="card-master box1"
                               onClick={() => handleCardClick(item)}
                             >
+                            <img className="newopacity" src={imageUrl}/> 
                               <div className="icon">
                                 <img
                                   src={imageUrl}

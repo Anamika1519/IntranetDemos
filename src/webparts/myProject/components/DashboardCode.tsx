@@ -6,7 +6,11 @@ import { IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
 import Provider from "../../../GlobalContext/provider";
 import {IMyProjectProps} from './IMyProjectProps';
 import VerticalSideBar from "../../verticalSideBar/components/VerticalSideBar";
+import CustomBreadcrumb from '../../../CustomJSComponents/CustomBreadcrumb/CustomBreadcrumb';
 import UserContext from "../../../GlobalContext/context";
+import "../../../Assets/Figtree/Figtree-VariableFont_wght.ttf";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../../../CustomCss/mainCustom.scss";
 import HorizontalNavbar from "../../horizontalNavBar/components/HorizontalNavBar";
 import { SPFI } from "@pnp/sp/presets/all";
 import NewRequest from './NewRequest';
@@ -665,6 +669,9 @@ const Dashboard = ({ props }: any) => {
             marginTop: "0rem",
           }}
         >
+          <div className='container-fluid  paddb'>
+
+         
     <div className={styles.dashboard}>
       {showMDR ? (
         <MDR context={props.context} />
@@ -683,7 +690,7 @@ const Dashboard = ({ props }: any) => {
                   <button type="button" onClick={handleViewMDR} className={styles.btnDark}>
                     View MDR
                   </button>
-                  <button type="button" onClick={handleBackToDashboard} className={styles.btnDark}>
+                  <button type="button" onClick={handleBackToDashboard} className='btnDark1'>
                     Back
                   </button>
                 </div>
@@ -789,7 +796,7 @@ const Dashboard = ({ props }: any) => {
               <div className={styles.chartCol}>
                 <div className={styles.chartCard}>
                   <div className={styles.cardBody}>
-                    <h4 className={styles.chartTitle}>Deliverables by Status</h4>
+                    <h4 style={{fontWeight:'bold'}} className='header-title line18 font-8 text-dark newtextdark fw-bold mb-0'>Deliverables by Status</h4>
                     <div className={styles.chartContainer}>
                       {statusChartData.length > 0 ? (
                         <div className={styles.pieChartWrapper}>
@@ -797,7 +804,7 @@ const Dashboard = ({ props }: any) => {
                             data={statusChartData}
                             width={250}
                             height={250}
-                            chartTitle="Deliverables by Status"
+                           // chartTitle="Deliverables by Status"
                             // hideLabels={false}
                             // showLabelsInPercent={true}
                           />
@@ -849,7 +856,7 @@ const Dashboard = ({ props }: any) => {
             <div className={styles.deliverablesSection}>
               <div className={styles.deliverablesCard}>
                 <div className={styles.cardBody}>
-                  <h4 className={styles.sectionHeader}>Deliverables Status</h4>
+                  <h4 className='header-title line18 font-8 text-dark newtextdark fw-bold mb-0'>Deliverables Status</h4>
 
                   <div className={styles.tableContainer}>
                     <table className={styles.deliverablesTable}>
@@ -893,7 +900,7 @@ const Dashboard = ({ props }: any) => {
                             </td>
                             <td>{deliverable.DocumentComments}</td>
                             <td style={{minWidth:'100px'}} className={styles.textCenter}>
-                              <button
+                              <button style={{minWidth:'40px'}}
                                 type="button"
                                 className={styles.btnOutlineSuccess}
                                 onClick={() => handleOpenAuditHistory(deliverable.ID)}
@@ -902,7 +909,7 @@ const Dashboard = ({ props }: any) => {
                               </button>
                             </td>
                             <td style={{minWidth:'100px'}} className={styles.textCenter}>
-                              <button
+                              <button style={{minWidth:'40px'}}
                                 type="button"
                                 className={styles.btnOutlineDanger}
                                 onClick={() => handleOpenHierarchy(deliverable.ID)}
@@ -1082,7 +1089,7 @@ const Dashboard = ({ props }: any) => {
       ) : (
         <>
           <div className={styles.controls}>
-            <h2 style={{margin:'0px'}} className='fw-bold text-dark header-title'>Dashboard</h2>
+            <h2 style={{margin:'0px',fontWeight:'600'}} className='fw-bold text-dark header-title'>Dashboard</h2>
 
             <div className={styles.searchArea}>
               <input
@@ -1149,7 +1156,7 @@ const Dashboard = ({ props }: any) => {
     </div>
     </div>
           </div>
-      </div>
+      </div> </div>
   );
 };
 

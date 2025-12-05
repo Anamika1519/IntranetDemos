@@ -194,7 +194,7 @@ export const MastersettingContext = ({ props }: any) => {
           <HorizontalNavbar  _context={sp} siteUrl={SiteUrl}/>
         <div className="content" style={{marginLeft: `${!useHide ? '240px' : '80px'}`}}>
           <div  className="container-fluid  paddb">
-            <div className="row pt-0" style={{ paddingLeft: '0.5rem' }}>
+            <div className="row pt-0 mt-2" style={{ paddingLeft: '0.5rem' }}>
               <div className="col-lg-3">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
@@ -216,6 +216,7 @@ export const MastersettingContext = ({ props }: any) => {
                    return (<div className="col-sm-3 col-md-3 mt-2">
                       <a href={item?.LinkUrl}>
                         <div className="card-master box1">
+                        <img className="newopacity" src={imageUrl} /> 
                           <div className="icon">
                             {/* <img src={ImageUrl?.serverUrl + ImageUrl?.serverRelativeUrl} /> */}
                             <img src={imageUrl} /> 

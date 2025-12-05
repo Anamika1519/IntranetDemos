@@ -4,7 +4,7 @@
   right: 0px;
 }
 .nav-pills .nav-link.active{
-  background:#1fb0e5 !important;
+  background:var(--primary-color) !important;
 }
 .heightcard{    transition: transform .2s;}
 .heightcard:hover h4{text-decoration: underline;}
@@ -45,10 +45,14 @@
   transform: translateX(0);
 }
 
-.bg img{width: 80%;}
+.bg img{width: 80%;    filter: brightness(0%);
+  opacity: 0.2; }
   
   h4.card-title {
-    color: rgb(255, 255, 255) !important;
+    color:#000 !important;
+  }
+  h4.card-title:hover{
+    color: var(--primary-color) !important;
   }
   .btn-lightcss {
     position: absolute;
@@ -90,10 +94,10 @@
   }
 
   .card.heightcard {
-    background: rgb(18, 168, 222);
+    background:#fff;
     color: rgb(255, 255, 255);
     box-shadow: 0 3px 20px #1d26260d;
-    border-radius: 20px !important;
+    border-radius: 0px !important;
     height: 160px !important;
     border: none;
   }

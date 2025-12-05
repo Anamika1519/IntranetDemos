@@ -154,8 +154,8 @@ const HelloWorldContext = ({ props }: any) => {
     // console.log("item-->>>>",item)
     const encryptedId = encryptId(String(item.ID));
     sessionStorage.setItem("mediaId", encryptedId);
-    sessionStorage.setItem("dataID", item.Id)
-    window.location.href = `${siteUrl}/SitePages/Mediadetails.aspx?${item.Id}`;
+    sessionStorage.setItem("dataID", item.ID)
+    window.location.href = `${siteUrl}/SitePages/Mediadetails.aspx?${item.ID}`;
   };
   const Breadcrumb = [
     {
@@ -179,11 +179,7 @@ const HelloWorldContext = ({ props }: any) => {
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}`, marginTop: '0rem' }}>
           <div className="container-fluid paddb">
             <div className="row">
-              <div className="col-lg-4">
-
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
-
-              </div>
+            
               {/* <div className="col-lg-8">
                   <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
                     <form className="d-flex align-items-center justify-content-start">
@@ -200,13 +196,18 @@ const HelloWorldContext = ({ props }: any) => {
                 </div> */}
             </div>
 
-            <div className="row mt-3">
+            <div className="row mt-2">
               <div className="col-12">
-                <div className="card">
+                <div className="card mb-2">
                   <div className="card-body">
                     <div className="row">
-                      <div className="col-md-12">
-                        <div className="text-center filter-menu d-flex justify-content-center">
+                    <div className="col-lg-3">
+
+<CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+
+</div>
+                      <div className="col-md-9">
+                        <div className="text-center filter-menu d-flex justify-content-end mt-2">
                           {/* Main tabs */}
                           <a
                             style={{ textDecoration: 'unset' }}
@@ -349,7 +350,7 @@ const HelloWorldContext = ({ props }: any) => {
                             {item.Title || "Untitled"}
                           </h4>
                           <div className="mb-1 mt-1 row">
-                            <span className="font-14" style={{ borderRadius: "4px", color: '#1fb0e5', fontWeight: '600' }}>
+                            <span className="font-14" style={{ borderRadius: "4px", color: '#1e63ad', fontWeight: '600' }}>
                               {item.MediaGalleryCategory?.CategoryName}
                             </span>
                           </div>

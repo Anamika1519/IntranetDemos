@@ -242,8 +242,8 @@ export const addItem = async (itemData, _sp) => {
 export const updateItem = async (itemData, _sp, id) => {
   let resultArr = []
   try {
-    // const newItem = await _sp.web.lists.getByTitle('ARGMediaGallery').items.getById(id).update(itemData);
-    const newItem = await _sp.web.lists.getByTitle('ARGKnowledgeCenter').items.getById(id).update(itemData);
+    const newItem = await _sp.web.lists.getByTitle('ARGMediaGallery').items.getById(id).update(itemData);
+    //const newItem = await _sp.web.lists.getByTitle('ARGKnowledgeCenter').items.getById(id).update(itemData);
 
     console.log('Item added successfully:', newItem);
     resultArr = newItem

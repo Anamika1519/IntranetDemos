@@ -852,14 +852,14 @@ const NewsdetailsContext = ({ props }: any) => {
                                         <a data-bs-toggle="modal" data-bs-target="#centermodal" className="image-popup mb-2" title="Screenshot-1">
                                           {res.fileType.startsWith('video/') ?
                                             <video muted={true} id='Backendvideo' ref={getvideo} style={{
-                                              width: '100%', height: '100%', objectFit: 'cover', borderRadius: '13px', cursor: 'auto',
+                                              width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0px', cursor: 'auto',
                                             }} className="img-fluid imgcssscustom" controls={true}>
                                               <source src={(videositeurl + res.fileUrl) + "#t=5"} type="video/mp4"></source>
                                             </video> :
                                             <img src={`${videositeurl}${res.fileUrl}`}
 
                                               className="img-fluid imgcssscustom" alt="work-thumbnail" data-themekey="#" style={{
-                                                width: '100%', height: '100%', objectFit: 'cover', cursor: 'auto', borderRadius: '13px'
+                                                width: '100%', height: '100%', objectFit: 'cover', cursor: 'auto', borderRadius: '0px'
                                               }} />
                                           }
 
@@ -925,7 +925,7 @@ const NewsdetailsContext = ({ props }: any) => {
 
                     <div className="col-md-12">
 
-                      <div className="card p-4" style={{ border: '1px solid #54ade0', borderRadius: '20px', boxShadow: '0 3px 20px #1d26260d' }}>
+                      <div className="card p-4" >
 
                         <div>
 

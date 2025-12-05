@@ -2777,8 +2777,8 @@ const MyApprovalContext = ({ props }: any) => {
               activeTab === "ProjectWorkflow") && (
                 <div>
                   {!isActivedata && (
-                    <div className="card cardCss mt-2">
-                      <div className="card-body">
+                    <div className=" mt-2">
+                      <div className="">
                         <div id="cardCollpase4" className="collapse show">
                           <div className="table-responsive pt-0">
                             {activeTab === "Intranet" ||
@@ -3207,7 +3207,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                 textAlign: 'center'
                                               }}
                                             >
-                                              <span className="badge font-12 bg-info">   {item.ProcessName}</span>
+                                              <span className="badge font-12 bg-secondary">   {item.ProcessName}</span>
                                             </td>
 
                                             <td
@@ -3890,7 +3890,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                     textAlign: 'center'
                                                   }}
                                                 >
-                                                  <span className="badge font-12 bg-info">  {item?.FileUID?.Processname} </span>
+                                                  <span className="badge font-12 bg-secondary">  {item?.FileUID?.Processname} </span>
                                                 </td>
 
                                                 <td
@@ -4320,7 +4320,7 @@ const MyApprovalContext = ({ props }: any) => {
                                             {item.ProjectName}
                                           </td>
                                           <td style={{ minWidth: "120px", maxWidth: "120px", textAlign: 'center' }}>
-                                            <span className="badge font-12 bg-info">{item.ProcessName}</span>
+                                            <span className="badge font-12 bg-secondary">{item.ProcessName}</span>
                                           </td>
                                           <td style={{ minWidth: "100px", maxWidth: "100px" }} title={item.Requester?.Title}>
                                             {item.Requester?.Title}
@@ -4629,7 +4629,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                       {item.ProjectName || item.Title}
                                                     </td>
                                                     <td style={{ minWidth: "120px", maxWidth: "120px", textAlign: 'center' }}>
-                                                      <span className="badge font-12 bg-info">{item.ProcessName}</span>
+                                                      <span className="badge font-12 bg-secondary">{item.ProcessName}</span>
                                                     </td>
                                                     <td style={{ minWidth: "100px", maxWidth: "100px" }} title={item.Requester?.Title}>
                                                       {item.Requester?.Title}
@@ -4691,20 +4691,20 @@ const MyApprovalContext = ({ props }: any) => {
                                   </div>
                                 ) : (
                                   // FORM VIEW - This is where your form goes
-                                  <div className="card cardCss mt-2">
+                                  <div className="card mt-2">
                                     <div className="card-body">
                                       <div className="form-header d-flex justify-content-between align-items-center mb-3">
-                                        <h4>Project Approval Details</h4>
-                                        <button
+                                        <h4 className="text-dark font-16 fw-bold m-0">Project Approval Details</h4>
+                                        {/* <button
                                           className="btn btn-secondary"
                                           onClick={handleProjectBackClick}
                                         >
                                           Back
-                                        </button>
+                                        </button> */}
                                       </div>
 
                                       <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                           {/* <div className="mb-3">
                                             <label className="form-label"><strong>Request ID:</strong></label>
                                             <input
@@ -4723,6 +4723,9 @@ const MyApprovalContext = ({ props }: any) => {
                                               disabled
                                             />
                                           </div>
+
+
+
                                           {/* <div className="mb-3">
                                             <label className="form-label"><strong>Process Name:</strong></label>
                                             <input
@@ -4742,7 +4745,7 @@ const MyApprovalContext = ({ props }: any) => {
                                             />
                                           </div> */}
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                           {/* <div className="mb-3">
                                             <label className="form-label"><strong>Requested Date:</strong></label>
                                             <input
@@ -4770,6 +4773,9 @@ const MyApprovalContext = ({ props }: any) => {
                                               disabled
                                             />
                                           </div>
+
+                                          </div>
+                                          <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Deliverable:</strong></label>
                                             <input
@@ -4780,11 +4786,11 @@ const MyApprovalContext = ({ props }: any) => {
                                             />
                                           </div>
                                         </div>
-                                      </div>
+                                      
 
                                       {/* Additional fields from your data */}
-                                      <div className="row">
-                                        <div className="col-md-6">
+                                    
+                                        <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Document Type:</strong></label>
                                             <input
@@ -4794,6 +4800,8 @@ const MyApprovalContext = ({ props }: any) => {
                                               disabled
                                             />
                                           </div>
+                                          </div>
+                                          <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Document Number:</strong></label>
                                             <input
@@ -4804,7 +4812,7 @@ const MyApprovalContext = ({ props }: any) => {
                                             />
                                           </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Area:</strong></label>
                                             <input
@@ -4814,6 +4822,8 @@ const MyApprovalContext = ({ props }: any) => {
                                               disabled
                                             />
                                           </div>
+                                          </div>
+                                          <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Organization:</strong></label>
                                             <input
@@ -4824,11 +4834,11 @@ const MyApprovalContext = ({ props }: any) => {
                                             />
                                           </div>
                                         </div>
-                                      </div>
+                               
 
                                       {/* Client and Prepared By fields */}
-                                      <div className="row">
-                                        <div className="col-md-6">
+                                      
+                                        <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Client Name:</strong></label>
                                             <input
@@ -4839,7 +4849,7 @@ const MyApprovalContext = ({ props }: any) => {
                                             />
                                           </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Prepared By:</strong></label>
                                             <input
@@ -4850,10 +4860,10 @@ const MyApprovalContext = ({ props }: any) => {
                                             />
                                           </div>
                                         </div>
-                                      </div>
+                                 
 
                                       {/* Approval Role and Revision Number */}
-                                      <div className="row">
+                                     
                                         {/* <div className="col-md-6">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Approval Role:</strong></label>
@@ -4865,7 +4875,7 @@ const MyApprovalContext = ({ props }: any) => {
                                             />
                                           </div>
                                         </div> */}
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                           <div className="mb-3">
                                             <label className="form-label"><strong>Revision Number:</strong></label>
                                             <input
@@ -5009,6 +5019,8 @@ const MyApprovalContext = ({ props }: any) => {
 
                                       {/* Dynamic Approval Hierarchy Table */}
                                       {selectedProjectTask?.ApprovalRole === "Document Controller" && (
+                                        <div className="card">
+                                          <div className="card-body">
                                         <div className="approval-projectHierarchy mt-4">
                                           <div className="d-flex justify-content-between align-items-center mb-3">
                                             <h5>Approval Hierarchy</h5>
@@ -5096,6 +5108,8 @@ const MyApprovalContext = ({ props }: any) => {
                                               </tbody>
                                             </table>
                                           </div>
+                                        </div>
+                                        </div>
                                         </div>
                                       )}
 

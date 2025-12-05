@@ -1,6 +1,6 @@
 .post {
-  border: 1px solid #54ade0;
-  border-radius: 20px !important;
+ 
+  border-radius: 5px !important;
 
   margin: 16px 0;
   background-color: #fff;
@@ -24,7 +24,7 @@
 .post-options button {
   background: none;
   border: none;
-  color: #007bff;
+  color: var(--primary-color);
   cursor: pointer;
 }
 

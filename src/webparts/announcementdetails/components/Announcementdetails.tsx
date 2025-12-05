@@ -777,7 +777,7 @@ const AnnouncementdetailsContext = ({ props }: any) => {
             </div> */}
                 <div className="row mt-2" >
                   <div className="col-md-12">
-                    <div className="card p-4" style={{ border: '1px solid #54ade0', borderRadius: '20px', boxShadow: '0 3px 20px #1d26260d' }}>
+                    <div className="card p-4">
                       <div>
                         {/* New comment input */}
                         <h4 className="mt-0 mb-3 text-dark fw-bold font-16">Comments</h4>

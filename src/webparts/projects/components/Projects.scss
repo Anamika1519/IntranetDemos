@@ -8,7 +8,7 @@
   .project-box{height: 240px;}
   .alignrightl{width: 90px; margin-bottom: 20px; margin-top: 5px;}
   .project-box a:hover{color: #fff !important; cursor: auto;}
-  a.hovertext:hover{color: #1fb0e5 !important; cursor: pointer !important;}
+  a.hovertext:hover{color: var(--primary-color) !important; cursor: pointer !important;}
   .two-line{    overflow: hidden; line-height: 18px !important;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -46,7 +46,7 @@
       padding: 1px 8px !important; width:75px;
   }
     .date-color{height: 38px;}
-    .nav-pills .nav-link.active{background: #1fb0e5;}
+    .nav-pills .nav-link.active{background: var(--primary-color);}
     .morealign{    position: absolute;
       width: 16px; top: 15px;
       right: 5px;}
@@ -76,7 +76,7 @@
         .newminus{margin-left: -12px !important;    min-width: 2rem;}
     #ProjectName{height: 38px;}
   .nav-pills .nav-link{    
-    border: 1px solid #54ade0;
+    border: 1px solid var(--light-color);
     border-radius: 3px !important;
     color: #000;
     font-size: 14px;
@@ -90,7 +90,7 @@
       font-weight: 500 !important;
       padding: 4px 10px !important;}
     .ml20{padding-left: 10px; display: flex; padding-top: 10px;}
-    .ml20 img{width: 2.5rem !important; height: 2.5rem !important; border-radius: 1000px !important;}
+    .ml20 img{ border-radius: 1000px !important;}
 
 
     
@@ -108,7 +108,7 @@
     .status-ongoing {
       background-color: #6c757d; /* Grey color for Ongoing */
     }
-    
+    .btn-secondary{ padding: .6rem 1rem !important;}
     .status-finished {
       background-color: #d4edda; /* Light green color for Finished */
       color: #155724; /* Dark green text */

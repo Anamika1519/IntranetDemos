@@ -906,13 +906,84 @@ const HelloWorldContext = ({ props }: any) => {
           style={{ marginLeft: `${!useHide ? "240px" : "80px"}` }}
         >
           <div className="container-fluid paddb">
+          <div className="card mb-0 mt-2">
+          <div className="card-body">
             <div className="row">
               <div className="col-lg-4">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="col-lg-8">
-                <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
+                <div className="d-flex flex-wrap align-items-center justify-content-end mt-2">
                   {/* Button to trigger modal */}
+                  <ul
+                            className="nav nav-pills navtab-bg float-end me-3"
+                            role="tablist"
+                          >
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("home1")}
+                                className={`nav-link ${activeTab === "home1" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "home1"}
+                                role="tab"
+                              >
+                                All
+                              </a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("profile1")}
+                                className={`nav-link ${activeTab === "profile1" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "profile1"}
+                                role="tab"
+                                tabIndex={-1}
+                              >
+                                Owner
+                              </a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("profile11")}
+                                className={`nav-link ${activeTab === "profile11" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "profile11"}
+                                role="tab"
+                                tabIndex={-1}
+                              >
+                                Member
+                              </a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("Ongoing")}
+                                className={`nav-link ${activeTab === "Ongoing" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "Ongoing"}
+                                role="tab"
+                                tabIndex={-1}
+                              >
+                                Ongoing
+                              </a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("Completed")}
+                                className={`nav-link ${activeTab === "Completed" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "Completed"}
+                                role="tab"
+                                tabIndex={-1}
+                              >
+                                Completed
+                              </a>
+                            </li>
+                          </ul>
                   <button
                     type="button"
                     data-bs-toggle="modal"
@@ -1290,92 +1361,9 @@ const HelloWorldContext = ({ props }: any) => {
                 </div>
               </div>
             </div>
-
-            <div className="row mt-3">
-              <div className="col-12">
-                <div className="card mb-0">
-                  <div className="card-body">
-                    <div className="row justify-content-between">
-                      <div className="col-md-12">
-                        <div className="d-flex flex-wrap align-items-center justify-content-center">
-                          <ul
-                            className="nav nav-pills navtab-bg float-end"
-                            role="tablist"
-                          >
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("home1")}
-                                className={`nav-link ${activeTab === "home1" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "home1"}
-                                role="tab"
-                              >
-                                All
-                              </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("profile1")}
-                                className={`nav-link ${activeTab === "profile1" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "profile1"}
-                                role="tab"
-                                tabIndex={-1}
-                              >
-                                Owner
-                              </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("profile11")}
-                                className={`nav-link ${activeTab === "profile11" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "profile11"}
-                                role="tab"
-                                tabIndex={-1}
-                              >
-                                Member
-                              </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("Ongoing")}
-                                className={`nav-link ${activeTab === "Ongoing" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "Ongoing"}
-                                role="tab"
-                                tabIndex={-1}
-                              >
-                                Ongoing
-                              </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("Completed")}
-                                className={`nav-link ${activeTab === "Completed" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "Completed"}
-                                role="tab"
-                                tabIndex={-1}
-                              >
-                                Completed
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>{" "}
-                {/* end card */}
-              </div>{" "}
-              {/* end col */}
             </div>
+            </div>
+           
 
             {activeTab === "home1" && (
               <div className="row mt-3">

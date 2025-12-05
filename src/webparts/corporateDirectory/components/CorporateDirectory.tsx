@@ -1385,105 +1385,90 @@ const CorporateDirectoryContext = ({ props }: any) => {
 
           <div className="container-fluid  paddb">
 
-            <div className="row">
+          
+            <div className="card mb-0 mt-2">
 
-              <div className="col-lg-5">
+<div className="card-body">
+            <div className="row ">
+            <div className="col-lg-4">
 
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
+<CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
 
-              </div>
+</div>
+              <div className="col-lg-8">
+
+                
+
+                    <div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
+                    <form className="d-flex flex-wrap align-items-center justify-content-start me-2">
+
+<label htmlFor="searchInput" className="visually-hidden">
+
+  Search
+
+</label>
+
+<div className="me-0 position-relative">
+
+  <input
+
+    type="search"
+
+    className="form-control my-1 my-md-0"
+
+    id="searchInput"
+
+    placeholder="Search by name in Card View..."
+    onChange={(e) => handleSearch(e)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Prevents a new line
+        handleSearch(e); // Calls the function to add a reply
+      }
+    }}
+  />
+
+  <span
+
+    style={{
+
+      position: "absolute",
+
+      right: "11px",
+
+      top: "11px",
+
+      fontSize: "20px",
+
+    }}
+
+    className="fe-search"
+
+  ></span>
+
+</div>
 
 
-              <div className="col-lg-7">
+{/* <div
 
-                <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
+  className="btn btn-secondary waves-effect waves-light"
 
-                  <form className="d-flex flex-wrap align-items-center justify-content-start">
+  data-bs-toggle="modal"
 
-                    <label htmlFor="searchInput" className="visually-hidden">
+  data-bs-target="#custom-modal"
 
-                      Search
+  onClick={handleNewsExportClick}
 
-                    </label>
+>
 
-                    <div className="me-0 position-relative">
+  <FontAwesomeIcon icon={faFileExport} /> Export
 
-                      <input
+</div> */}
 
-                        type="search"
-
-                        className="form-control my-1 my-md-0"
-
-                        id="searchInput"
-
-                        placeholder="Search by name in Card View..."
-                        onChange={(e) => handleSearch(e)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault(); // Prevents a new line
-                            handleSearch(e); // Calls the function to add a reply
-                          }
-                        }}
-                      />
-
-                      <span
-
-                        style={{
-
-                          position: "absolute",
-
-                          right: "11px",
-
-                          top: "11px",
-
-                          fontSize: "20px",
-
-                        }}
-
-                        className="fe-search"
-
-                      ></span>
-
-                    </div>
-
-
-                    {/* <div
-
-                      className="btn btn-secondary waves-effect waves-light"
-
-                      data-bs-toggle="modal"
-
-                      data-bs-target="#custom-modal"
-
-                      onClick={handleNewsExportClick}
-
-                    >
-
-                      <FontAwesomeIcon icon={faFileExport} /> Export
-
-                    </div> */}
-
-                  </form>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div className="row mt-4">
-
-              <div className="col-12">
-
-                <div className="card mb-0 cardcsss">
-
-                  <div className="card-body">
-
-                    <div className="d-flex flex-wrap align-items-center justify-content-center">
-
+</form>
                       <ul
 
-                        className="navs nav-pillss navtab-bgs"
+                        className="navs nav-pillss navtab-bgs mt-0"
 
                         role="tablist"
 
@@ -1619,7 +1604,7 @@ const CorporateDirectoryContext = ({ props }: any) => {
 
                               <div
 
-                                style={{ border: "1px solid #54ade0" }}
+                                
 
                                 className="text-center card mb-3"
 

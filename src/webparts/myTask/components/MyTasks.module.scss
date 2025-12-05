@@ -1,5 +1,5 @@
 .myTask {
-    padding: 0px 0px;
+    padding: 0px 0px; margin-bottom: 50px;
 
     h2 {
         margin-bottom: 20px;
@@ -19,7 +19,7 @@
 }
 
 .tileCard {
-    width:35%; float: left;
+    width:24%; float: left;
    margin-right: 10px;
     background: white;
     border-radius: 8px;
@@ -108,7 +108,7 @@
 
 /* 🔶 Table Styles */
 .mainTableContainer {
-    margin-top: 10px;
+    margin-top: 0px;
     display: grid;
 }
 
@@ -122,8 +122,8 @@
 .tableWrapper {
     overflow-x: auto;
     width: 100%;
-    border: 1px solid #e1e1e1;
-    border-radius: 8px;
+    border: 0 solid #e1e1e1;
+    border-radius: 5px;
 }
 
 .taskTable {
@@ -212,7 +212,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 20px; background: #fff; padding: 12px; border-radius: 5px;
 
     h3 {
         font-size: 18px;
@@ -222,7 +222,7 @@
 }
 
 .backButton {
-    background-color: #0078d4;
+    background-color:var(--back-color);
     color: #fff;
     border: none;
     padding: 6px 12px;
@@ -231,7 +231,7 @@
     font-weight: 500; margin-top: 0px;;
 
     &:hover {
-        background-color: #005a9e;
+        background-color:var(--secondary-color);
     }
 }
 
@@ -448,7 +448,7 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 0px;
+    margin-top: 0px; margin-bottom: 50px;
 
     // 👇 Add scroll for wide content
     overflow-x: hidden;

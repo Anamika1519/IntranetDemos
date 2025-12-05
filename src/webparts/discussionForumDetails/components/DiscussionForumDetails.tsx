@@ -1698,11 +1698,7 @@ alt="Check"
                           <div >
                             <div
                               className="card"
-                              style={{
-                                border: "1px solid #54ade0",
-                                borderRadius: "20px",
-                                boxShadow: "0 3px 20px #1d26260d",
-                              }}
+                             
                             >
                               <div className="p-4">
                                 {/* New comment input */}

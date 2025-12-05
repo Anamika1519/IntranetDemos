@@ -342,36 +342,66 @@ const MediaMastercontext = ({ props }: any) => {
         <HorizontalNavbar _context={sp} siteUrl={siteUrl} />
         <div className="content" style={{ marginLeft: `${!useHide ? '240px' : '80px'}`}}>
           <div className="container-fluid  paddb">
-            <div className="row pt-0">
+            <div className='card mt-1'>
+            <div className='card-body'>
+            <div className="row align-items-center pt-0">
               <div className="col-lg-3">
                  <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
               </div>
               <div className="col-lg-9">
-                <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
-                  <div className="d-flex flex-wrap align-items-center justify-content-start">
-                    <a href={`${siteUrl}/SitePages/settings.aspx`}>
-                      <button type="button" className="btn btn-secondary me-1 waves-effect waves-light">
-                        <FontAwesomeIcon icon={faArrowLeft} className="me-1" />
-                        Back
-                      </button>
-                    </a>
-                    <a onClick={() => GotoAdd(`${siteUrl}/SitePages/MediaGalleryForm.aspx`)} >
-                      <button type="button" className="btn btn-primary waves-effect waves-light" style={{ background: '#1fb0e5' }}>
-                        <FontAwesomeIcon icon={faPlusCircle} className="me-1" />
-                        Add
-                      </button>
-                    </a>
+                <div className="d-flex flex-wrap align-items-center justify-content-end mt-1">
+                  <div className="d-flex gap-4 flex-wrap align-items-center justify-content-start">
+                    
+                  <a href={`${siteUrl}/SitePages/settings.aspx`}>
+                  <span className="mt-2 mb-1" data-tooltip='Back'>
+                  <img
+                src={require("../../../CustomAsset/backicon.png")}
+              
+              /></span>
+              </a>
+              <a href={``}>
+              <span className="mt-2 mb-1" data-tooltip='Delete'>
+                  <img
+                src={require("../../../CustomAsset/deleteiocn.png")}
+              
+              /> </span>
+              </a>
+              <a onClick={() => GotoAdd(`${siteUrl}/SitePages/MediaGalleryForm.aspx`)}>
+                        <span className="mt-2 mb-1" data-tooltip='Add'>
+                  <img src={require("../../../CustomAsset/addicon.png")}
+              
+              /></span>
+              </a>
+                   
+                    
+                   
+                
                   </div>
                 </div>
               </div>
             </div>
-            <div className="card cardCss mt-4 mb-0">
+
+              </div>
+
+            </div>
+          
+            <div className="card mt-2 mb-0">
               <div className="card-body">
                 <div id="cardCollpase4" className="collapse show">
                   <div className="table-responsive pt-0">
                     <table className="mtbalenew mt-0 pt-0 table-centered table-nowrap table-borderless mb-0">
                       <thead>
                         <tr>
+                        <th
+                            style={{
+                              borderBottomLeftRadius: "0px",
+                              minWidth: "20px",
+                              maxWidth: "20px", textAlign:'center',
+                              borderTopLeftRadius: "0px",
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </th>
                           <th style={{ borderBottomLeftRadius: '0px', minWidth: '0px', maxWidth: '50px', borderTopLeftRadius: '0px' }}>
  
                             <div className="d-flex pb-2"
@@ -487,6 +517,16 @@ const MediaMastercontext = ({ props }: any) => {
                                 : JSON.parse(item.Image);
                             return (
                               <tr key={index}>
+                                <td
+                            style={{
+                              borderBottomLeftRadius: "0px",
+                              minWidth: "20px",
+                              maxWidth: "20px", textAlign:'center',
+                              borderTopLeftRadius: "0px",
+                            }}
+                          >
+                            <input style={{width:'18px', height:'18px'}} type="checkbox"/>
+                            </td>
                                 <td
                                   style={{
                                     minWidth: "50px",

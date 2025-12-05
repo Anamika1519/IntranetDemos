@@ -1385,13 +1385,61 @@ const DiscussionForumContext = ({ props }: any) => {
           }}
         >
           <div className="container-fluid paddb">
-          <div className="row" style={{paddingLeft:'0.5rem'}}>
-              <div className="col-lg-6">
-                 <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/>
-              </div>
+        
+            <div className="row mt-2" style={{paddingLeft:'0.5rem'}}>
+              <div className="col-12">
+                <div className="card mb-0">
+                  <div className="card-body">
 
-              <div className="col-lg-6">
-                <div className="d-flex flex-wrap align-items-center justify-content-end mt-3">
+                    <div className="row">
+                    <div className="col-md-4">   
+                      <CustomBreadcrumb Breadcrumb={Breadcrumb} _context={sp}/></div>
+                      <div className="col-md-8">
+                        <div className="mt-2 d-flex flex-wrap align-items-center justify-content-end">
+                          <ul
+                            className="nav nav-pills navtab-bg float-end me-3"
+                            role="tablist"
+                          >
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("home1")}
+                                className={`nav-link ${activeTab === "home1" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "home1"}
+                                role="tab"
+                              >
+                                All
+                              </a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("lastsevenDays")}
+                                className={`nav-link ${activeTab === "lastsevenDays" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "lastsevenDays"}
+                                role="tab"
+                                tabIndex={-1}
+                              >
+                                Latest
+                              </a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                              <a
+
+                                onClick={() => handleTabClick("OldDays")}
+                                className={`nav-link ${activeTab === "OldDays" ? "active" : ""
+                                  }`}
+                                aria-selected={activeTab === "OldDays"}
+                                role="tab"
+                                tabIndex={-1}
+                              >
+                                Trending
+                              </a>
+                            </li>
+                          </ul>
+                        
                   {/* Button to trigger modal */}
                   <button
                     type="button"
@@ -1401,7 +1449,7 @@ const DiscussionForumContext = ({ props }: any) => {
                   >
                     <i className="fe-plus-circle"></i> Start New Discussion
                   </button>
-                </div>
+                
                 {/* Bootstrap Modal */}
                 <div
                   className="modal fade bd-example-modal-lg"
@@ -1723,7 +1771,7 @@ const DiscussionForumContext = ({ props }: any) => {
 
                           <div className="text-center butncss mt-2">
                             <div
-                              className="btn btn-success waves-effect waves-light m-1"
+                              className="btn btn-primary waves-effect waves-light m-1"
                               style={{ width:'100px' }}
                               onClick={handleFormSubmit}
                             >
@@ -1762,58 +1810,6 @@ const DiscussionForumContext = ({ props }: any) => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="row mt-4" style={{paddingLeft:'0.5rem'}}>
-              <div className="col-12">
-                <div className="card mb-0">
-                  <div className="card-body">
-                    <div className="row justify-content-between">
-                      <div className="col-md-12">
-                        <div className="d-flex flex-wrap align-items-center justify-content-center">
-                          <ul
-                            className="nav nav-pills navtab-bg float-end"
-                            role="tablist"
-                          >
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("home1")}
-                                className={`nav-link ${activeTab === "home1" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "home1"}
-                                role="tab"
-                              >
-                                All
-                              </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("lastsevenDays")}
-                                className={`nav-link ${activeTab === "lastsevenDays" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "lastsevenDays"}
-                                role="tab"
-                                tabIndex={-1}
-                              >
-                                Latest
-                              </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                              <a
-
-                                onClick={() => handleTabClick("OldDays")}
-                                className={`nav-link ${activeTab === "OldDays" ? "active" : ""
-                                  }`}
-                                aria-selected={activeTab === "OldDays"}
-                                role="tab"
-                                tabIndex={-1}
-                              >
-                                Trending
-                              </a>
-                            </li>
-                          </ul>
                         </div>
                       </div>
                     </div>
@@ -1823,7 +1819,7 @@ const DiscussionForumContext = ({ props }: any) => {
               </div>{" "}
               {/* end col */}
             </div>
-            <div style={{margin:'0px 10px'}} className="card cardCss mt-2 mb-0">
+            <div style={{margin:'0px 10px'}} className="card  mt-2 mb-0">
               <div className="card-body">
                 <div id="cardCollpase4" className="collapse show">
                   <div className="table-responsive pt-0">

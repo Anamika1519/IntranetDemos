@@ -12,6 +12,9 @@ import "@pnp/sp/items/get-all";
 import "@pnp/sp/folders";
 import "@pnp/sp/files/folder";
 import "@pnp/sp/fields";
+import "@pnp/sp/files";
+import "@pnp/sp/security";
+import "@pnp/sp/presets/all";
 // var _sp: SPFI;
 // export const getSP = (context?: WebPartContext): SPFI => {
 //   if (context != null && (_sp === undefined ||_sp === null)) {
@@ -34,4 +37,16 @@ export const getSP = (context?: WebPartContext): SPFI => {
     
   }
   return _sp;
+}
+var _spurl: SPFI;
+export const getSPContext = (context?: WebPartContext): SPFI=> {
+  if (context !== null && (_spurl === undefined ||_spurl === null)) {
+    //You must add the @pnp/logging package to include the PnPLogging behavior it is no longer a peer dependency
+    // The LogLevel set's at what level a message will be written to the console
+   _spurl = spfi().using(SPFx(context)).using(PnPLogging(LogLevel.Warning));
+  
+    
+  }
+  return _spurl;
+  
 }

@@ -59,9 +59,7 @@ a.filter-menu-item.dropdown-item{border: 0px solid #ccc !important;}
 }
 .card
 {
-    border-radius: 20px !important;
-    border: 1px solid #54ade0;
-    box-shadow: 0 3px 20px #1d26260d;
+  
     margin-bottom: 20px;
 }
 
@@ -83,7 +81,7 @@ a.filter-menu-item.dropdown-item{border: 0px solid #ccc !important;}
     margin-right: 2px;
     font-weight: 500;
     background-color: #fff;
-    border: 1px solid #54ade0 !important;
+    border: 1px solid var(--light-color) !important;
 }
 .filter-menu a {
     // background-color: #f3f7f9;
@@ -102,7 +100,7 @@ a, button {
     width: 100%;
 }
 .filter-menu a.active {
-    background-color: #1fb0e5;
+    background-color: var(--primary-color);
     color: #fff;
 }
 @media (min-width: 768px) {
@@ -115,13 +113,13 @@ a, button {
 }
 button#dropdown-basic {
     background: #fff !important;
-    border: 1px solid #1fb0e5 !important;
+    border: 1px solid var(--light-color) !important;
     color: #000 !important;
     height: 2.6rem !important; margin-left: 5px;
     border-radius: 3px; font-size: 14px;
 }
 button#dropdown-basic:hover{
-    background: #1fb0e5 !important;
+    background: var(--primary-color) !important;
     color:  #fff !important;
 }
 a.filter-menu-item.dropdown-item {
@@ -134,9 +132,9 @@ a.filter-menu-item.dropdown-item {
 .gal-box {
     margin-bottom: 15px;
     height: auto; width: 100%;
-    border-radius: 15px;
+    border-radius: 0px;
     position: relative;
-    border: 1px solid #54ade0 !important;
+    border: 0px solid #54ade0 !important;
     background-color: var(--ct-secondary-bg);
     box-shadow: var(--ct-box-shadow);
 }
@@ -254,7 +252,7 @@ a {
 .gal-box .image-popup img {
     width: 100%;
     object-fit: cover;
-    border-radius: 15px;
+    border-radius: 0px;
     padding-top: 0px;
     height: 100%;
     margin: 0 auto;
@@ -303,8 +301,8 @@ img, svg {
 .btn-primary:hover{color: #fff;}
 .text-dark { --ct-text-opacity: 1; color: rgba(var(--ct-dark-rgb), var(--ct-text-opacity)) !important;}
 .fw-bold {font-weight: 700 !important;}
-.btn-primary { background: rgba(0, 135, 81, 0.20) !important; font-weight: 500 !important;
-    height: auto !important; color: #008751 !important; border: 0px !important;}
+.btn-primary { background: #fef3e6!important; font-weight: 500 !important;
+    height: auto !important; color: #fa901d !important; border: 0px !important;}
     @media(max-width:640px){
         .gal-box {
             height: auto !important;

@@ -163,13 +163,13 @@ const HelloWorldContext = ({ props }: any) => {
                   <div className="gal-box mb-3" onClick={() => handleImageClick(index)}>
                     <a className="image-popup">
                       {item.fileType.startsWith('video/') ?
-                        <video muted={true} id='Backendvideo' ref={getvideo} style={{ maxWidth: "100%", height: "100%", width: "100%", borderRadius: "13px", objectFit: "cover" }} className="img-fluid" controls={true}>
+                        <video muted={true} id='Backendvideo' ref={getvideo} style={{ maxWidth: "100%", height: "100%", width: "100%", borderRadius: "0px", objectFit: "cover" }} className="img-fluid" controls={true}>
                           <source src={(videositeurl + item.fileUrl) + "#t=5"} type="video/mp4"></source>
                         </video> :
                         <img
                           src={item?.fileUrl ? item?.fileUrl : require("../../../Assets/ExtraImage/NoDataFound.png")}
                           alt="media"
-                          style={{ maxWidth: "100%", height: "100%", width: "100%", borderRadius: "13px", objectFit: "cover" }}
+                          style={{ maxWidth: "100%", height: "100%", width: "100%", borderRadius: "0px", objectFit: "cover" }}
                         />
                       }
                     </a>

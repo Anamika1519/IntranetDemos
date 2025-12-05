@@ -500,7 +500,7 @@ const HelloWorldContext = ({ props ,  }: any) => {
                           <div
                             className="carousel-inner"
                             role="listbox"
-                            style={{ borderRadius: "1rem" }}
+                            
                           >
                             {dynamicbanners.length == 0 &&
                               <div
@@ -1423,7 +1423,7 @@ const HelloWorldContext = ({ props ,  }: any) => {
                                       </div>
                                       <div
                                         className=""
-                                        style={{ position: "relative" }}
+                                        style={{ position: "relative", display:'flex' }}
                                       >
                                         {showDropdownId === project.Id && (
                                           project?.TeamMembers?.length > 0 && project?.TeamMembers?.map(

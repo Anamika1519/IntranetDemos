@@ -19,8 +19,8 @@
   max-width: 420px;
 }
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link{
-  background: #1fb0e5 !important;
-border-radius: .5rem;
+  background:var(--primary-color) !important;
+border-radius: 5px;
 color: #fff !important;
 }
 .links {

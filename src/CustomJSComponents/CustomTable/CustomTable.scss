@@ -57,7 +57,7 @@
      }
   
   .page-item.active .page-link {
-    background-color: #1fb0e5;
+    background-color: var(--primary-color);
     color: white;
   }
   
@@ -97,9 +97,9 @@
 
 /* Active page */
 .page-item.active .page-link {
-  background-color: #1fb0e5;
+  background-color: var(--primary-color);
   color: white;
-  border: 1px solid #007bff;
+  border: 1px solid var(--primary-color);
   border-radius: 30px !important;
 }
 
@@ -134,10 +134,10 @@
 }
 
 .page-item.active .page-link {
-  background: #1fb0e5;
+  background: var(--primary-color);
   color: #fff;
   border: none;
-  border-radius: 50% !important;
+  border-radius: 30px !important;
 }
 
 .page-link:hover {

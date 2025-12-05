@@ -1,7 +1,7 @@
 /* General card styling */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+   
+    border-radius: 0px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     overflow: hidden;
@@ -244,14 +244,14 @@ img[title=Badges] {
     display: flex;
 }
 a.nav-linkss.active {
-    background: #1fb0e5 !important;
+    background: var(--primary-color) !important;
     color: #fff !important;
     text-decoration: unset;
     border-radius: 0.5rem;
     padding: 0.70rem;
 }
 a.nav-linkss {
-    border: 1px solid #1fb0e5;
+    border: 1px solid var(--light-color) !important;
     background: #fff !important;
     text-decoration: unset;
     color: #000;

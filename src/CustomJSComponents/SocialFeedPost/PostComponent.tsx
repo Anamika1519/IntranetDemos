@@ -966,17 +966,17 @@ export const PostComponent = ({ key, sp, siteUrl, currentUsername, CurrentUser, 
                             {comment?.Author?.SPSPicturePlaceholderState == 0 ?
                                 <img
                                     src={
-                                        `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${comment?.Author.EMail}`
+                                        `${siteUrl}/_layouts/15/userphoto.aspx?size=M&accountname=${comment?.Author?.EMail}`
                                     }
                                     className="commentsImg"
                                     alt="profile-image"
                                     style={{ cursor: "auto", borderRadius: '1000px', width: "6rem", height: '6rem' }}
                                 />
                                 :
-                                (comment?.Author.EMail !== null || comment?.Author.EMail !== "") &&
+                                (comment?.Author?.EMail !== null || comment?.Author?.EMail !== "") &&
                                 <Avatar sx={{ bgcolor: 'primary.main' }} className="rounded-circlecss img-thumbnail
                                   avatar-xl">
-                                    {`${comment?.Author.EMail?.split('.')[0]?.charAt(0)}${comment?.Author.EMail?.split('.')[1]?.charAt(0)}`.toUpperCase()}
+                                    {`${comment?.Author?.EMail?.split('.')[0]?.charAt(0)}${comment?.Author?.EMail?.split('.')[1]?.charAt(0)}`.toUpperCase()}
                                 </Avatar>
                             }
                         </div>

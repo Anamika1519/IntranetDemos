@@ -464,10 +464,13 @@ outline: none !important;  box-shadow: none !important;border: none !important; 
 
 
 .primary1 {
-  min-width: 90px;
-    padding: 5px 16px !important;
+
     text-transform: capitalize;
-    font-size: 16px !important;border-color: #008751 !important;
+border-color: #008751 !important;
+    min-width: 85px;
+    padding: 4px 15px !important;
+    text-transform: capitalize;
+    font-size: 0.875rem !important;
 }
 .btn-primary{
   border-color: var(--primary-color) !important;
@@ -567,3 +570,49 @@ outline: none !important;  box-shadow: none !important;border: none !important; 
 }
 }
 .bg-light{    background-color: #ececec !important;}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 30px;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+/* When checked */
+.toggle-switch input:checked + .slider {
+  background-color: #28a745; /* green */
+}
+
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(30px);
+}

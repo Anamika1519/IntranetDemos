@@ -25,6 +25,8 @@ import { getDiscussion, getDiscussionFilter, fetchTrendingDiscussionBasedOn, get
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { MSGraphClientV3 } from "@microsoft/sp-http";
 import { toLower } from "lodash";
+let ai = require("../assets/ai.png");
+
 
 import Swal from 'sweetalert2'
 import Avatar from '@mui/material/Avatar'
@@ -81,7 +83,7 @@ const SocialFeedContext = ({ props }: any) => {
   const [CurrentDataAll, setCurrentDataAll] = useState<any>([]);
   const [CurrentuserPicturePlaceholderState, setCurrentuserPicturePlaceholderState] = useState(null);
   const [CurrenuserProfilepic, SetCurrenuserProfilepic] = useState(null);
-
+  const [askAI, setAskAI] = useState(false);
   const menuRef = useRef(null);
   useEffect(() => {
     // Load posts from localStorage when the component mounts
@@ -1180,6 +1182,43 @@ const SocialFeedContext = ({ props }: any) => {
       console.error("Error unfollowing:", error);
     }
   };
+
+  // multiverse url 
+  const FLOW_URL = "https://default54c8cf561cca43aa99721f9875d3ac.9d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4c3d75d3016b4dfe8f2d6bbb79df1bd7/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4kQLjxJhG35Qk29FtTuK-Avy0QBNN8hu_PYxw_wh9C4";
+
+  // office india url 
+  // const FLOW_URL = "https://62fe413aac9fe8f9abf4ad8c89c177.dd.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6b3aca61f8fe4acc86148b618c838e5b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TF9O5FaVvvlv-8DRBSDVdTdyc5zszHVcVrZAb9Pte0w";
+const handleAISubmit = async () => {
+  setLoading(true);
+  try {
+    const payload = {
+      prompt: Contentpost
+    };
+
+    const response = await fetch(FLOW_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    // Power Automate returned STRINGIFIED JSON inside "extractedText"
+    const parsed = JSON.parse(data.extractedText);
+
+    // The actual text you want
+    const aiText = parsed.text;
+
+    setContent(aiText); // display AI output inside the textarea
+    setLoading(false);
+  } catch (error) {
+    console.error("AI Submit Error:", error);
+    alert("Error calling Power Automate flow");
+    setLoading(false);
+  }
+};
   return (
 
     <div id="wrapper" ref={elementRef}>
@@ -1390,7 +1429,7 @@ const SocialFeedContext = ({ props }: any) => {
                                   //onSubmit={handleSubmit} 
                                   className="comment-area-box">
 
-                                  <textarea
+                                  {/* <textarea
 
                                     className="form-control border-0 resize-none textareacss"
 
@@ -1402,7 +1441,18 @@ const SocialFeedContext = ({ props }: any) => {
 
                                     onChange={(e) => setContent(e.target.value)}
 
-                                  />
+                                  /> */}
+                                                                 <div style={{ position: "relative" }}>
+  <textarea
+    className="form-control border-0 resize-none textareacss"
+    placeholder={askAI ? "What's in your mind..." : "Type your post here..."}
+    value={Contentpost}
+    rows={4}
+    onChange={(e) => setContent(e.target.value)}
+  />
+
+  
+</div>
 
                                   <div className="p-2 bg-light d-flex justify-content-between align-items-center">
 
@@ -1429,9 +1479,19 @@ const SocialFeedContext = ({ props }: any) => {
                                     <label>
 
                                       <div>
-                                        <div className='btn btn-default'>
+                                      <div className='d-flex gap-2 align-items-center'>
+                                        <div style={{borderRight:'1px solid #dfdfdf'}} className='btn btn-default'>
                                           <svg onClick={() => handleImageChange} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                                         </div>
+                                        <div className='d-flex gap-1 align-items-center'>
+                                        <span className="ai-toggle-text text-dark fw-bold"> <img src={ai}></img> Ask AI</span>
+
+  <label className="toggle-switch"> <input type="checkbox"checked={askAI} onChange={() => setAskAI(!askAI)} />
+    <span className="slider"></span>
+  </label>
+  </div>  </div>
+
+
                                         {/* <Link className='hovertext' style={{ width: "20px", height: "16px" }} onClick={() => handleImageChange} /> */}
 
                                         <input
@@ -1477,12 +1537,28 @@ const SocialFeedContext = ({ props }: any) => {
                                       )}
                                     </div>
 
-                                    <button type="button" className="btn btn-sm btn-primary primary1 font-121" disabled={Loading} onClick={(e) => postbtnclicked (e)}>
+                                    <div>
+                                    <div className='d-flex align-items-center gap-2'>
+
+                                    <button type="button" className="btn btn-sm btn-primary primary1 font-121"    style={{padding: "3px 10px",}} disabled={Loading} onClick={(e) => postbtnclicked (e)}>
 
                                       <FontAwesomeIcon style={{ float: 'left', margin: "7px 6px 0px 0px" }} icon={faPaperPlane} /> Post
 
                                     </button>
-
+                                    {askAI && (
+    <button
+      type="button"
+      className="btn btn-success btn-sm"
+      style={{
+      
+        padding: "4px 10px",
+      }}
+      onClick={handleAISubmit}
+    >
+      Submit
+    </button>
+  )}
+</div></div>
                                   </div>
 
                                 </form>
@@ -2221,6 +2297,7 @@ const SocialFeedContext = ({ props }: any) => {
               </div>
 
             </div>
+            <div style={{height:'50px'}}></div>
 
           </div>
 

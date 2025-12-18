@@ -2288,7 +2288,7 @@ declare global {
                     const serverRelativePath = decodeURIComponent(idParam);
                     
                     // Construct the editable Office Online URL
-                    const editableUrl = `https://officeindia.sharepoint.com/:w:/r/sites/Intranetdemos${encodeURIComponent(serverRelativePath.split("/sites/Intranetdemos")[1])}?web=1`;
+                    const editableUrl = `https://multiverse.sharepoint.com/:w:/r/sites/multiverseintranetportal${encodeURIComponent(serverRelativePath.split("/sites/multiverseintranetportal")[1])}?web=1`;
                      console.log(editableUrl , "editableUrl");
                      const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
                      iframe.src = editableUrl;
@@ -2303,7 +2303,7 @@ declare global {
         
         const editableUrl = convertToEditableUrl(availreadurl);
         console.log(editableUrl);
-        // Result: https://officeindia.sharepoint.com/:w:/r/sites/Intranetdemos/Location/Section/Transmittal_1758641391232.docx?web=1
+        // Result: https://officeindia.sharepoint.com/:w:/r/sites/multiverseintranetportal/Location/Section/Transmittal_1758641391232.docx?web=1
     }
    
       const handleSave = () => {

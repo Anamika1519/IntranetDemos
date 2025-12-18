@@ -2035,7 +2035,7 @@ const deleteLocalFile = (index, filArray, name) => {
                           {DocumentpostArr1.map((file, index) => (
                             <tr key={index}>
                               <td style={{minWidth:'40px',maxWidth:'40px'}} className='text-center'>{index + 1}</td>
-                              <td style={{minWidth:'100px',maxWidth:'100px'}}>{file.fileName.replace("/sites/Intranetdemos", "")}</td>
+                              <td style={{minWidth:'100px',maxWidth:'100px'}}>{file.fileName.replace("/sites/multiverseintranetportal", "")}</td>
                               <td style={{minWidth:'40px',maxWidth:'40px'}} className='text-right'>{file.fileSize}</td>
                               <td style={{minWidth:'40px',maxWidth:'40px'}} className='text-center'> <img style={{cursor:'pointer'}} src={require("../../CustomAsset/del.png")}  onClick={() => deleteLocalFile(index, DocumentpostArr1, "docs")} /> </td>
                             </tr>

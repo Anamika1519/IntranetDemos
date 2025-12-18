@@ -244,7 +244,10 @@ const CustomNewsWebpartTemplate = ({ _sp, SiteUrl }) => {
                         </button>
                     </div>
                 )}
-            </div></>
+            </div>
+            <div style={{height:'70px'}}></div>
+            
+            </>
 
     )
 }

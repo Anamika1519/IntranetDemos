@@ -337,7 +337,7 @@ input[type=text][disabled]{
 .alignrightbird{width: 30px;
   margin-top: -2px;}
 .postion8{ width:95%; float: right; margin-top: 92px; }
-.mainevent{border-bottom: 1px solid #ccc; padding: 10px 0px;}
+.mainevent{border-bottom: 1px solid #ccc; padding:0px 0px 10px 0px;}
 .mainevent:last-child{border-bottom: 0px !important;}
 .ipaddw{width: 10px;}
 .footer{background: #d4d4d3;bottom:-70px;padding: 8px 10px;position: relative;text-align: right; width: 100%;}
@@ -1308,7 +1308,7 @@ margin: 10px 0px !important ;
     line-height: 1.4 !important;
 }
   .paddbnew {
-    padding: 0px 17px 0px 15px;
+    padding: 15px 17px 0px 15px;
 }
   .view-all{height: 25px !important;}
  
@@ -1407,7 +1407,7 @@ margin: 10px 0px !important ;
   .navlink_icon svg{    height: 18;
     width: 18px;}
   .paddbnew {
-    padding: 0px 17px 0px 13px;
+    padding: 17px 17px 0px 13px;
 }
   .view-all{height: 24px !important;}
   
@@ -1629,7 +1629,7 @@ color: #fff !important;
   margin: .3rem .4rem 0px 19px;
 }
 .paddbnew {
-  padding: 0px 7px 0 4px;
+  padding: 17px 7px 0 4px;
 }
 .sidebar .nav_link{
   font-size:13.2px;

@@ -367,9 +367,9 @@ const EventcalenderContext = ({ props }: any) => {
                 </div>
               </div>
             } */}
-            <div className="row mt-2">
+            <div className="row mt-2 mb-4">
               {/* Tab content */}
-              <div className="tab-content mt-0">
+              <div className="tab-content mt-0 mb-4">
                 <div
                   className={`tab-pane fade ${activeTab === "listView" ? "show active" : ""
                     }`}
@@ -665,7 +665,7 @@ const EventcalenderContext = ({ props }: any) => {
 
                                 <div className="carousel-inner">
                                   <div className="carousel-item active">
-                                    <div style={{ padding: '10px', height: '425px' }} className="gal-box">
+                                    <div style={{ padding: '10px', height: '425px',border:'1px solid #ccc' }} className="gal-box">
 
                                       <>
                                         <a className="image-popup newhimg span57" title={eventDetails.title} href={eventDetails.eventLink}>

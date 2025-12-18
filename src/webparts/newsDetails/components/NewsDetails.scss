@@ -159,7 +159,7 @@ background-color: #0056b3;
 
 .eventcommm .nose{padding: 0px !important; margin: 0px !important; }
 .postion8{ width:95%; float: right; margin-top: 92px; }
-.mainevent {border-bottom: 1px solid #ccc; padding: 10px 0px;}
+.mainevent {border-bottom: 1px solid #ccc; padding: 0px 0px 10px 0px;}
 .mainevent:last-child{border-bottom: 0px !important;}
 .gal-box img{cursor:auto;}
 .btn-primary{border-color: var(--primary-color) !important;}
@@ -182,5 +182,5 @@ background-color: #0056b3;
 }
 
 .ht{
-  padding: 7px 12px !important;
+  padding: 7px 12px !important; border: 1px solid #ccc !important;
 }

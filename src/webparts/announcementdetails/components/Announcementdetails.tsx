@@ -867,7 +867,7 @@ const AnnouncementdetailsContext = ({ props }: any) => {
                         <div className="mainevent mt-2">
                           <div className="bordernew" >
                             <h3 className="twolinewrap font-16  text-dark fw-bold mb-2 hovertext cursor-pointer" style={{ cursor: "pointer" }} onClick={() => gotoNewsDetails(res)}>{res.Title}</h3>
-                            <p style={{ lineHeight: '20px', fontSize: '15px' }} className="text-muted twolinewrap">{res.Overview}</p>
+                            <p style={{ lineHeight: '20px', fontSize: '15px' }} className="text-muted twolinewrap mb-2">{res.Overview}</p>
                             <div className="row">
                               <div className="col-sm-12"> <span style={{ marginTop: "4px" }} className="date-color font-12 float-start  mb-1 ng-binding"><i className="fe-calendar"></i> {moment(res.Modified).format("DD-MMM-YYYY")}</span>  &nbsp; &nbsp; &nbsp; <span className="font-12" style={{ color: '#009157', fontWeight: '600' }}>  </span></div>
 
@@ -883,7 +883,7 @@ const AnnouncementdetailsContext = ({ props }: any) => {
 
               </div>
             </div>
-
+<div style={{height:'50px'}}></div>
 
           </div>
         </div>

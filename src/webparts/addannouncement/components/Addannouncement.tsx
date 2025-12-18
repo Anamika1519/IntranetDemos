@@ -2286,7 +2286,7 @@ const closeModal = () => {
                           {DocumentpostArr1.map((file: any, index: number) => (
                             <tr key={index}>
                               <td className='text-center'>{index + 1}</td>
-                              <td>{file.fileName.replace("/sites/Intranetdemos", "")}</td>
+                              <td>{file.fileName.replace("/sites/multiverseintranetportal", "")}</td>
                               <td className='text-right'>{file.fileSize}</td>
                               <td className='text-center'> <img src={require("../../../CustomAsset/trashed.svg")} style={{ width: '15px' }} onClick={() => deleteLocalFile(index, DocumentpostArr1, "docs")} /> </td>
                             </tr>

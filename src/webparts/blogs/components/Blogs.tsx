@@ -542,7 +542,8 @@ const BlogsContext = ({ props }: any) => {
                 file,
                 sp,
                 "Documents",
-                "https://officeindia.sharepoint.com"
+                // "https://officeindia.sharepoint.com"
+                  "https://multiverse.sharepoint.com/"
               );
             }
           }
@@ -1523,7 +1524,7 @@ const BlogsContext = ({ props }: any) => {
                                     <div
                                       className="d-flex"
                                       style={{
-                                        justifyContent: "center",
+                                        justifyContent: "center", fontSize:'.875rem',
 
                                       }}
                                     >
@@ -1535,7 +1536,7 @@ const BlogsContext = ({ props }: any) => {
                                       Save as Draft
                                     </div>
                                   </div>
-                                  <div style={{ width: '140px', justifyContent: 'center', textAlign: 'center' }}
+                                  <div style={{ width: '140px', justifyContent: 'center',fontSize:'.875rem', textAlign: 'center' }}
                                     className="btn btn-primary waves-effect waves-light m-1"
 
                                     onClick={handleFormSubmit}
@@ -1543,7 +1544,7 @@ const BlogsContext = ({ props }: any) => {
                                     <div
                                       className="d-flex"
                                       style={{
-                                        justifyContent: "center",
+                                        justifyContent: "center",fontSize:'.875rem',
 
                                       }}
                                     >
@@ -1556,7 +1557,7 @@ const BlogsContext = ({ props }: any) => {
                                     </div>
                                   </div>
                                   <button
-                                    type="button" style={{ width: '140px', justifyContent: 'center', textAlign: 'center' }}
+                                    type="button" style={{ width: '140px',fontSize:'.875rem', justifyContent: 'center', textAlign: 'center' }}
                                     className="btn cancel-btn waves-effect waves-light m-1"
 
                                     onClick={handleCancel}
@@ -1713,7 +1714,7 @@ const BlogsContext = ({ props }: any) => {
                                   {DocumentpostArr1.map((file: any, index: number) => (
                                     <tr key={index}>
                                       <td style={{ minWidth: '40px', maxWidth: '40px' }} className='text-center'>{index + 1}</td>
-                                      <td style={{ minWidth: '100px', maxWidth: '100px' }}>{file.fileName.replace("/sites/Intranetdemos", "")}</td>
+                                      <td style={{ minWidth: '100px', maxWidth: '100px' }}>{file.fileName.replace("/sites/multiverseintranetportal", "")}</td>
                                       <td style={{ minWidth: '40px', maxWidth: '40px' }} className='text-right'>{file.fileSize}</td>
                                       <td style={{ minWidth: '40px', maxWidth: '40px' }} className='text-center'> <img style={{ cursor: 'pointer' }} src={require("../../../CustomAsset/del.png")} onClick={() => deleteLocalFile(index, DocumentpostArr1, "docs")} /> </td>
                                     </tr>
@@ -1795,7 +1796,7 @@ const BlogsContext = ({ props }: any) => {
               </div>
             }
             <CustomBlogpartTemplate _sp={sp} SiteUrl={SiteUrl} />
-            <div style={{ height: '20px' }}></div>
+            <div style={{ height: '50px' }}></div>
 
           </div>
         </div>

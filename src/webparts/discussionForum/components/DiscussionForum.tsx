@@ -1153,7 +1153,7 @@ const DiscussionForumContext = ({ props }: any) => {
                 InviteMemebersId: selectedIds,
                 ARGDiscussionStatus: "Ongoing",
                 DiscussionInProgress: "In Progress",
-                DiscussionFileManager: `/sites/Intranetdemos/ARGDiscussionFiles/${formData.topic}`,
+                DiscussionFileManager: `/sites/multiverseintranetportal/ARGDiscussionFiles/${formData.topic}`,
                 DiscussionFolderName: formData.topic
               };
             }
@@ -1167,7 +1167,7 @@ const DiscussionForumContext = ({ props }: any) => {
                 DiscussionForumCategoryId: Number(formData.category),
                 ARGDiscussionStatus: "Ongoing",
                 DiscussionInProgress: "In Progress",
-                DiscussionFileManager: `/sites/Intranetdemos/ARGDiscussionFiles/${formData.topic}`,
+                DiscussionFileManager: `/sites/multiverseintranetportal/ARGDiscussionFiles/${formData.topic}`,
                 DiscussionFolderName: formData.topic
               };
             }
@@ -1276,7 +1276,7 @@ const DiscussionForumContext = ({ props }: any) => {
 
   const handleCancel = () => {
     window.location.href =
-      "https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/Blogs.aspx";
+      "https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/Blogs.aspx";
   };
 
   const formats = [

@@ -203,7 +203,7 @@ const HelloWorldContext = ({ props }: any) => {
     if (sts == "Open") {
         if (/\.(doc|docx|xls|xlsx|ppt|pptx|csv|docs)$/i.test(fileUrl)) {
 
-            window.open(`${videositeurl}/sites/Intranetdemos/_layouts/15/WopiFrame.aspx?sourcedoc=${encodeURIComponent(obj.fileUrl)}&action=default`, "_blank");
+            window.open(`${videositeurl}/sites/multiverseintranetportal/_layouts/15/WopiFrame.aspx?sourcedoc=${encodeURIComponent(obj.fileUrl)}&action=default`, "_blank");
         } else {
             window.open(fileUrl, "_blank"); // Open PDF and other files normally
         }

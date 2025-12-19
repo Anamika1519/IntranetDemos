@@ -43,6 +43,9 @@ const HelloWorldContext = ({ props ,  }: any) => {
   const { setHide }: any = context;
   const [isDarkMode, setIsDarkMode] = React.useState(false);
   const [showDropdownId, setShowDropdownId] = React.useState(null);
+  const [mailItems, setMailItems] = useState<any[]>([]);
+  const [mailLoading, setMailLoading] = useState<boolean>(true);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
   React.useEffect(() => {
     console.log("This function is called only once", useHide);
 
@@ -367,13 +370,53 @@ const HelloWorldContext = ({ props ,  }: any) => {
         const projectComment = await fetchProjectComments(project.ID);
         commentCounts[project.ID] = projectComment[project.ID];
       }
-
+      const getCurrentUser = async () => {
+        const user = await sp.web.currentUser();
+        setCurrentUserEmail(user.Email);
+      };
+   
+      getCurrentUser();
+   
+      if (currentUserEmail) {
+        fetchMailToRespond();
+      }
       // Once all comments are fetched, update the state at once
       setCommentsData(commentCounts);
     };
 
     fetchCommentsForProjects();
   }, [projects]);
+  const fetchMailToRespond = async () => {
+    try {
+      setMailLoading(true);
+ 
+      if (!currentUserEmail) return;
+ 
+      const items = await sp.web.lists
+        .getByTitle("EmailDashboard")
+        .items
+        .select(
+          "Id",
+          "EmailID",
+          "Subject",
+          "From",
+          "ReceivedDateTime",
+          "NeedsReply",
+          "AISummary",
+          "LinkToEmail2"
+        )
+        // ✅ ONLY current user filter
+        .filter(`EmailID eq '${currentUserEmail}'`)
+        .orderBy("ReceivedDateTime", false)
+        .top(5)();
+ 
+      setMailItems(items);
+    } catch (error) {
+      console.error("Error fetching EmailDashboard data", error);
+    } finally {
+      setMailLoading(false);
+    }
+  };
   return (
 
 
@@ -1248,6 +1291,96 @@ const HelloWorldContext = ({ props ,  }: any) => {
 
                 </div>
               </div>
+
+              <div className="col-xl-12 col-lg-12 mt-3">
+                <div className="card" style={{ borderRadius: "1rem" }}>
+                  <div className="card-body">
+                    <h4 className="header-title font-16 text-dark fw-bold mb-3">
+                      Mail to Respond
+                      <a
+                        style={{ float: "right", cursor: "pointer" }}
+                        className="font-11 fw-normal btn rounded-pill waves-effect waves-light view-all"
+                      >
+                        View All
+                      </a>
+                    </h4>
+ 
+                    {/* Loader */}
+                    {mailLoading && (
+                      <div className="text-center text-muted font-14">
+                        Loading mails...
+                      </div>
+                    )}
+ 
+                    {/* Empty State */}
+                    {!mailLoading && mailItems.length === 0 && (
+                      <div className="text-center text-muted font-14 mt-3">
+                        No mails pending for response
+                      </div>
+                    )}
+ 
+                    {/* Mail Items */}
+                    {!mailLoading &&
+                      mailItems.map((item, index) => (
+                        <div
+                          key={item.Id}
+                          className="d-flex align-items-start border-bottom pb-3 mb-3"
+                        >
+                          {/* Avatar */}
+                          <Avatar
+                            sx={{ bgcolor: "primary.main", width: 45, height: 45 }}
+                            className="me-3"
+                          >
+                            {item.From?.charAt(0)?.toUpperCase()}
+                          </Avatar>
+ 
+                          {/* Mail Content */}
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1 fw-bold text-dark font-14">
+                              {item.Subject}
+                            </h6>
+ 
+                            <p className="mb-1 font-13 text-muted">
+                              {item.AISummary}
+                            </p>
+ 
+                            {item.NeedsReply && (
+                              <span className="badge bg-warning text-dark">
+                                Needs Reply
+                              </span>
+                            )}
+ 
+ 
+                            <div className="font-12 text-muted">
+                              <span className="me-3">
+                                <strong>From:</strong> {item.From}
+                              </span>
+                              <span>
+                                <strong>Received:</strong>{" "}
+                                {moment(item.ReceivedDateTime).format("DD-MMM-YYYY")}
+                              </span>
+                            </div>
+                          </div>
+ 
+                          {/* Respond Button */}
+                          <div className="text-end">
+                            {item.LinkToEmail2?.Url && (
+                              <button
+                                className="btn btn-sm btn-outline-primary rounded-pill"
+                                onClick={() =>
+                                  window.open(item.LinkToEmail2.Url, "_blank")
+                                }
+                              >
+                                Respond To
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+
               <div className="row">
                
                 <div

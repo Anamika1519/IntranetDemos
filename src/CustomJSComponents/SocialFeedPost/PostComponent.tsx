@@ -823,8 +823,10 @@ export const PostComponent = ({ key, sp, siteUrl, currentUsername, CurrentUser, 
                         }}
                     />
                 ) : (
-                    <p>{post.Contentpost}   {/* Edit Button */}
-                    </p>
+                    // <p>{post.Contentpost}   {/* Edit Button */}
+                    // </p>
+                    // Code by Priyanka for Spaceing In post comment in Social feed
+                    <p className="post-text">{post.Contentpost}</p>
                 )}
 
                 <div className="image-preview mt-2">

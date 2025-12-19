@@ -209,3 +209,8 @@
 .dropdown-menucsspost button:hover {
   background-color: #f0f0f0; color: #1fb0e5;
 }
+// Code by Priyanka for Spaceing In post comment in Social feed 
+.post-text {
+  white-space: pre-wrap;  
+  word-break: break-word;
+}

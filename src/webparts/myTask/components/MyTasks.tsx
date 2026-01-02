@@ -733,7 +733,7 @@ const MyTask = ({ props }: any) => {
               <h3 style={{margin:'0px'}}>
                 My Task &gt;&gt; {selectedTask?.docNumber}
               </h3>
-              <button className={styles.backButton} onClick={handleBackClick}>Back</button>
+              <button type="button" className={styles.backButton} onClick={handleBackClick}>Back</button>
             </div>
             <div className={styles.formView}>
               <div className={styles.formInner}>
@@ -968,12 +968,12 @@ const MyTask = ({ props }: any) => {
                   <div className={styles.formButtons}>
                     {selectedTask?.status === "Pending" && (
                       <>
-                        <button className={styles.submitButton} onClick={handleSubmitClick}>Submit</button>
-                        <button className={styles.cancelButton} onClick={handleBackClick}>Cancel</button>
+                        <button type="button" className={styles.submitButton} onClick={handleSubmitClick}>Submit</button>
+                        <button type="button" className={styles.cancelButton} onClick={handleBackClick}>Cancel</button>
                       </>
                     )}
                     {selectedTask?.status === "Approved" && (
-                      <button className={styles.cancelButton} onClick={handleBackClick}>Back</button>
+                      <button type="button" className={styles.cancelButton} onClick={handleBackClick}>Back</button>
                     )}
                   </div>
                 </div>

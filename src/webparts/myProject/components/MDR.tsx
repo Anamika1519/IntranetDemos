@@ -414,13 +414,13 @@ const MDR: React.FC<IMDRProps> = ({ context }) => {
             <div className={styles.pageHeader}>
                 <h2>MDR - {projectName || 'Project Details'}</h2>
                 <div className={styles.headerActions}>
-                    <button onClick={exportMDRToExcel} className={styles.btnExport}>
+                    <button type="button" onClick={exportMDRToExcel} className={styles.btnExport}>
                         Export to Excel
                     </button>
                     {/* <button onClick={goToPage} className={styles.btnSecondary}>
                         Go to Home
                     </button> */}
-                    <button onClick={handleBack} className={styles.btnDark}>
+                    <button type="button" onClick={handleBack} className={styles.btnDark}>
                         Back
                     </button>
                 </div>

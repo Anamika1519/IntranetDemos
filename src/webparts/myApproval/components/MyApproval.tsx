@@ -1475,48 +1475,80 @@ const MyApprovalContext = ({ props }: any) => {
 
   // Simple project document open function (if needed)
   // Handle project document open with proper URL construction
+  // const handleProjectOpenDocument = () => {
+  //   if (!projectDocumentInfo) {
+  //     console.error('No document available');
+  //     alert('No document available to open.');
+  //     return;
+  //   }
+
+  //   try {
+  //     let documentUrl = '';
+
+  //     // Priority 1: Use SharedLink if available
+  //     if (projectDocumentInfo.sharedLink) {
+  //       documentUrl = projectDocumentInfo.sharedLink;
+  //       console.log('Opening document using SharedLink:', documentUrl);
+  //     }
+  //     // Priority 2: Use the document URL to construct the full URL
+  //     else if (projectDocumentInfo.documentUrl) {
+  //       const siteUrl = props.siteUrl; // Use your siteUrl from props
+  //       documentUrl = `${siteUrl}${projectDocumentInfo.documentUrl}`;
+  //       console.log('Opening document using ServerRelativeUrl:', documentUrl);
+  //     }
+  //     // Priority 3: Use fileRef if available
+  //     else if (projectDocumentInfo.fileRef) {
+  //       const siteUrl = props.siteUrl;
+  //       documentUrl = `${siteUrl}${projectDocumentInfo.fileRef}`;
+  //       console.log('Opening document using FileRef:', documentUrl);
+  //     }
+  //     else {
+  //       throw new Error('No valid document URL found');
+  //     }
+
+  //     // Open the document in a new tab
+  //     window.open(documentUrl, '_blank', 'noopener,noreferrer');
+
+  //     console.log(`Opened document: ${projectDocumentInfo.fileName || projectDocumentInfo.fileLeafRef}`);
+
+  //   } catch (error) {
+  //     console.error('Error opening document:', error);
+  //     alert('Error opening document. Please try again or contact administrator.');
+  //   }
+  // };
   const handleProjectOpenDocument = () => {
     if (!projectDocumentInfo) {
-      console.error('No document available');
-      alert('No document available to open.');
+      alert("No document available");
       return;
     }
 
     try {
-      let documentUrl = '';
+      let documentUrl = "";
 
-      // Priority 1: Use SharedLink if available
+      // 1️⃣ Shared link – direct open
       if (projectDocumentInfo.sharedLink) {
         documentUrl = projectDocumentInfo.sharedLink;
-        console.log('Opening document using SharedLink:', documentUrl);
-      }
-      // Priority 2: Use the document URL to construct the full URL
-      else if (projectDocumentInfo.documentUrl) {
-        const siteUrl = props.siteUrl; // Use your siteUrl from props
-        documentUrl = `${siteUrl}${projectDocumentInfo.documentUrl}`;
-        console.log('Opening document using ServerRelativeUrl:', documentUrl);
-      }
-      // Priority 3: Use fileRef if available
-      else if (projectDocumentInfo.fileRef) {
-        const siteUrl = props.siteUrl;
-        documentUrl = `${siteUrl}${projectDocumentInfo.fileRef}`;
-        console.log('Opening document using FileRef:', documentUrl);
-      }
-      else {
-        throw new Error('No valid document URL found');
       }
 
-      // Open the document in a new tab
-      window.open(documentUrl, '_blank', 'noopener,noreferrer');
+      // 2️⃣ ServerRelativeUrl or documentUrl
+      else if (projectDocumentInfo.documentUrl || projectDocumentInfo.fileRef) {
+        const serverRelativeUrl =
+          projectDocumentInfo.documentUrl || projectDocumentInfo.fileRef;
 
-      console.log(`Opened document: ${projectDocumentInfo.fileName || projectDocumentInfo.fileLeafRef}`);
+        // 👉 tenant root extract karo
+        const tenantRoot = props.siteUrl.split("/sites")[0];
 
+        documentUrl = `${tenantRoot}${serverRelativeUrl}`;
+      } else {
+        throw new Error("No valid document URL found");
+      }
+
+      window.open(documentUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
-      console.error('Error opening document:', error);
-      alert('Error opening document. Please try again or contact administrator.');
+      console.error(error);
+      alert("Error opening document");
     }
   };
-
   // Function to fetch document for a specific deliverable
   const fetchDocumentForDeliverable = async (deliverableId: number) => {
     try {
@@ -5025,6 +5057,7 @@ const MyApprovalContext = ({ props }: any) => {
                                           <div className="d-flex justify-content-between align-items-center mb-3">
                                             <h5>Approval Hierarchy</h5>
                                             <button
+                                            type="button"
                                               className="btn btn-primary btn-sm"
                                               onClick={() => addNewProjectApprovalRow()}
                                             >
@@ -5096,6 +5129,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                     </td>
                                                     <td className="text-center">
                                                       <button
+                                                      type="button"
                                                         className="btn btn-outline-danger btn-sm"
                                                         onClick={() => deleteProjectApprovalRow(index)}
                                                         title="Delete Row"
@@ -5122,12 +5156,14 @@ const MyApprovalContext = ({ props }: any) => {
                                                 {selectedProjectTask?.ApprovalRole === "DCC" ? (
                                                   <>
                                                     <button
+                                                    type="button"
                                                       className="btn btn-success"
                                                       onClick={() => handleProjectApprovalAction("Approved")}
                                                     >
                                                       Submit
                                                     </button>
                                                     <button
+                                                    type="button"
                                                       className="btn btn-secondary"
                                                       onClick={handleProjectBackClick}
                                                     >
@@ -5137,24 +5173,28 @@ const MyApprovalContext = ({ props }: any) => {
                                                 ) : (
                                                   <>
                                                     <button
+                                                    type="button"
                                                       className="btn btn-success"
                                                       onClick={() => handleProjectApprovalAction("Approved")}
                                                     >
                                                       Approve
                                                     </button>
                                                     <button
+                                                    type="button"
                                                       className="btn btn-danger"
                                                       onClick={() => handleProjectApprovalAction("Rejected")}
                                                     >
                                                       Reject
                                                     </button>
                                                     <button
+                                                    type="button"
                                                       className="btn btn-warning"
                                                       onClick={() => handleProjectApprovalAction("Rework")}
                                                     >
                                                       Rework
                                                     </button>
                                                     <button
+                                                    type="button"
                                                       className="btn btn-secondary"
                                                       onClick={handleProjectBackClick}
                                                     >
@@ -5168,7 +5208,7 @@ const MyApprovalContext = ({ props }: any) => {
                                             {(selectedProjectTask?.Status === "Approved" ||
                                               selectedProjectTask?.Status === "Rejected" ||
                                               selectedProjectTask?.Status === "Rework") && (
-                                                <button className="btn btn-secondary" onClick={handleProjectBackClick}>
+                                                <button type="button" className="btn btn-secondary" onClick={handleProjectBackClick}>
                                                   Back
                                                 </button>
                                               )}

@@ -25,6 +25,7 @@ import { getDiscussion, getDiscussionFilter, fetchTrendingDiscussionBasedOn, get
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { MSGraphClientV3 } from "@microsoft/sp-http";
 import { toLower } from "lodash";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 let ai = require("../assets/ai.png");
 
 
@@ -51,7 +52,7 @@ const SocialFeedContext = ({ props }: any) => {
   const [HideShowPost, setHideShowPost] = useState(false)
   const [currentEmail, setCurrentEmail] = useState("")
   const [CurrentUser, setCurrentUser] = useState<any>([])
-
+const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [currentId, setCurrentID] = useState<any>(0)
   const [CurrentData, setCurrentData] = useState<any>([])
 
@@ -106,6 +107,11 @@ const SocialFeedContext = ({ props }: any) => {
     };
 
   }, [props]);
+
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+  setContent(prev => prev + emojiData.emoji);
+  setShowEmojiPicker(false);
+};
   const getAllAPI = async () => {
     setCurrentEmail(await getCurrentUserProfileEmail(sp));
     var emailCurr = await getCurrentUserProfileEmail(sp);
@@ -1511,7 +1517,36 @@ const handleAISubmit = async () => {
                                       </div>
 
                                     </label>
-
+                                    {/* added emojo code */}
+                                    <div style={{ position: "relative" }}>
+<button
+  type="button"   // ⭐ VERY IMPORTANT
+  className="btn btn-light"
+  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+    style={{
+      position: "absolute",
+      // left: "-28px",
+      // top: "2px",
+      cursor: "pointer",
+      fontSize: "10px"
+    }}
+>
+  😊 Emoji
+</button>
+ 
+  {showEmojiPicker && (
+<div
+      style={{
+        position: "absolute",
+        top: "30px",
+        left: "-250px",
+        zIndex: 2000
+      }}
+>
+<EmojiPicker onEmojiClick={onEmojiClick} />
+</div>
+  )}
+</div>
                                     <div className="image-preview mt-2">
                                       {Loading1 ? (
                                         <div className="spinner-border text-primary" role="status">
@@ -1540,11 +1575,13 @@ const handleAISubmit = async () => {
                                     <div>
                                     <div className='d-flex align-items-center gap-2'>
 
+                                      {!askAI && (
                                     <button type="button" className="btn btn-sm btn-primary primary1 font-121"    style={{padding: "3px 10px",}} disabled={Loading} onClick={(e) => postbtnclicked (e)}>
 
                                       <FontAwesomeIcon style={{ float: 'left', margin: "7px 6px 0px 0px" }} icon={faPaperPlane} /> Post
 
                                     </button>
+                                    )}
                                     {askAI && (
     <button
       type="button"

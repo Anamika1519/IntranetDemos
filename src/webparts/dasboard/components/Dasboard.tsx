@@ -463,42 +463,42 @@ const HelloWorldContext = ({ props ,  }: any) => {
                   <div className="tile">
                     <ul>
                       <li>
-                        {/* <a href=" https://officeindia.sharepoint.com/sites/Intranetdemos/sitePages/dmsm.aspx"> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/DMSM.aspx">
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/dmsm.aspx"> */}
+                        {/* <a href=" https://officeindia.sharepoint.com/sites/multiverseintranetportal/sitePages/dmsm.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/DMSM.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/dmsm.aspx"> */}
 
                           {/* <img src={require("../assets/dms.png")} />
 
                           <p className="mt-1">Document Management</p> </a></li> */} 
                       {/* <li style={{ backgroundColor: ' #1faee3' }} className="newmyr">
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/BusinessApps.aspx"> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/BusinessApps.aspx">
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/BusinessApps.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/BusinessApps.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/BusinessApps.aspx">
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/BusinessApps.aspx"> */}
 
                           {/* <img src={require("../assets/business-app.png")} />
                           {/* <img src="business-app.png"/> */}
                           {/* <p className="mt-1">Business Apps</p> </a> </li> */}
                       {/* <li style={{ backgroundColor: ' #333333' }} > */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyRequests.aspx"> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/myrequests.aspx"> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyRequests.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/MyRequests.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/myrequests.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/MyRequests.aspx"> */}
 
                           {/* <img src={require("../assets/my-request.png")} />
                           {/* <img src="my-request.png"/> */}
                           {/* <p className="mt-1">My Requests</p> </a> </li>
                       <li style={{ backgroundColor: ' #008551' }}> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyApprovals.aspx">  */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/MyApprovals.aspx">  */}
 
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyApprovals.aspx"> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/MyApprovals.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/MyApprovals.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/MyApprovals.aspx"> */}
 
                           {/* <img src={require("../assets/my-approval.png")} /> */}
                           {/* <img src="my-approval.png"/>  */}
                           {/* <p className="mt-1">My Approvals</p></a> </li> */} 
                       {/* <li style={{ backgroundColor: ' #007aa7' }}> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/KnowledgeCenter.aspx"> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/KnowledgeCenter.aspx"> */}
-                        {/* <a href="https://officeindia.sharepoint.com/sites/Intranetdemos/SitePages/KnowledgeCenter.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/KnowledgeCenter.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/KnowledgeCenter.aspx"> */}
+                        {/* <a href="https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/KnowledgeCenter.aspx"> */}
 
                           {/* <img src={require("../assets/knowledge-center.png")} /> */}
                           {/* <img src="knowledge-center.png"/> */}

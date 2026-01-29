@@ -112,8 +112,16 @@ td {
   text-align: left;
   vertical-align: top;
   min-width: 200px; // Adjust per column
+  max-width: 200px;
 }
- 
+.ms-Button--default {
+  margin-top: 0;
+  padding: 8px 0 !important;
+  width: 70px !important;
+  margin-left: 10px;
+}
+ button{min-width: auto;}
+
 th {
   background-color: #f3f2f1;
   font-weight: 600;
@@ -192,7 +200,7 @@ td {
   background: transparent !important;
 }
 .buttonRow {
-  margin-top: 16px;
+  margin-top: 16px;margin-bottom: 30px;
   display: flex;
   gap: 12px; align-items: center; justify-content: end;
 }

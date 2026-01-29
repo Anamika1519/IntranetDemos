@@ -1,15 +1,16 @@
 :root{
-  --primary-color:#ec1c24;
+  --primary-color:#0351a4;
   --light-color:#ccc;
   --back-color:#666666;
   --blue-color:#ec1c24;
   --secondary-color:#6a6a6a;
-  --light-circle:#fbe1e2;
+  --light-circle:#0351a40f;
 }
 .ms-Button-label{font-weight: 500 !important;}
 .menu_items{
   max-height:calc(100vh - 0px);
 }
+
 .btn-circle1,.btn-circle-light{
   background: #fff;
   border-radius: 1000px;
@@ -2148,4 +2149,17 @@ label{color: #6c757d !important;font-size: .875rem !important;}
 }
 input[type=password], input[type=text], input[type=file], input:not([type]), textarea, .ms-inputBox {
   padding: 6px 5px;
+}
+.ms-Dialog-action{
+  display: flex;
+  align-items: center;
+  justify-content: center; gap:10px
+ }
+ .ms-Dialog-action button{width: 80px;    padding: 5px;}
+ .ms-MessageBar-icon i, .ms-TextField-field i,.ms-Icon,.ms-DatePicker-event--without-label{
+  font-family:Fluent MDL2 Hybrid Icons !important;
+ }
+ .pr7{
+  padding: 8px 20px !important;
+    border-radius: 5px !important;
 }

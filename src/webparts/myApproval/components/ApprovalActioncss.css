@@ -59,14 +59,17 @@
     padding: 8px 10px; font-size: 15px;
     text-align: left;
     
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; color: #6b6b6b;
+    overflow: inherit;
+    text-overflow: inherit;
+    white-space: inherit; color: #6b6b6b;
     border-bottom: 1px solid #e1e1e1;
     border-right: 1px solid #e1e1e1;
   }
   .mtbalenew td:last-child{
     border-right: 0px solid #e1e1e1; text-align: center;
+  }
+  .mtbalenew td .badge{
+    white-space: normal !important;
   }
   .mtbalenew tr:nth-child(even) td {
     background: #f9f9f9;
@@ -102,3 +105,7 @@
     .mtbalenew{overflow: auto !important;}
   .mtbalenew tbody{overflow: visible !important;}
   }
+  .ms-MessageBar-icon i, .ms-TextField-field i,.ms-Icon{
+    font-family: Fluent MDL2 Hybrid Icons !important;
+   }
+   button{min-width: auto;}

@@ -264,7 +264,7 @@ const VerticalContext = ({ _context, component }: any) => {
       let imgnew = imageData && imageData.fileName ? `${siteProps.Url}/_api/v2.1/sites('${siteProps.Id}')/lists('${response.Id}')/items('${res[0].ID}')/attachments('${imageData.fileName}')/thumbnails/0/c400x400/content` : ""
       // alert(imgnew + 'imgnew' )
     });
-    const siteUrl = "https://officeindia.sharepoint.com/sites/Intranetdemos";
+    const siteUrl = "https://officeindia.sharepoint.com/sites/multiverseintranetportal";
     let listTitle = 'UtilitySettings'
     let CurrentsiteID = "a505b4c0-aec7-4fef-96d6-b0f11e787e0d";
     siteID = CurrentsiteID;

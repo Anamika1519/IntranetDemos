@@ -8,44 +8,97 @@
         font-weight: 600;
     }
 }
-
+.navbar  {
+  .sidebar-openBa {
+    display: none;
+  }
+}
+.navbar {
+  .search_bar{
+    display: none !important;
+  }
+}
 
 /* 🔷 Tiles Styles */
 .tilesContainer {
     
-    gap: 15px;
-    margin-bottom: 15px; float: left; width: 100%;
+    gap: 0px; display: flex;
+    margin-bottom: 0px;   align-items: center; justify-content: start;
     
 }
 
+
+.tileCount {
+  background: #fff;
+    border-radius: 1000px;
+    color: #46484a;
+    float: right;
+    font-weight: 500; border: 1px solid #46484a;
+    height: 20px;
+    height: 22px;
+    line-height: 21px;
+    margin-left: 0px;
+    margin-top: 9.7px;
+    padding: 4px 0px;
+    text-align: center;
+    width: 30px;
+    border-radius: 1000px; font-size:14px;
+    height: 30px;
+}
 .tileCard {
-    width:24%; float: left;
-   margin-right: 10px;
+    float: left;
+   margin-right: 0px;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 0px;
+  
     cursor: pointer;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
+    border-bottom: 4px solid #ccc;
 
     &:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        
         transform: translateY(-2px);
     }
 
     &.activeTile {
-        border-color: #0078d4;
+        border-bottom:4px solid var(--primary-color); 
+        p{
+          color: var(--primary-color);
+        }
+        .tileCount {
+          background: var(--primary-color) !important; color: #fff !important;
+        }
     }
+    
 }
-
+.nrefield {
+  &.activeTile {
+    border:1px solid var(--primary-color); 
+  }
+}
+.indexdesign {
+  background: var(--light-circle) !important;
+  border: none;
+  border-radius: 1000px;
+  color: var(--primary-color) !important;
+  float: left;
+  font-size: 16px !important;
+  font-weight: 600;
+  height: 28px !important;
+  line-height: 30px !important;
+  margin-left: 12px;
+  padding: 0 1px !important;
+  text-align: center;
+  width: 28px !important;
+}
 .tileBody {
-    padding: 15px;
+    padding: 0rem 1.5rem!important;
 }
 
 .tileRow {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .tileIcon {
@@ -87,22 +140,17 @@
 }
 
 .tileContent {
-    flex: 1;
-    text-align: right;
+    display: flex;align-items: center; justify-content: center;
+     gap: 7px;
 }
 
-.tileCount {
-    margin: 0;
-    font-size: 22px;
-    font-weight: bold;
-    color: #323130;
-    line-height: 1;
-}
+
+
 
 .tileLabel {
-    margin: 4px 0 0 0;
-    color: #605e5c;
-    font-size: 13px;
+    margin: 0px 0 0 0;
+    color: #000;
+    font-size: 14px;
     font-weight: 500;
 }
 
@@ -113,9 +161,9 @@
 }
 
 .tableCard {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   
+    border-radius: 0px;
+   
     overflow: hidden;
 }
 
@@ -123,7 +171,7 @@
     overflow-x: auto;
     width: 100%;
     border: 0 solid #e1e1e1;
-    border-radius: 5px;
+    border-radius: 0px;
 }
 
 .taskTable {
@@ -133,47 +181,57 @@
 
     th,
     td {
-        padding: 12px 8px;
-        text-align: left;
-        border-bottom: 1px solid #e1e1e1;
-        white-space: nowrap;
+        padding: 5px 8px;
+        text-align: left; font-size: 14px;
+        border: 1px solid #e1e1e1;
+        
     }
 
     th {
         background-color: #f8f9fa;
         font-weight: 600;
-        color: #323130;
+        color: #000;
         position: sticky;
         top: 0;
-        border-bottom: 2px solid #e1e1e1;
+        border: 1px solid #ccc;
+    }
+    td{
+      background-color: #ffffff;
     }
 
     tr:hover {
         background-color: #f8f9fa;
     }
+     tr:nth-child(2n) td {
+      background: #f9f9f9;
+  }
 }
 
 /* 🔹 Status Styles */
 .statusBadge {
     padding: 6px 12px;
-    border-radius: 4px;
+    border-radius: 30px;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     display: inline-block;
-    min-width: 80px;
+    min-width: 100px;
     text-align: center;
 }
 
 .pendingStatus {
-    background-color: #fff4ce;
-    color: #8a6d00;
-    border: 1px solid #ffd700;
+  background: rgba(0, 135, 81, .2) !important;
+  border: 1px solid #efefef !important;
+  border-radius: 30px !important;
+  color: #008751 !important;
+  font-size: 13px !important;
+  padding: 2px 5px !important;
+  width: 100px;
 }
 
 .completedStatus {
     background-color: #dff6dd;
-    color: #107c10;
+    color: #107c10;border-radius: 30px !important;
     border: 1px solid #107c10;
 }
 
@@ -332,7 +390,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            border-bottom: 0px solid #e1e1e1;
+            border-bottom: 1px solid #ccc;
         }
 
         th {
@@ -493,7 +551,7 @@
     color: #856404;
     border: 1px solid #ffeaa7;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 30px;
     font-size: 12px;
     font-weight: bold;
 }
@@ -646,7 +704,7 @@
     color: white;
   }
 }
-
+.app-menu{display: none !important;}
 .ribbonContent {
   overflow-x: auto;
 }
@@ -693,3 +751,49 @@
     margin-bottom: 0.5rem;
   }
 }
+
+//priyanshu
+.selectedFilesList {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  .fileItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    margin: 5px 0;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+  }
+ 
+  .removeFileBtn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .removeFileBtn:hover {
+    background: #c82333;
+  }
+  
+  .existingFilesList {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+  .search_bar,.sidebar-openBa{display: none !important;}

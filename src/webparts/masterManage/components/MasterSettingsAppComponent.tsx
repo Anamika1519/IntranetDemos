@@ -56,7 +56,7 @@ export const SettingsAppsComponent = ({ data }: any) => {
       }, []);
     
     return <div>
-        <iframe id="listIframe" src={`https://multiverse.sharepoint.com/sites/multiverseintranetportal/Lists/Settings/AllItems.aspx`}  width="100%"
+        <iframe id="listIframe" src={`https://officeindia.sharepoint.com/sites/multiverseintranetportal/Lists/Settings/AllItems.aspx`}  width="100%"
       height="600px"
       style={{ border: 'none' }} />
     </div>;

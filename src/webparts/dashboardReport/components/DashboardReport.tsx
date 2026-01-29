@@ -26,21 +26,21 @@ export default class DashboardReport extends React.Component<IDashboardReportPro
   public constructor(props: IDashboardReportProps | Readonly<IDashboardReportProps>) {
     super(props);
     //Load CSS files
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/css/bootstrap.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/css/app.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/css/icons.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/flatpickr/flatpickr.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/selectize/css/selectize.bootstrap3.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/css/bootstrap.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/css/app.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/css/icons.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/flatpickr/flatpickr.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/selectize/css/selectize.bootstrap3.css");
 
     // Load JS files in correct order using Promise.all
     Promise.all([
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/js/head.js"),
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/flatpickr/flatpickr.min.js"),
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/apexcharts/apexcharts.min.js"),
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/selectize/js/standalone/selectize.min.js")
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/js/head.js"),
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/flatpickr/flatpickr.min.js"),
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/apexcharts/apexcharts.min.js"),
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/selectize/js/standalone/selectize.min.js")
     ]).then(() => {
       // All dependencies loaded, now load dashboard init script
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/js/pages/dashboard-1.init.js");
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/js/pages/dashboard-1.init.js");
     }).catch(error => {
       console.error("Script loading failed:", error);
     });
@@ -63,21 +63,21 @@ export default class DashboardReport extends React.Component<IDashboardReportPro
   }
   async componentDidMount() {
     console.log("test");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/css/bootstrap.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/css/app.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/css/icons.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/flatpickr/flatpickr.min.css");
-    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/selectize/css/selectize.bootstrap3.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/css/bootstrap.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/css/app.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/css/icons.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/flatpickr/flatpickr.min.css");
+    SPComponentLoader.loadCss("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/selectize/css/selectize.bootstrap3.css");
 
     // Load JS files in correct order using Promise.all
     Promise.all([
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/js/head.js"),
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/flatpickr/flatpickr.min.js"),
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/apexcharts/apexcharts.min.js"),
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/libs/selectize/js/standalone/selectize.min.js")
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/js/head.js"),
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/flatpickr/flatpickr.min.js"),
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/apexcharts/apexcharts.min.js"),
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/libs/selectize/js/standalone/selectize.min.js")
     ]).then(() => {
       // All dependencies loaded, now load dashboard init script
-      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/Intranetdemos/assets/js/pages/dashboard-1.init.js");
+      SPComponentLoader.loadScript("https://officeindia.sharepoint.com/sites/multiverseintranetportal/assets/js/pages/dashboard-1.init.js");
     }).catch(error => {
       console.error("Script loading failed:", error);
     });

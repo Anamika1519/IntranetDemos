@@ -294,7 +294,7 @@ const HelloWorldContext = ({ props }: any) => {
   const handleCancel = () => {
     debugger;
     window.location.href =
-      "https://multiverse.sharepoint.com/sites/multiverseintranetportal/SitePages/Project.aspx";
+      "https://officeindia.sharepoint.com/sites/multiverseintranetportal/SitePages/Project.aspx";
   };
 
   const saveProjectData = async (formData: {

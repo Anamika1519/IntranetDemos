@@ -252,7 +252,7 @@ const Dashboard = ({ props }: any) => {
         "AssignedTo/Title"
       ).expand(
         "AssignedTo"
-      )();
+      ).getAll();
 
       console.log("Approval items loaded:", approvalItems);
       setApprovalItems(approvalItems);
@@ -272,7 +272,7 @@ const Dashboard = ({ props }: any) => {
         "ProjectCreationListIDId",
         "Status",
         "DeliverablesDocumentIDId"
-      ).expand("AssignedTo")();
+      ).expand("AssignedTo").getAll();
 
       console.log("Deliverable items loaded:", deliverables);
       setDeliverableItems(deliverables);

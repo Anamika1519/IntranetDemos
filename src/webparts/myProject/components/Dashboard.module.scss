@@ -641,7 +641,7 @@
 
 .tableContainer {
   min-width: 100%;
-  width: 100%; display: grid; overflow: auto; margin-top: 12px;
+  width: 100%; display: grid; overflow: auto; margin-top: 12px;margin-bottom: 20px;
 
   .deliverablesTable {
     width: 100%;
@@ -653,7 +653,7 @@
       padding: 12px;
       text-align: left;
       border: 1px solid #e1e1e1;
-      white-space: nowrap;
+      white-space: normal;
       vertical-align: top;
     }
 
@@ -694,7 +694,7 @@
 .fileLink {
   color: #0078d4;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 14px; word-wrap: break-word;
 
   &:hover {
     text-decoration: underline;
@@ -1000,14 +1000,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 .modalContent {
   background: white;
   border-radius: 8px;
   width: 90%;
-  max-width: 800px;
+  max-width: 900px;
   max-height: 80vh;
   display: flex;
   position: relative;
@@ -1080,6 +1080,8 @@
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
+    max-width: 120px;
+    min-width: 120px;
   }
   
   th {
